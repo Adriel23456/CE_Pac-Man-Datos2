@@ -64,7 +64,7 @@ void Game::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void *
 }
 
 QT_INIT_METAOBJECT const QMetaObject Game::staticMetaObject = { {
-    QMetaObject::SuperData::link<QMainWindow::staticMetaObject>(),
+    QMetaObject::SuperData::link<QGraphicsView::staticMetaObject>(),
     qt_meta_stringdata_Game.data,
     qt_meta_data_Game,
     qt_static_metacall,
@@ -83,12 +83,12 @@ void *Game::qt_metacast(const char *_clname)
     if (!_clname) return nullptr;
     if (!strcmp(_clname, qt_meta_stringdata_Game.stringdata0))
         return static_cast<void*>(this);
-    return QMainWindow::qt_metacast(_clname);
+    return QGraphicsView::qt_metacast(_clname);
 }
 
 int Game::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
 {
-    _id = QMainWindow::qt_metacall(_c, _id, _a);
+    _id = QGraphicsView::qt_metacall(_c, _id, _a);
     return _id;
 }
 QT_WARNING_POP

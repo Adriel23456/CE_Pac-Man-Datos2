@@ -1,18 +1,24 @@
 #pragma once
 #include "Nodo.h"
+#include <vector>
 
 class Nivel {
 public:
     Nivel();
-    Nodo* getLevel(int levelNumber);
+    Nodo getNode(int row, int col) const;
+    int getRows() const;
+    int getColumns() const;
+
+    static const int CELL_SIZE = 32;
 
 private:
-    static const int ROWS = 6;
-    static const int COLS = 10;
-    Nodo level1[ROWS][COLS];
-    Nodo level2[ROWS][COLS];
-    Nodo level3[ROWS][COLS];
-    Nodo level4[ROWS][COLS];
+    std::vector<Nodo> level1;
+    std::vector<Nodo> level2;
+    std::vector<Nodo> level3;
+    std::vector<Nodo> level4;
+
+    int rows;
+    int columns;
 
     void initializeLevels();
 };

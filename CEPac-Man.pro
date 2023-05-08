@@ -4,6 +4,19 @@ INCLUDEPATH += .
 
 QT += core gui widgets
 
-# Input
-SOURCES += main.cpp Game.cpp
-HEADERS += Game.h
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+
+CONFIG += c++11
+
+SOURCES += \
+        main.cpp \
+        Game.cpp \
+        Nodo.cpp \
+        Nivel.cpp 
+
+HEADERS += \
+        Game.h \
+        Nodo.h \
+        Nivel.h 
+
+FORMS +=
