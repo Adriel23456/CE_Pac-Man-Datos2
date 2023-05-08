@@ -8,8 +8,9 @@
 //./CEPac-Man.exe
 //-------------------------------------------------------------------------------------------------------
 //En caso de error...
-//export QT_QPA_PLATFORM_PLUGIN_PATH=/usr/lib/x86_64-linux-gnu/qt5/plugins/platforms/
 //export QT_QPA_PLATFORM=xcb
+//Otro caso:
+//export QT_QPA_PLATFORM_PLUGIN_PATH=/usr/lib/x86_64-linux-gnu/qt5/plugins/platforms/
 
 
 #include <QApplication>
