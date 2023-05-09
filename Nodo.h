@@ -7,7 +7,7 @@ private:
     bool enemyPassed;   // Verdadero si un enemigo ha pasado por esta celda en los últimos 5 frames
     bool hasFood;       // Verdadero si la celda tiene comida
     bool hasPower;      // Verdadero si la celda puede tener un poder
-    static const int CELL_SIZE = 32;
+    static const int CELL_SIZE = 16;
 
 public:
     Nodo();

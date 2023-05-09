@@ -17,12 +17,17 @@ public:
     Pacman();
     Pacman(Nodo* currentPosition);
     ~Pacman();
+
     int getLives();
     void loseLife();
+    
     bool canMove(Nodo* newNode);
+
     void setDirection(int direction);
     int getDirection();
+
     void setCurrentPosition(Nodo* newCurrentPosition);
+    Nodo* getCurrentPosition();
 
 protected:
     void keyPressEvent(QKeyEvent* event);

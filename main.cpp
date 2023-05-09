@@ -14,10 +14,8 @@
 
 int main(int argc, char *argv[]) {
     QApplication app(argc, argv);
-
     // Crear e iniciar la ventana del juego
     Game gameWindow;
     gameWindow.show();
-
     return app.exec();
 }

@@ -64,3 +64,7 @@ int Pacman::getDirection(){
 void Pacman::setCurrentPosition(Nodo* newCurrentPosition){
     this->currentPosition = newCurrentPosition;
 }
+
+Nodo* Pacman::getCurrentPosition(){
+    return currentPosition;
+}
