@@ -3,19 +3,26 @@
 #include <QTimer>
 #include <QKeyEvent>
 
-Pacman::Pacman() : lives(3), directionX(0), directionY(0), nivel(nivel) {
+Pacman::Pacman() : lives(3), direction(0), currentPosition(new Nodo()), reloadTime(3000) {
+}
+
+Pacman::Pacman(Nodo* currentPosition): lives(3), direction(0), currentPosition(currentPosition), reloadTime(3000) {
     // Establece la imagen del personaje de Pacman
-    QPixmap pacmanPixmap("/home/adriel/Desktop/Proyecto#2/CE_Pac-Man-Datos2/pacman.png");
-    int scaledSize = Nivel::CELL_SIZE; // Ajusta el tamaño de Pac-Man al tamaño de las celdas
+    QPixmap pacmanPixmap("/home/adriel/Desktop/Proyecto#2/CE_Pac-Man-Datos2/Images/pacman.png");
+    int scaledSize = this->currentPosition->getCellSize(); // Ajusta el tamaño de Pac-Man al tamaño de las celdas
     setPixmap(pacmanPixmap.scaled(scaledSize, scaledSize, Qt::KeepAspectRatio));
     
     // Configura el temporizador para el movimiento de Pacman
     QTimer* timer = new QTimer(this);
-    connect(timer, &QTimer::timeout, this, &Pacman::move);
-    timer->start(100); // Actualiza la posición cada 100 ms
+    connect(timer, &QTimer::timeout, this, &Pacman::setCurrentPosition);
+    timer->start(150); // Actualiza la posición cada 150 ms
 }
 
-int Pacman::getLives() const {
+Pacman::~Pacman() {
+    // No hay nada que hacer aquí porque no hay asignacion de memoria dinamica...
+}
+
+int Pacman::getLives(){
     return lives;
 }
 
@@ -23,55 +30,37 @@ void Pacman::loseLife() {
     lives--;
 }
 
-void Pacman::setNivel(Nivel* nivel){
-    this->nivel = nivel;
-}
-
-void Pacman::setPosition(int x, int y) {
-    setPos(x, y);
+bool Pacman::canMove(Nodo* newNode) {
+    if (newNode->getType()==1) {
+        return false;
+    } else{
+        return true;
+    }
 }
 
 void Pacman::keyPressEvent(QKeyEvent* event) {
-    int newX = x();
-    int newY = y();
-
+    int valor;
     switch (event->key()) {
         case Qt::Key_W:
-            newY -= Nivel::CELL_SIZE;
+            valor = 2;
             break;
         case Qt::Key_A:
-            newX -= Nivel::CELL_SIZE;
+            valor = 1;
             break;
         case Qt::Key_S:
-            newY += Nivel::CELL_SIZE;
+            valor = 3;
             break;
         case Qt::Key_D:
-            newX += Nivel::CELL_SIZE;
+            valor = 4;
             break;
     }
-
-    if (canMove(newX, newY)) {
-        directionX = newX - x();
-        directionY = newY - y();
-    }
+    setDirection(valor);
 }
 
-void Pacman::move() {
-    int newX = x() + directionX;
-    int newY = y() + directionY;
-
-    if (canMove(newX, newY)) {
-        setPos(newX, newY);
-    }
+int Pacman::getDirection(){
+    return direction;
 }
 
-bool Pacman::canMove(int newX, int newY) {
-    int row = newY / Nivel::CELL_SIZE;
-    int col = newX / Nivel::CELL_SIZE;
-
-    if (row >= 0 && row < nivel->getRows() && col >= 0 && col < nivel->getColumns()) {
-        Nodo node = nivel->getNode(row, col);
-        return node.getType() != 0;
-    }
-    return false;
+void Pacman::setCurrentPosition(Nodo* newCurrentPosition){
+    this->currentPosition = newCurrentPosition;
 }

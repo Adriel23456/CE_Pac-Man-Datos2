@@ -7,6 +7,10 @@ Nodo::Nodo(int type, bool enemyPassed, bool hasFood, bool hasPower)
     : type(type), enemyPassed(enemyPassed), hasFood(hasFood), hasPower(hasPower) {
 }
 
+Nodo::~Nodo() {
+    // No hay nada que hacer aquí porque no hay asignacion de memoria dinamica...
+}
+
 int Nodo::getType() const {
     return type;
 }
@@ -37,4 +41,8 @@ bool Nodo::getHasPower() const {
 
 void Nodo::setHasPower(bool hasPower) {
     this->hasPower = hasPower;
+}
+
+int Nodo::getCellSize() const {
+    return CELL_SIZE;
 }

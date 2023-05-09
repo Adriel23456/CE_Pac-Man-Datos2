@@ -1,6 +1,15 @@
 {
     "files.associations": {
         "qpushbutton": "cpp",
-        "qtimer": "cpp"
+        "qtimer": "cpp",
+        "array": "cpp",
+        "chrono": "cpp",
+        "compare": "cpp",
+        "functional": "cpp",
+        "ratio": "cpp",
+        "tuple": "cpp",
+        "type_traits": "cpp",
+        "utility": "cpp",
+        "variant": "cpp"
     }
 }

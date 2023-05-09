@@ -2,31 +2,28 @@
 
 #include <QObject>
 #include <QGraphicsPixmapItem>
-#include "Nivel.h"
-
-class Nivel; // Añade esta línea para la declaración adelantada
+#include "Nodo.h"
 
 class Pacman : public QObject, public QGraphicsPixmapItem {
     Q_OBJECT
 
+private:
+    int lives; //Sera 3 automaticamente
+    int direction; //Puede ser 0(Nula), 1(Izquierda), 2(Arriba), 3(Derecha) o 4(Abajo)
+    Nodo* currentPosition; //Nodo donde se encuentra
+    const int reloadTime; // Tiempo de reaparición en milisegundos
+
 public:
     Pacman();
-    int getLives() const;
+    Pacman(Nodo* currentPosition);
+    ~Pacman();
+    int getLives();
     void loseLife();
-    void setPosition(int x, int y);
-    void setNivel(Nivel* nivel);
-
-    static const int REAPPEAR_TIME = 3000; // Tiempo de reaparición en milisegundos
+    bool canMove(Nodo* newNode);
+    void setDirection(int direction);
+    int getDirection();
+    void setCurrentPosition(Nodo* newCurrentPosition);
 
 protected:
     void keyPressEvent(QKeyEvent* event);
-
-private:
-    int lives;
-    int directionX;
-    int directionY;
-    Nivel* nivel;
-
-    void move();
-    bool canMove(int newX, int newY);
 };
