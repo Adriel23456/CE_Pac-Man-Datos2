@@ -1,11 +1,14 @@
 #include "Pacman.h"
+
 #include <QTimer>
 #include <QKeyEvent>
 
-Pacman::Pacman(Nivel* nivel) : lives(3), directionX(0), directionY(0), nivel(nivel) {
+Pacman::Pacman() : lives(3), directionX(0), directionY(0), nivel(nivel) {
     // Establece la imagen del personaje de Pacman
-    setPixmap(QPixmap(":/images/pacman.png"));
-
+    QPixmap pacmanPixmap("/home/adriel/Desktop/Proyecto#2/CE_Pac-Man-Datos2/pacman.png");
+    int scaledSize = Nivel::CELL_SIZE; // Ajusta el tamaño de Pac-Man al tamaño de las celdas
+    setPixmap(pacmanPixmap.scaled(scaledSize, scaledSize, Qt::KeepAspectRatio));
+    
     // Configura el temporizador para el movimiento de Pacman
     QTimer* timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, &Pacman::move);
@@ -18,6 +21,10 @@ int Pacman::getLives() const {
 
 void Pacman::loseLife() {
     lives--;
+}
+
+void Pacman::setNivel(Nivel* nivel){
+    this->nivel = nivel;
 }
 
 void Pacman::setPosition(int x, int y) {

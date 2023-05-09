@@ -12,11 +12,13 @@ SOURCES += \
         main.cpp \
         Game.cpp \
         Nodo.cpp \
-        Nivel.cpp 
+        Nivel.cpp \
+        Pacman.cpp
 
 HEADERS += \
         Game.h \
         Nodo.h \
-        Nivel.h 
+        Nivel.h \
+        Pacman.h
 
 FORMS +=

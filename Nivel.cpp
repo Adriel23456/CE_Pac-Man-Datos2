@@ -1,4 +1,6 @@
 #include "Nivel.h"
+#include "Pacman.h"
+#include "Game.h"
 
 Nivel::Nivel() : rows(7), columns(10) {
     initializeLevels();
@@ -6,18 +8,44 @@ Nivel::Nivel() : rows(7), columns(10) {
 
 Nodo Nivel::getNode(int row, int col) const {
     int index = row * columns + col;
-    if (index >= 0 && index < level1.size()) {
-        return level1[index];
+    int currentLevel = gameInstance ->getCurrentLevel();
+    if (currentLevel == 1){
+        if (index >= 0 && index < level1.size()) {
+            return level1[index];
+        }
+        return Nodo(); // Devuelve un nodo vacío en caso de que los índices estén fuera de rango
+    }else if(currentLevel == 2){
+        if (index >= 0 && index < level2.size()) {
+            return level2[index];
+        }
+        return Nodo(); // Devuelve un nodo vacío en caso de que los índices estén fuera de rango
+    }else if(currentLevel == 3){
+        if (index >= 0 && index < level3.size()) {
+            return level3[index];
+        }
+        return Nodo(); // Devuelve un nodo vacío en caso de que los índices estén fuera de rango
+    }else{
+        if (index >= 0 && index < level4.size()) {
+            return level4[index];
+        }
+        return Nodo(); // Devuelve un nodo vacío en caso de que los índices estén fuera de rango
     }
-    return Nodo(); // Devuelve un nodo vacío en caso de que los índices estén fuera de rango
 }
 
-int Nivel::getRows() const {
+int Nivel::getRows(){
     return rows;
 }
 
-int Nivel::getColumns() const {
+int Nivel::getColumns(){
     return columns;
+}
+
+void Nivel::setRows(int rows){
+    Nivel::rows = rows;
+}
+
+void Nivel::setColumns(int columns){
+    Nivel::columns = rows;
 }
 
 void Nivel::initializeLevels() {
@@ -118,4 +146,8 @@ void Nivel::initializeLevels() {
             level4.push_back(Nodo(level1Data[i][j], false, true, false));
         }
     }
+}
+
+void Nivel::setGameInstance(Game* gameInstance) {
+    this->gameInstance = gameInstance;
 }
