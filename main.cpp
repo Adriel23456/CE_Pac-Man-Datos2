@@ -11,7 +11,6 @@
 #include <QApplication>
 #include <QDesktopWidget>
 #include "Game.h"
-#include "Nivel.h"
 
 int main(int argc, char *argv[]) {
     QApplication app(argc, argv);

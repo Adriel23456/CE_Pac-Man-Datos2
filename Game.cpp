@@ -2,6 +2,7 @@
 #include "Nivel.h"
 #include "Pacman.h"
 #include <QGraphicsRectItem>
+#include <QDebug>
 
 void renderizaNivel(Game* game) {
     // Limpia la escena antes de renderizar un nuevo nivel
@@ -33,8 +34,8 @@ void renderizaNivel(Game* game) {
     pacmanPixmap = pacmanPixmap.scaled(anchoCelda, altoCelda, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
     game->getCurrentNivel()->getPacman()->setPixmap(pacmanPixmap);
 
-    //Se va a agarrar al nodo donde va a posicionarse el Pacman:
-    Nodo* nodoPrincipio = game->getCurrentNivel()->getNodoPrincipio();
+    //Se va a agarrar al nodo donde esta el Pacman:
+    Nodo* nodoPrincipio = game->getCurrentNivel()->getPacman()->getCurrentPosition();
 
     //Se actualizara la posicion de Pac-Man en la escena:
     int x = nodoPrincipio->getCol() * anchoCelda;
@@ -46,11 +47,10 @@ void renderizaNivel(Game* game) {
 }
 
 Game::Game(QWidget* parent): QGraphicsView(parent) {
-    QGraphicsView *graphicsView = new QGraphicsView(parent);
     this->nivel = new Nivel();
     this->puntos = 0;
     this->setFixedSize(800, 500);
-    this->setWindowTitle("CE-Pac-Man");
+    this->setWindowTitle("CEPac-Man");
     this->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     this->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     // Inicializa la escena y la vista
@@ -60,8 +60,10 @@ Game::Game(QWidget* parent): QGraphicsView(parent) {
     renderizaNivel(this);
     // Configura un temporizador para controlar la velocidad de actualización del juego
     timer = new QTimer(this);
-    connect(timer, &QTimer::timeout, scene, &QGraphicsScene::advance);
-    timer->start(200); // Actualiza cada 200 ms
+    connect(timer, &QTimer::timeout, this, QOverload<>::of(&Game::update));
+    timer->start(1250); // Actualiza cada 1000 ms
+    this->setFocusPolicy(Qt::StrongFocus);
+    this->setFocus();
 }
 
 Game::~Game() {
@@ -79,15 +81,62 @@ QGraphicsScene* Game::getScene(){
 }
 
 void Game::update(){
-    //Logica de preguntar si el jugador presiono una tecla
-    //Logica de preguntar si el jugador puede moverse a la posicion presionada
-    //Logica de preguntarse si ya se va a realizar el movimiento de los objetos
-        //Si si se puede mover, redibuja al jugador en la nueva posicion y actualiza al nodo nuevo como un nodo con "falso" en comida y suma 50 a la variable de puntos (El jugador se dibuja encima del nodo)
-        //Se pregunta, dependiendo del nivel, si ya se comio todas las celdas de movimiento
-            //Si esto es correcto, se elimina el nivel y se genera un nuevo nivel, el que le sigue
-                //Renderiza el nuevo nivel y se sigue aplicando este update
-            //Si esto es correcto y es el ultimo nivel, se muestra una ventana de juego terminado
-    //Si aun no son los 200ms, no se movera el personaje y se repite este codigo...
+    qDebug() << "Actualizado de pantalla...";
+
+    int anchoCelda = this->width() / this->getCurrentNivel()->getColumns();
+    int altoCelda = this->height() / this->getCurrentNivel()->getRows();
+    int direction = this->getCurrentNivel()->getPacman()->getDirection();
+
+    // Obtén las coordenadas actuales de Pac-Man en la matriz
+    Nodo* nodoActual = this->getCurrentNivel()->getPacman()->getCurrentPosition();
+
+    int currentRow = nodoActual->getRow();
+    int currentCol = nodoActual->getCol();
+    qDebug() << QString("La fila del Pacman es: %1").arg(currentRow);
+    qDebug() << QString("La columna del Pacman es: %1").arg(currentCol);
+
+    // Calcula las nuevas coordenadas en función de la dirección
+    int newRow = currentRow;
+    int newCol = currentCol;
+    if(direction == 0){
+    }else if(direction == 1){
+        newCol--;
+    }else if(direction == 2){
+        newRow--;
+    }else if(direction == 3){
+        newCol++;
+    }else{
+        newRow++;
+    }
+
+    Nodo* nuevoNodo = this->getCurrentNivel()->getNode(newRow, newCol);
+
+    qDebug() << QString("EL nodo del posible movimiento es, fila: %1").arg(newRow);
+    qDebug() << QString("EL nodo del posible movimiento es, columna: %1").arg(newCol);
+
+    // Comprueba si Pac-Man puede moverse al nuevo nodo
+    if (this->getCurrentNivel()->getPacman()->canMove(nuevoNodo)) {
+        this->getCurrentNivel()->getPacman()->setCurrentPosition(nuevoNodo);
+        // Actualiza la posición de Pac-Man en la escena
+        //Se actualizara la posicion de Pac-Man en la escena:
+        int x = nuevoNodo->getCol() * anchoCelda;
+        int y = nuevoNodo->getRow() * altoCelda;
+        this->getCurrentNivel()->getPacman()->setPos(x, y);
+        
+
+        // Si el nodo tiene comida, actualiza la comida restante y suma puntos
+        if (nuevoNodo->getHasFood()) {
+            nuevoNodo->setHasFood(false);
+            this->getCurrentNivel()->setComidaRestante(this->getCurrentNivel()->getComidaRestante()-1);
+            this->puntos += 50;
+        }
+
+    } else {
+        // Si Pac-Man no puede moverse al nuevo nodo, regresa a la posición anterior
+        this->getCurrentNivel()->getPacman()->setCurrentPosition(nodoActual);
+    }
+    // Comprueba si se debe cambiar de nivel
+    cambiaNivel();
 }
 
 void Game::cambiaNivel() {
@@ -96,4 +145,27 @@ void Game::cambiaNivel() {
         this->nivel = new Nivel(currentLevel++);
         renderizaNivel(this);
     }
+}
+
+void Game::keyPressEvent(QKeyEvent* event) {
+    int valor = 0;
+    switch (event->key()) {
+        case Qt::Key_W:
+            valor = 2;
+            this->getCurrentNivel()->getPacman()->setDirection(valor);
+            break;
+        case Qt::Key_A:
+            valor = 1;
+            this->getCurrentNivel()->getPacman()->setDirection(valor);
+            break;
+        case Qt::Key_S:
+            valor = 4;
+            this->getCurrentNivel()->getPacman()->setDirection(valor);
+            break;
+        case Qt::Key_D:
+            valor = 3;
+            this->getCurrentNivel()->getPacman()->setDirection(valor);
+            break;
+    }
+    qDebug() << "Tecla presionada y valor cambiado";
 }

@@ -218,3 +218,7 @@ Nodo* Nivel::getNodoPrincipio(){
 Pacman* Nivel::getPacman(){
     return pacman;
 }
+
+void Nivel::setComidaRestante(int newComida){
+    comidaRestante = newComida;
+}

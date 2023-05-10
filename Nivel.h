@@ -29,6 +29,7 @@ public:
     int getColumns(); //Obtener las columnas del nivel
     int getCurrentLevel(); //Obtener el nivel actual
     int getComidaRestante(); //Obtener la comida restante del nivel
+    void setComidaRestante(int newComida); //Cambiar la cantidad de comida restante...
     Nodo* getNodoPrincipio(); //Obtener el nodo de la posicion inicial del pacman
     Pacman* getPacman(); //Obtener al objeto QT pacman
 };

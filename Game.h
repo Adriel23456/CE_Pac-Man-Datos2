@@ -2,8 +2,10 @@
 
 #include <QGraphicsView>
 #include <QGraphicsScene>
+#include <QKeyEvent>
 #include <QTimer>
 #include "Nivel.h"
+#include "Pacman.h"
 
 //class Nivel; // Añado esta línea para la declaración adelantada
 //class Pacman; // Añado esta línea para la declaración adelantada
@@ -25,4 +27,6 @@ public:
     void update();
     void cambiaNivel();
     QGraphicsScene* getScene();
+protected:
+    void keyPressEvent(QKeyEvent *event);
 };

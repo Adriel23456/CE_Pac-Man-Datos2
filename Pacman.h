@@ -28,7 +28,4 @@ public:
 
     void setCurrentPosition(Nodo* newCurrentPosition);
     Nodo* getCurrentPosition();
-
-protected:
-    void keyPressEvent(QKeyEvent* event);
 };
