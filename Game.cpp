@@ -106,11 +106,17 @@ void Game::update(){
         newRow++;
     }
 
-    Nodo* nuevoNodo = this->getCurrentNivel()->getNode(newRow, newCol);
+    Nodo* nuevoNodo = this->getCurrentNivel()->getNode(newRow-1, newCol-1);
 
     qDebug() << QString("EL nodo del posible movimiento es, fila: %1").arg(newRow);
     qDebug() << QString("EL nodo del posible movimiento es, columna: %1").arg(newCol);
-
+    this->getCurrentNivel()->getPacman()->setCurrentPosition(nuevoNodo);
+    // Actualiza la posición de Pac-Man en la escena
+    //Se actualizara la posicion de Pac-Man en la escena:
+    int x = nuevoNodo->getCol() * anchoCelda;
+    int y = nuevoNodo->getRow() * altoCelda;
+    this->getCurrentNivel()->getPacman()->setPos(x, y);
+    /*
     // Comprueba si Pac-Man puede moverse al nuevo nodo
     if (this->getCurrentNivel()->getPacman()->canMove(nuevoNodo)) {
         this->getCurrentNivel()->getPacman()->setCurrentPosition(nuevoNodo);
@@ -131,6 +137,7 @@ void Game::update(){
         // Si Pac-Man no puede moverse al nuevo nodo, regresa a la posición anterior
         this->getCurrentNivel()->getPacman()->setCurrentPosition(this->getCurrentNivel()->getPacman()->getCurrentPosition());
     }
+    */
     // Actualiza los objetos
     this->getScene()->update();
     // Comprueba si se debe cambiar de nivel
