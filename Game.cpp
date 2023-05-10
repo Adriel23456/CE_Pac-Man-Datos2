@@ -87,11 +87,8 @@ void Game::update(){
     int altoCelda = this->height() / this->getCurrentNivel()->getRows();
     int direction = this->getCurrentNivel()->getPacman()->getDirection();
 
-    // Obtén las coordenadas actuales de Pac-Man en la matriz
-    Nodo* nodoActual = this->getCurrentNivel()->getPacman()->getCurrentPosition();
-
-    int currentRow = nodoActual->getRow();
-    int currentCol = nodoActual->getCol();
+    int currentRow = this->getCurrentNivel()->getPacman()->getCurrentPosition()->getRow();
+    int currentCol = this->getCurrentNivel()->getPacman()->getCurrentPosition()->getCol();
     qDebug() << QString("La fila del Pacman es: %1").arg(currentRow);
     qDebug() << QString("La columna del Pacman es: %1").arg(currentCol);
 
@@ -123,7 +120,6 @@ void Game::update(){
         int y = nuevoNodo->getRow() * altoCelda;
         this->getCurrentNivel()->getPacman()->setPos(x, y);
         
-
         // Si el nodo tiene comida, actualiza la comida restante y suma puntos
         if (nuevoNodo->getHasFood()) {
             nuevoNodo->setHasFood(false);
@@ -133,8 +129,10 @@ void Game::update(){
 
     } else {
         // Si Pac-Man no puede moverse al nuevo nodo, regresa a la posición anterior
-        this->getCurrentNivel()->getPacman()->setCurrentPosition(nodoActual);
+        this->getCurrentNivel()->getPacman()->setCurrentPosition(this->getCurrentNivel()->getPacman()->getCurrentPosition());
     }
+    // Actualiza los objetos
+    this->getScene()->update();
     // Comprueba si se debe cambiar de nivel
     cambiaNivel();
 }
