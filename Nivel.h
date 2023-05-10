@@ -14,6 +14,7 @@ private:
     Nodo* nodoPrincipio; //Nodo donde inicia el jugador
     //std::vector<Nodo> nodosEnemigo; //Nodos donde iniciarian los enemigos
     Pacman* pacman; //El jugador que se genera para este nivel
+    int comidaRestante; //Cuantas celdas con comida quedan...
     int rows; //Filas de este nivel
     int columns; //Columnas de este nivel
 
@@ -26,4 +27,8 @@ public:
     Nodo* getNode(int row, int col); //Metodo para obtener el puntero del nodo dada una posicion (x,y) en la matriz
     int getRows(); //Obtener las filas del nivel
     int getColumns(); //Obtener las columnas del nivel
+    int getCurrentLevel(); //Obtener el nivel actual
+    int getComidaRestante(); //Obtener la comida restante del nivel
+    Nodo* getNodoPrincipio(); //Obtener el nodo de la posicion inicial del pacman
+    Pacman* getPacman(); //Obtener al objeto QT pacman
 };

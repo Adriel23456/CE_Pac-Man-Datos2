@@ -9,13 +9,6 @@ Pacman::Pacman() : lives(3), direction(0), currentPosition(new Nodo()), reloadTi
 Pacman::Pacman(Nodo* currentPosition): lives(3), direction(0), currentPosition(currentPosition), reloadTime(3000) {
     // Establece la imagen del personaje de Pacman
     QPixmap pacmanPixmap("/home/adriel/Desktop/Proyecto#2/CE_Pac-Man-Datos2/Images/pacman.png");
-    int scaledSize = this->currentPosition->getCellSize(); // Ajusta el tamaño de Pac-Man al tamaño de las celdas
-    setPixmap(pacmanPixmap.scaled(scaledSize, scaledSize, Qt::KeepAspectRatio));
-    
-    // Configura el temporizador para el movimiento de Pacman
-    QTimer* timer = new QTimer(this);
-    connect(timer, &QTimer::timeout, this, &Pacman::setCurrentPosition);
-    timer->start(150); // Actualiza la posición cada 150 ms
 }
 
 Pacman::~Pacman() {

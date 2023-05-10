@@ -8,9 +8,9 @@
 //En caso de error...
 //export QT_QPA_PLATFORM=xcb
 
-
 #include <QApplication>
 #include "Game.h"
+#include "Nivel.h"
 
 int main(int argc, char *argv[]) {
     QApplication app(argc, argv);

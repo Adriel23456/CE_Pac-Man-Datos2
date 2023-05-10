@@ -140,6 +140,7 @@ Nivel::Nivel(){
     this->currentLevel = 1;
     this->rows = 7;
     this->columns = 10;
+    this->comidaRestante = 25;
     this->matrizNodos = initializeLevel1();
     this->nodoPrincipio = getNodoPrincipio1(matrizNodos, columns);
     this->pacman = new Pacman(nodoPrincipio);
@@ -150,22 +151,29 @@ Nivel::Nivel(int newLevel){
     if (currentLevel == 2){
         this->rows = 12;
         this->columns = 20;
+        this->comidaRestante = 50;
         this->matrizNodos = initializeLevel2();
         this->nodoPrincipio = getNodoPrincipio2(matrizNodos, columns);
         this->pacman = new Pacman(nodoPrincipio);
     }else if(currentLevel == 3){
         this->rows = 12;
         this->columns = 35;
+        this->comidaRestante = 75;
         this->matrizNodos = initializeLevel3();
         this->nodoPrincipio = getNodoPrincipio3(matrizNodos, columns);
         this->pacman = new Pacman(nodoPrincipio);
     }else{
         this->rows = 19;
         this->columns = 35;
+        this->comidaRestante = 100;
         this->matrizNodos = initializeLevel4();
         this->nodoPrincipio = getNodoPrincipio4(matrizNodos, columns);
         this->pacman = new Pacman(nodoPrincipio);
     }
+}
+
+Nivel::~Nivel(){
+    delete pacman;
 }
 
 Nodo* Nivel::getNode(int row, int col){
@@ -192,4 +200,20 @@ int* Nivel::getMatriz(){
     } else{
         return *level4Data;
     }
+}
+
+int Nivel::getCurrentLevel(){
+    return currentLevel;
+}
+
+int Nivel::getComidaRestante(){
+    return comidaRestante;
+}
+
+Nodo* Nivel::getNodoPrincipio(){
+    return nodoPrincipio;
+}
+
+Pacman* Nivel::getPacman(){
+    return pacman;
 }
