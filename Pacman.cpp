@@ -50,6 +50,10 @@ void Pacman::keyPressEvent(QKeyEvent* event) {
     setDirection(valor);
 }
 
+void Pacman::setDirection(int newDirection){
+    this->direction = newDirection;
+}
+
 int Pacman::getDirection(){
     return direction;
 }

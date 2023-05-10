@@ -23,7 +23,7 @@ public:
     
     bool canMove(Nodo* newNode);
 
-    void setDirection(int direction);
+    void setDirection(int direction); 
     int getDirection();
 
     void setCurrentPosition(Nodo* newCurrentPosition);

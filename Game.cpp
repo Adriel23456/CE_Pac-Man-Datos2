@@ -3,6 +3,40 @@
 #include "Pacman.h"
 #include <QGraphicsRectItem>
 
+void renderizaNivel(Game* game) {
+    // Limpia la escena antes de renderizar un nuevo nivel
+    game->getScene()->clear();
+
+    int anchoCelda = game->width() / game->getCurrentNivel()->getColumns();
+    int altoCelda = game->height() / game->getCurrentNivel()->getRows();
+
+    for (int i = 0; i < game->getCurrentNivel()->getRows(); ++i) {
+        for (int j = 0; j < game->getCurrentNivel()->getColumns(); ++j) {
+            QGraphicsRectItem* rect = new QGraphicsRectItem(j * anchoCelda, i * altoCelda, anchoCelda, altoCelda);
+            Nodo* nodo = (game->getCurrentNivel()->getNode(i, j));
+            if (nodo->getType() == 1) {
+                // Pared
+                rect->setBrush(Qt::black);
+            } else {
+                // Nodo de movimiento libre
+                rect->setBrush(Qt::white);
+            }
+            game->getScene()->addItem(rect);
+        }
+    }
+    // Cambia el tamaño de Pac-Man para que quepa en una celda
+    QPixmap pacmanPixmap = game->getCurrentNivel()->getPacman()->pixmap();
+    pacmanPixmap = pacmanPixmap.scaled(anchoCelda, altoCelda, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    game->getCurrentNivel()->getPacman()->setPixmap(pacmanPixmap);
+
+    //Se va a establecer el nodo donde va a posicionarse el Pacman (Incompleto)
+    Nodo* nodoPrincipio = game->getCurrentNivel()->getNodoPrincipio();
+    game->getCurrentNivel()->getPacman()->setCurrentPosition(nodoPrincipio);
+
+    // Añade Pac-Man a la escena
+    game->getScene()->addItem(game->getCurrentNivel()->getPacman());
+}
+
 Game::Game(QWidget* parent): QGraphicsView(parent) {
     this->nivel = new Nivel();
     this->puntos = 0;
@@ -11,7 +45,7 @@ Game::Game(QWidget* parent): QGraphicsView(parent) {
     // Inicializa la escena y la vista
     scene = new QGraphicsScene(this);
     setScene(scene);
-    renderizaNivel(1, this);
+    renderizaNivel(this);
     // Configura un temporizador para controlar la velocidad de actualización del juego
     timer = new QTimer(this);
     connect(timer, &QTimer::timeout, scene, &QGraphicsScene::advance);
@@ -48,40 +82,6 @@ void Game::cambiaNivel() {
     if (nivel->getComidaRestante() == 0) {
         int currentLevel = nivel->getCurrentLevel();
         this->nivel = new Nivel(currentLevel++);
-        renderizaNivel(nivel->getCurrentLevel(), this);
+        renderizaNivel(this);
     }
-}
-
-void renderizaNivel(int currentLevel, Game* game) {
-    // Limpia la escena antes de renderizar un nuevo nivel
-    game->getScene()->clear();
-
-    int anchoCelda = game->width() / game->getCurrentNivel()->getColumns();
-    int altoCelda = game->height() / game->getCurrentNivel()->getRows();
-
-    for (int i = 0; i < game->getCurrentNivel()->getRows(); ++i) {
-        for (int j = 0; j < game->getCurrentNivel()->getColumns(); ++j) {
-            QGraphicsRectItem* rect = new QGraphicsRectItem(j * anchoCelda, i * altoCelda, anchoCelda, altoCelda);
-            Nodo* nodo = (game->getCurrentNivel()->getNode(i+1, j+1));
-            if (nodo->getType() == 1) {
-                // Pared
-                rect->setBrush(Qt::black);
-            } else {
-                // Nodo de movimiento libre
-                rect->setBrush(Qt::white);
-            }
-            game->getScene()->addItem(rect);
-        }
-    }
-    // Cambia el tamaño de Pac-Man para que quepa en una celda
-    QPixmap pacmanPixmap = game->getCurrentNivel()->getPacman()->pixmap();
-    pacmanPixmap = pacmanPixmap.scaled(anchoCelda, altoCelda, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-    game->getCurrentNivel()->getPacman()->setPixmap(pacmanPixmap);
-
-    //Se va a establecer el nodo donde va a posicionarse el Pacman (Incompleto)
-    Nodo* nodoPrincipio = game->getCurrentNivel()->getNodoPrincipio();
-    game->getCurrentNivel()->getPacman()->setCurrentPosition(nodoPrincipio);
-
-    // Añade Pac-Man a la escena
-    game->getScene()->addItem(game->getCurrentNivel()->getPacman());
 }
