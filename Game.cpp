@@ -37,8 +37,6 @@ void renderizaNivel(Game* game) {
     Nodo* nodoPrincipio = game->getCurrentNivel()->getNodoPrincipio();
 
     //Se actualizara la posicion de Pac-Man en la escena:
-    printf("%d\n", nodoPrincipio->getCol());
-    printf("%d\n", nodoPrincipio->getRow());
     int x = nodoPrincipio->getCol() * anchoCelda;
     int y = nodoPrincipio->getRow() * altoCelda;
     game->getCurrentNivel()->getPacman()->setPos(x, y);
@@ -48,12 +46,16 @@ void renderizaNivel(Game* game) {
 }
 
 Game::Game(QWidget* parent): QGraphicsView(parent) {
+    QGraphicsView *graphicsView = new QGraphicsView(parent);
     this->nivel = new Nivel();
     this->puntos = 0;
-    setFixedSize(850, 625);
-    setWindowTitle("CE-Pac-Man");
+    this->setFixedSize(800, 500);
+    this->setWindowTitle("CE-Pac-Man");
+    this->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    this->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     // Inicializa la escena y la vista
     scene = new QGraphicsScene(this);
+
     setScene(scene);
     renderizaNivel(this);
     // Configura un temporizador para controlar la velocidad de actualización del juego
