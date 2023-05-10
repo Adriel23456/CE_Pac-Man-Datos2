@@ -18,20 +18,30 @@ void renderizaNivel(Game* game) {
                 // Pared
                 rect->setBrush(Qt::black);
             } else {
-                // Nodo de movimiento libre
-                rect->setBrush(Qt::white);
+                if(nodo->getHasFood()==true){
+                    rect->setBrush(Qt::darkYellow);
+                } else{
+                    rect->setBrush(Qt::white);
+                }
             }
             game->getScene()->addItem(rect);
         }
     }
+    
     // Cambia el tamaño de Pac-Man para que quepa en una celda
-    QPixmap pacmanPixmap = game->getCurrentNivel()->getPacman()->pixmap();
-    pacmanPixmap = pacmanPixmap.scaled(anchoCelda, altoCelda, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    QPixmap pacmanPixmap("/home/adriel/Desktop/Proyecto#2/CE_Pac-Man-Datos2/Images/pacman.png");
+    pacmanPixmap = pacmanPixmap.scaled(anchoCelda, altoCelda, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
     game->getCurrentNivel()->getPacman()->setPixmap(pacmanPixmap);
 
-    //Se va a establecer el nodo donde va a posicionarse el Pacman (Incompleto)
+    //Se va a agarrar al nodo donde va a posicionarse el Pacman:
     Nodo* nodoPrincipio = game->getCurrentNivel()->getNodoPrincipio();
-    game->getCurrentNivel()->getPacman()->setCurrentPosition(nodoPrincipio);
+
+    //Se actualizara la posicion de Pac-Man en la escena:
+    printf("%d\n", nodoPrincipio->getCol());
+    printf("%d\n", nodoPrincipio->getRow());
+    int x = nodoPrincipio->getCol() * anchoCelda;
+    int y = nodoPrincipio->getRow() * altoCelda;
+    game->getCurrentNivel()->getPacman()->setPos(x, y);
 
     // Añade Pac-Man a la escena
     game->getScene()->addItem(game->getCurrentNivel()->getPacman());
