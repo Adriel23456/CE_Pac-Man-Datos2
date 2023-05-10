@@ -1,10 +1,15 @@
 #include "Nodo.h"
 
-Nodo::Nodo() : type(0), enemyPassed(false), hasFood(false), hasPower(false) {
+Nodo::Nodo() : type(0), enemyPassed(false), hasFood(false), hasPower(false), row(0), col(0) {
 }
 
-Nodo::Nodo(int type, bool enemyPassed, bool hasFood, bool hasPower)
-    : type(type), enemyPassed(enemyPassed), hasFood(hasFood), hasPower(hasPower) {
+Nodo::Nodo(int type, int row, int col){
+    this->type = type;
+    this->enemyPassed = false;
+    this->hasFood = true;
+    this->hasPower = false;
+    this->row = row;
+    this->col = col;
 }
 
 Nodo::~Nodo() {
@@ -45,4 +50,12 @@ void Nodo::setHasPower(bool hasPower) {
 
 int Nodo::getCellSize() const {
     return CELL_SIZE;
+}
+
+int Nodo::getRow(){
+    return this->row;
+}
+
+int Nodo::getCol(){
+    return this->col;
 }
