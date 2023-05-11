@@ -20,6 +20,9 @@ private:
     QPixmap nofoodPixmap;
     QPixmap wallPixmap;
     QPixmap pacmanPixmap;
+    QGraphicsTextItem* scoreText;
+    QGraphicsTextItem* livesText;
+    QGraphicsTextItem* levelText;
 
 public:
     explicit Game(QWidget* parent = nullptr);

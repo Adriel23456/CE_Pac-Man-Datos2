@@ -2,6 +2,7 @@
 #include "Nivel.h"
 #include "Pacman.h"
 #include <QDebug>
+#include <QFontDatabase>
 
 Game::Game(QWidget* parent): QGraphicsView(parent) {
     //Datos de inicio basicos
@@ -10,6 +11,12 @@ Game::Game(QWidget* parent): QGraphicsView(parent) {
     this->setFixedSize(800, 500);
     this->setWindowTitle("CEPac-Man");
     this->firstGeneration = true;
+
+    //Se añade el font en la aplicacion
+    int id = QFontDatabase::addApplicationFont("/home/adriel/Desktop/Proyecto#2/CE_Pac-Man-Datos2/fonts/Joystix.TTF");
+    QString family = QFontDatabase::applicationFontFamilies(id).at(0);
+    QFont retroFont(family);
+
 
     //Detalles de la ventana y de la escena
     this->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -25,10 +32,38 @@ Game::Game(QWidget* parent): QGraphicsView(parent) {
     wallPixmap.load("/home/adriel/Desktop/Proyecto#2/CE_Pac-Man-Datos2/Images/wall.png");
     pacmanPixmap.load("/home/adriel/Desktop/Proyecto#2/CE_Pac-Man-Datos2/Images/pacman.png");
 
+    // Inicializar el texto del puntaje
+    scoreText = new QGraphicsTextItem();
+    scoreText->setPlainText(QString("Score: %1").arg(puntos));
+    scoreText->setZValue(1);
+    scoreText->setDefaultTextColor(Qt::white);
+    scoreText->setFont(retroFont);
+    scoreText->setPos(5, 5); // Colocar en la esquina superior izquierda
+    scene->addItem(scoreText);
+
+    // Inicializar el texto de las vidas
+    livesText = new QGraphicsTextItem();
+    livesText->setZValue(1);
+    livesText->setPlainText(QString("Lives: %1").arg(this->getCurrentNivel()->getPacman()->getLives())); // Asumiendo que Pacman tiene un método getLives()
+    livesText->setDefaultTextColor(Qt::white);
+    livesText->setFont(retroFont);
+    livesText->setPos(5, 25); // Colocar un poco debajo del texto del puntaje
+    scene->addItem(livesText);
+
+    // Inicializar el texto del nivel
+    levelText = new QGraphicsTextItem();
+    levelText->setZValue(1);
+    levelText->setPlainText(QString("Level: %1").arg(this->getCurrentNivel()->getCurrentLevel())); // Asumiendo que Nivel tiene un método getCurrentLevel()
+    levelText->setDefaultTextColor(Qt::white);
+    levelText->setFont(retroFont);
+    levelText->setScale(2);
+    levelText->setPos(this->width()/2, this->height() - 60); // Colocar en el centro de la parte inferior de la pantalla
+    scene->addItem(levelText);
+
     // Configura un temporizador para controlar la velocidad de actualización del juego
     timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, QOverload<>::of(&Game::update));
-    timer->start(1250); // Actualiza cada 1250 ms
+    timer->start(850); // Actualiza cada 850 ms
 }
 
 Game::~Game() {
@@ -84,6 +119,8 @@ void Game::update(){
         Pacman* pacman = this->getCurrentNivel()->getPacman();
         int newRow = this->getCurrentNivel()->getPacman()->getCurrentPosition()->getRow();
         int newCol = this->getCurrentNivel()->getPacman()->getCurrentPosition()->getCol();
+        qDebug() << QString("La posicion actual del PacMan es, fila: %1").arg(newRow);
+        qDebug() << QString("La posicion actual del PacMan es, columna: %1").arg(newCol);
         int direction = this->getCurrentNivel()->getPacman()->getDirection();
         if(direction == 0){
         }else if(direction == 1){
@@ -110,11 +147,10 @@ void Game::update(){
         }else{
         }
         //Codigo para dibujar al PacMan:
-        int currentPacmanRow = (this->getCurrentNivel()->getPacman()->getCurrentPosition()->getRow()) * anchoCelda;
-        int currentPacmanCol = (this->getCurrentNivel()->getPacman()->getCurrentPosition()->getCol())* altoCelda;
-        qDebug() << QString("La fila del Pacman es: %1").arg(this->getCurrentNivel()->getPacman()->getCurrentPosition()->getRow());
-        qDebug() << QString("La columna del Pacman es: %1").arg(this->getCurrentNivel()->getPacman()->getCurrentPosition()->getCol());
+        int currentPacmanRow = (this->getCurrentNivel()->getPacman()->getCurrentPosition()->getRow()) * altoCelda;
+        int currentPacmanCol = (this->getCurrentNivel()->getPacman()->getCurrentPosition()->getCol())* anchoCelda;
         pacman->setPixmap(pacmanPixmap);
+
         //Se actualizará la posición del nodo en la escena:
         pacman->setPos(currentPacmanCol, currentPacmanRow);
         this->getScene()->addItem(pacman);
@@ -129,6 +165,44 @@ void Game::update(){
         nofoodPixmap = nofoodPixmap.scaled(anchoCelda, altoCelda, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
         wallPixmap = wallPixmap.scaled(anchoCelda, altoCelda, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
         pacmanPixmap = pacmanPixmap.scaled(anchoCelda, altoCelda, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+
+        //Codigo para actualizar la posicion que sera la siguiente del Pacman:
+        Pacman* pacman = this->getCurrentNivel()->getPacman();
+        int newRow = this->getCurrentNivel()->getPacman()->getCurrentPosition()->getRow();
+        int newCol = this->getCurrentNivel()->getPacman()->getCurrentPosition()->getCol();
+        qDebug() << QString("La posicion actual del PacMan es, fila: %1").arg(newRow);
+        qDebug() << QString("La posicion actual del PacMan es, columna: %1").arg(newCol);
+        int direction = this->getCurrentNivel()->getPacman()->getDirection();
+        if(direction == 0){
+        }else if(direction == 1){
+            newCol--;
+        }else if(direction == 2){
+            newRow--;
+        }else if(direction == 3){
+            newCol++;
+        }else{
+            newRow++;
+        }
+        Nodo* nuevoNodoPacman = this->getCurrentNivel()->getNode(newRow, newCol);
+        qDebug() << QString("EL nodo del posible movimiento es, fila: %1").arg(newRow);
+        qDebug() << QString("EL nodo del posible movimiento es, columna: %1").arg(newCol);
+        if(pacman->canMove(nuevoNodoPacman)){
+            pacman->setCurrentPosition(nuevoNodoPacman);
+            //Se debe de cambiar la informacion del nodo para que ya no tenga comida...
+            if (nuevoNodoPacman->getHasFood() == true){
+                nuevoNodoPacman->setHasFood(false);
+                this->getCurrentNivel()->setComidaRestante(this->getCurrentNivel()->getComidaRestante()-1);
+                this->puntos += 50;
+            }else{
+            }
+        }else{
+        }
+        //Codigo para dibujar al PacMan:
+        int currentPacmanRow = (this->getCurrentNivel()->getPacman()->getCurrentPosition()->getRow()) * altoCelda;
+        int currentPacmanCol = (this->getCurrentNivel()->getPacman()->getCurrentPosition()->getCol())* anchoCelda;
+        //Se actualizará la posición del nodo en la escena:
+        pacman->setPos(currentPacmanCol, currentPacmanRow);
+
         //Codigo para dibujar los nodos (El nivel):
         for (int i = 0; i < this->getCurrentNivel()->getRows(); ++i) {
             for (int j = 0; j < this->getCurrentNivel()->getColumns(); ++j) {
@@ -147,45 +221,15 @@ void Game::update(){
                 }
             }
         }
-        //Codigo para actualizar la posicion que sera la siguiente del Pacman:
-        Pacman* pacman = this->getCurrentNivel()->getPacman();
-        int newRow = this->getCurrentNivel()->getPacman()->getCurrentPosition()->getRow();
-        int newCol = this->getCurrentNivel()->getPacman()->getCurrentPosition()->getCol();
-        int direction = this->getCurrentNivel()->getPacman()->getDirection();
-        if(direction == 0){
-        }else if(direction == 1){
-            newCol--;
-        }else if(direction == 2){
-            newRow--;
-        }else if(direction == 3){
-            newCol++;
-        }else{
-            newRow++;
-        }
-        Nodo* nuevoNodoPacman = this->getCurrentNivel()->getNode(newRow, newCol);
-        qDebug() << QString("EL nodo del posible movimiento es, fila: %1").arg(newRow);
-        qDebug() << QString("EL nodo del posible movimiento es, columna: %1").arg(newCol);
-        if(pacman->canMove(nuevoNodoPacman)){
-            pacman->setCurrentPosition(nuevoNodoPacman);
-            //Se debe de cambiar la informacion del nodo para que ya no tenga comida...
-            if (nuevoNodoPacman->getHasFood() == true){
-                nuevoNodoPacman->setHasFood(false);
-                this->getCurrentNivel()->setComidaRestante(this->getCurrentNivel()->getComidaRestante()-1);
-                this->puntos += 50;
-            }else{
-            }
-        }else{
-        }
-        //Codigo para dibujar al PacMan:
-        int currentPacmanRow = (this->getCurrentNivel()->getPacman()->getCurrentPosition()->getRow()) * anchoCelda;
-        int currentPacmanCol = (this->getCurrentNivel()->getPacman()->getCurrentPosition()->getCol())* altoCelda;
-        qDebug() << QString("La fila del Pacman es: %1").arg(this->getCurrentNivel()->getPacman()->getCurrentPosition()->getRow());
-        qDebug() << QString("La columna del Pacman es: %1").arg(this->getCurrentNivel()->getPacman()->getCurrentPosition()->getCol());
-        //Se actualizará la posición del nodo en la escena:
-        pacman->setPos(currentPacmanCol, currentPacmanRow);
         // Actualizar los objetos
         this->getScene()->update();
     }
+    // Actualizar el texto del puntaje
+    scoreText->setPlainText(QString("Score: %1").arg(this->puntos));
+    // Actualizar el texto de las vidas
+    livesText->setPlainText(QString("Lives: %1").arg(this->getCurrentNivel()->getPacman()->getLives()));
+    // Actualizar el texto del nivel
+    levelText->setPlainText(QString("Level: %1").arg(this->getCurrentNivel()->getCurrentLevel()));
     // Comprueba si se debe cambiar de nivel
     cambiaNivel();
 }
