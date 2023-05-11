@@ -1,6 +1,10 @@
 #pragma once
 
-class Nodo {
+#include <QObject>
+#include <QGraphicsPixmapItem>
+
+class Nodo : public QObject, public QGraphicsPixmapItem {
+    Q_OBJECT
 
 private:
     int type;           // 0 para espacio vacío, 1 para pared

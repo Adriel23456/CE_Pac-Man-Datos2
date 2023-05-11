@@ -57,6 +57,7 @@ SOURCES       = main.cpp \
 		Nodo.cpp \
 		Nivel.cpp \
 		Pacman.cpp moc_Game.cpp \
+		moc_Nodo.cpp \
 		moc_Pacman.cpp
 OBJECTS       = main.o \
 		Game.o \
@@ -64,6 +65,7 @@ OBJECTS       = main.o \
 		Nivel.o \
 		Pacman.o \
 		moc_Game.o \
+		moc_Nodo.o \
 		moc_Pacman.o
 DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/unix.conf \
@@ -384,9 +386,9 @@ compiler_moc_predefs_clean:
 moc_predefs.h: /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp
 	g++ -pipe -O2 -std=gnu++11 -Wall -Wextra -dM -E -o moc_predefs.h /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp
 
-compiler_moc_header_make_all: moc_Game.cpp moc_Pacman.cpp
+compiler_moc_header_make_all: moc_Game.cpp moc_Nodo.cpp moc_Pacman.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) moc_Game.cpp moc_Pacman.cpp
+	-$(DEL_FILE) moc_Game.cpp moc_Nodo.cpp moc_Pacman.cpp
 moc_Game.cpp: Game.h \
 		Nivel.h \
 		Nodo.h \
@@ -394,6 +396,11 @@ moc_Game.cpp: Game.h \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
 	/usr/lib/qt5/bin/moc $(DEFINES) --include '/home/adriel/Desktop/Proyecto#2/CE_Pac-Man-Datos2/moc_predefs.h' -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I'/home/adriel/Desktop/Proyecto#2/CE_Pac-Man-Datos2' -I'/home/adriel/Desktop/Proyecto#2/CE_Pac-Man-Datos2' -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/11 -I/usr/include/x86_64-linux-gnu/c++/11 -I/usr/include/c++/11/backward -I/usr/lib/gcc/x86_64-linux-gnu/11/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include Game.h -o moc_Game.cpp
+
+moc_Nodo.cpp: Nodo.h \
+		moc_predefs.h \
+		/usr/lib/qt5/bin/moc
+	/usr/lib/qt5/bin/moc $(DEFINES) --include '/home/adriel/Desktop/Proyecto#2/CE_Pac-Man-Datos2/moc_predefs.h' -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I'/home/adriel/Desktop/Proyecto#2/CE_Pac-Man-Datos2' -I'/home/adriel/Desktop/Proyecto#2/CE_Pac-Man-Datos2' -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/11 -I/usr/include/x86_64-linux-gnu/c++/11 -I/usr/include/c++/11/backward -I/usr/lib/gcc/x86_64-linux-gnu/11/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include Nodo.h -o moc_Nodo.cpp
 
 moc_Pacman.cpp: Pacman.h \
 		Nodo.h \
@@ -444,6 +451,9 @@ Pacman.o: Pacman.cpp Pacman.h \
 
 moc_Game.o: moc_Game.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_Game.o moc_Game.cpp
+
+moc_Nodo.o: moc_Nodo.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_Nodo.o moc_Nodo.cpp
 
 moc_Pacman.o: moc_Pacman.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_Pacman.o moc_Pacman.cpp
