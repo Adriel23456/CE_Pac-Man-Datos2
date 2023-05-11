@@ -75,7 +75,7 @@ std::vector<Nodo*> initializeLevel1(){
     // Copia los valores de level1Data a la matriz level1 de objetos Nodo
     for (int i = 0; i < 7; ++i) {
         for (int j = 0; j < 10; ++j) {
-            Nodo* nodo = new Nodo(level1Data[i][j], i+1,j+1);
+            Nodo* nodo = new Nodo(level1Data[i][j], i,j);
             level1.push_back(nodo);
         }
     }
@@ -83,7 +83,7 @@ std::vector<Nodo*> initializeLevel1(){
 }
 
 Nodo* getNodoPrincipio1(std::vector<Nodo*> matrizNodo, int columns){
-    int index = 2 * columns + 3;
+    int index = 3 * columns + 4;
     Nodo* nodoPrincipio = matrizNodo[index];
     return nodoPrincipio;
 }
@@ -93,7 +93,7 @@ std::vector<Nodo*> initializeLevel2(){
     // Copia los valores de level1Data a la matriz level1 de objetos Nodo
     for (int i = 0; i < 14; ++i) {
         for (int j = 0; j < 20; ++j) {
-            Nodo* nodo = new Nodo(level2Data[i][j], i+1,j+1);
+            Nodo* nodo = new Nodo(level2Data[i][j],i,j);
             level2.push_back(nodo);
         }
     }
@@ -101,7 +101,7 @@ std::vector<Nodo*> initializeLevel2(){
 }
 
 Nodo* getNodoPrincipio2(std::vector<Nodo*> matrizNodo, int columns){
-    int index = 5 * columns + 10;
+    int index = 6 * columns + 10;
     Nodo* nodoPrincipio = matrizNodo[index];
     return nodoPrincipio;
 }
@@ -111,7 +111,7 @@ std::vector<Nodo*> initializeLevel3(){
     // Copia los valores de level1Data a la matriz level1 de objetos Nodo
     for (int i = 0; i < 12; ++i) {
         for (int j = 0; j < 33; ++j) {
-            Nodo* nodo = new Nodo(level3Data[i][j], i+1,j+1);
+            Nodo* nodo = new Nodo(level3Data[i][j],i,j);
             level3.push_back(nodo);
         }
     }
@@ -119,7 +119,7 @@ std::vector<Nodo*> initializeLevel3(){
 }
 
 Nodo* getNodoPrincipio3(std::vector<Nodo*> matrizNodo, int columns){
-    int index = 5 * columns + 15;
+    int index = 6 * columns + 15;
     Nodo* nodoPrincipio = matrizNodo[index];
     return nodoPrincipio;
 }
@@ -129,7 +129,7 @@ std::vector<Nodo*> initializeLevel4(){
     // Copia los valores de level1Data a la matriz level1 de objetos Nodo
     for (int i = 0; i < 19; ++i) {
         for (int j = 0; j < 29; ++j) {
-            Nodo* nodo = new Nodo(level4Data[i][j], i+1,j+1);
+            Nodo* nodo = new Nodo(level4Data[i][j], i,j);
             level4.push_back(nodo);
         }
     }
@@ -137,7 +137,7 @@ std::vector<Nodo*> initializeLevel4(){
 }
 
 Nodo* getNodoPrincipio4(std::vector<Nodo*> matrizNodo, int columns){
-    int index = 8 * columns + 14;
+    int index = 9 * columns + 14;
     Nodo* nodoPrincipio = matrizNodo[index];
     return nodoPrincipio;
 }
@@ -146,7 +146,7 @@ Nivel::Nivel(){
     this->currentLevel = 1;
     this->rows = 7;
     this->columns = 10;
-    this->comidaRestante = 20;
+    this->comidaRestante = 35;
     this->matrizNodos = initializeLevel1();
     this->nodoPrincipio = getNodoPrincipio1(matrizNodos, columns);
     this->pacman = new Pacman(nodoPrincipio);

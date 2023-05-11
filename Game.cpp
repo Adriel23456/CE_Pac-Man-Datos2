@@ -4,22 +4,26 @@
 #include <QDebug>
 
 Game::Game(QWidget* parent): QGraphicsView(parent) {
-    //Se limpia la escena
-    this->getScene()->clear();
-
     //Datos de inicio basicos
     this->nivel = new Nivel();
     this->puntos = 0;
     this->setFixedSize(800, 500);
     this->setWindowTitle("CEPac-Man");
+    this->firstGeneration = true;
 
     //Detalles de la ventana y de la escena
     this->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     this->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     scene = new QGraphicsScene(this);
-    setScene(scene);
+    setScene(this->scene);
     this->setFocusPolicy(Qt::StrongFocus);
     this->setFocus();
+
+    //Se cargan las imagenes
+    foodPixmap.load("/home/adriel/Desktop/Proyecto#2/CE_Pac-Man-Datos2/Images/food.png");
+    nofoodPixmap.load("/home/adriel/Desktop/Proyecto#2/CE_Pac-Man-Datos2/Images/nofood.png");
+    wallPixmap.load("/home/adriel/Desktop/Proyecto#2/CE_Pac-Man-Datos2/Images/wall.png");
+    pacmanPixmap.load("/home/adriel/Desktop/Proyecto#2/CE_Pac-Man-Datos2/Images/pacman.png");
 
     // Configura un temporizador para controlar la velocidad de actualización del juego
     timer = new QTimer(this);
@@ -43,10 +47,6 @@ QGraphicsScene* Game::getScene(){
 
 void Game::update(){
     qDebug() << "Actualizado de pantalla...";
-    foodPixmap.load("/home/adriel/Desktop/Proyecto#2/CE_Pac-Man-Datos2/Images/food.png");
-    nofoodPixmap.load("/home/adriel/Desktop/Proyecto#2/CE_Pac-Man-Datos2/Images/nofood.png");
-    wallPixmap.load("/home/adriel/Desktop/Proyecto#2/CE_Pac-Man-Datos2/Images/wall.png");
-    pacmanPixmap.load("/home/adriel/Desktop/Proyecto#2/CE_Pac-Man-Datos2/Images/pacman.png");
     if(this->getFirstGeneration() == true){
         //Se establecen las alturas y anchuras relativas del nivel actual
         int anchoCelda = this->width() / this->getCurrentNivel()->getColumns();
