@@ -1,7 +1,7 @@
 #pragma once
 
-#include <QObject>
 #include <QGraphicsPixmapItem>
+#include <QObject>
 
 class Nodo : public QObject, public QGraphicsPixmapItem {
     Q_OBJECT

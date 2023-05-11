@@ -19,6 +19,11 @@ private:
     QGraphicsScene* scene;
     QTimer* timer;
     int puntos;
+    bool firstGeneration;
+    QPixmap foodPixmap;
+    QPixmap nofoodPixmap;
+    QPixmap wallPixmap;
+    QPixmap pacmanPixmap;
 
 public:
     explicit Game(QWidget* parent = nullptr);
@@ -27,6 +32,8 @@ public:
     void update();
     void cambiaNivel();
     QGraphicsScene* getScene();
+    void setFirstGeneration(bool newValue);
+    bool getFirstGeneration();
 protected:
     void keyPressEvent(QKeyEvent *event);
 };

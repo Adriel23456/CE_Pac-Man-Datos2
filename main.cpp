@@ -2,8 +2,21 @@
 //-------------------------------------------------------------------------------------------------------
 //qmake
 //make
-//SOURCES += main.cpp Game.cpp
-//HEADERS += Game.h
+/*
+SOURCES += \
+        main.cpp \
+        Game.cpp \
+        Nodo.cpp \
+        Nivel.cpp \
+        Pacman.cpp
+
+HEADERS += \
+        Game.h \
+        Nodo.h \
+        Nivel.h \
+        Pacman.h
+*/
+//.CEPac-Man
 //-------------------------------------------------------------------------------------------------------
 //En caso de error...
 //export QT_QPA_PLATFORM=xcb

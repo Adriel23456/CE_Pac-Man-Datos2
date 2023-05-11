@@ -10,7 +10,7 @@
 class Nivel {
 private:
     int currentLevel; //Nivel actual
-    std::vector<Nodo> matrizNodos; //Vector de nodos del nivel actual
+    std::vector<Nodo*> matrizNodos; //Vector de nodos del nivel actual
     Nodo* nodoPrincipio; //Nodo donde inicia el jugador
     //std::vector<Nodo> nodosEnemigo; //Nodos donde iniciarian los enemigos
     Pacman* pacman; //El jugador que se genera para este nivel
@@ -29,7 +29,7 @@ public:
     int getColumns(); //Obtener las columnas del nivel
     int getCurrentLevel(); //Obtener el nivel actual
     int getComidaRestante(); //Obtener la comida restante del nivel
-    void setComidaRestante(int newComida); //Cambiar la cantidad de comida restante...
+    void setComidaRestante(int newComida);
     Nodo* getNodoPrincipio(); //Obtener el nodo de la posicion inicial del pacman
     Pacman* getPacman(); //Obtener al objeto QT pacman
 };
