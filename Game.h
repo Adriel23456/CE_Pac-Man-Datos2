@@ -2,6 +2,7 @@
 
 #include <QGraphicsView>
 #include <QGraphicsScene>
+#include <SFML/Audio.hpp>
 #include <QKeyEvent>
 #include <QTimer>
 #include "Nivel.h"
@@ -23,6 +24,9 @@ private:
     QGraphicsTextItem* scoreText;
     QGraphicsTextItem* livesText;
     QGraphicsTextItem* levelText;
+    //QMediaPlayer* backgroundMusic;
+    //QMediaPlayer* pacmanEatSound;
+    //QMediaPlayer* victorySound;
 
 public:
     explicit Game(QWidget* parent = nullptr);
@@ -33,6 +37,9 @@ public:
     QGraphicsScene* getScene();
     void setFirstGeneration(bool newValue);
     bool getFirstGeneration();
+    void playBackgroundMusic();
+    void playPacmanMoveSound();
+    void playPacmanEatSound();
 protected:
     void keyPressEvent(QKeyEvent *event);
 };

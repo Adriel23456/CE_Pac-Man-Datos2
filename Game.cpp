@@ -60,6 +60,22 @@ Game::Game(QWidget* parent): QGraphicsView(parent) {
     levelText->setPos(this->width()/2, this->height() - 60); // Colocar en el centro de la parte inferior de la pantalla
     scene->addItem(levelText);
 
+    // Inicializa los reproductores de sonido
+    //backgroundMusic = new QMediaPlayer();
+    //pacmanEatSound = new QMediaPlayer();
+    //victorySound = new QMediaPlayer();
+
+    // Carga los archivos de sonido
+    //backgroundMusic->setMedia(QUrl::fromLocalFile("sounds/background.mp3"));
+    //pacmanMoveSound->setMedia(QUrl::fromLocalFile("/path/to/pacmanMoveSound.mp3"));
+    //pacmanEatSound->setMedia(QUrl::fromLocalFile("/path/to/pacmanEatSound.mp3"));
+
+    // Asegúrate de que la música de fondo se repita indefinidamente
+    //backgroundMusic->setLoops(QMediaPlayer::Infinite);
+
+    // Inicia la música de fondo
+    //playBackgroundMusic();
+
     // Configura un temporizador para controlar la velocidad de actualización del juego
     timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, QOverload<>::of(&Game::update));
