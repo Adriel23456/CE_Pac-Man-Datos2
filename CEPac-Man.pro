@@ -22,3 +22,12 @@ HEADERS += \
         Pacman.h
 
 FORMS +=
+
+# Añade la ruta a los archivos de cabecera de SFML
+INCLUDEPATH += /usr/include/SFML
+
+# Añade la ruta a las bibliotecas de SFML
+LIBS += -L/usr/lib/x86_64-linux-gnu -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio -lsfml-network
+
+# Vincula las bibliotecas de SFML necesarias
+LIBS += -lsfml-audio -lsfml-graphics -lsfml-window -lsfml-system

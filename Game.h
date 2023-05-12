@@ -24,9 +24,13 @@ private:
     QGraphicsTextItem* scoreText;
     QGraphicsTextItem* livesText;
     QGraphicsTextItem* levelText;
-    //QMediaPlayer* backgroundMusic;
-    //QMediaPlayer* pacmanEatSound;
-    //QMediaPlayer* victorySound;
+    sf::Music backgroundMusic;
+    sf::Sound pacmanEatSound;
+    sf::SoundBuffer pacmanEatBuffer;
+    sf::Sound victorySound;
+    sf::SoundBuffer victorySoundBuffer;
+    sf::Sound deathSound;
+    sf::SoundBuffer deathSoundBuffer;
 
 public:
     explicit Game(QWidget* parent = nullptr);
@@ -38,8 +42,9 @@ public:
     void setFirstGeneration(bool newValue);
     bool getFirstGeneration();
     void playBackgroundMusic();
-    void playPacmanMoveSound();
     void playPacmanEatSound();
+    void playVictorySound();
+    void playDeathSound();
 protected:
     void keyPressEvent(QKeyEvent *event);
 };

@@ -17,7 +17,6 @@ Game::Game(QWidget* parent): QGraphicsView(parent) {
     QString family = QFontDatabase::applicationFontFamilies(id).at(0);
     QFont retroFont(family);
 
-
     //Detalles de la ventana y de la escena
     this->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     this->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -60,26 +59,32 @@ Game::Game(QWidget* parent): QGraphicsView(parent) {
     levelText->setPos(this->width()/2, this->height() - 60); // Colocar en el centro de la parte inferior de la pantalla
     scene->addItem(levelText);
 
-    // Inicializa los reproductores de sonido
-    //backgroundMusic = new QMediaPlayer();
-    //pacmanEatSound = new QMediaPlayer();
-    //victorySound = new QMediaPlayer();
+    // Cargar la música de fondo
+    if (!backgroundMusic.openFromFile("sounds/background.ogg"))
+        return; // error
+    backgroundMusic.setLoop(true); // Repetir indefinidamente
 
-    // Carga los archivos de sonido
-    //backgroundMusic->setMedia(QUrl::fromLocalFile("sounds/background.mp3"));
-    //pacmanMoveSound->setMedia(QUrl::fromLocalFile("/path/to/pacmanMoveSound.mp3"));
-    //pacmanEatSound->setMedia(QUrl::fromLocalFile("/path/to/pacmanEatSound.mp3"));
+    // Cargar el sonido de comer
+    if (!pacmanEatBuffer.loadFromFile("sounds/eaten.ogg"))
+        return; // error
+    pacmanEatSound.setBuffer(pacmanEatBuffer);
 
-    // Asegúrate de que la música de fondo se repita indefinidamente
-    //backgroundMusic->setLoops(QMediaPlayer::Infinite);
+    // Cargar el sonido de victoria
+    if (!victorySoundBuffer.loadFromFile("sounds/victory.ogg"))
+        return; // error
+    victorySound.setBuffer(victorySoundBuffer);
 
-    // Inicia la música de fondo
-    //playBackgroundMusic();
+    // Cargar el sonido de muerte
+    if (!deathSoundBuffer.loadFromFile("sounds/death.ogg"))
+        return; // error
+    deathSound.setBuffer(deathSoundBuffer);
 
     // Configura un temporizador para controlar la velocidad de actualización del juego
     timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, QOverload<>::of(&Game::update));
     timer->start(150); // Actualiza cada 850 ms
+
+    playBackgroundMusic();
 }
 
 Game::~Game() {
@@ -204,6 +209,7 @@ void Game::update(){
                 nuevoNodoPacman->setHasFood(false);
                 this->getCurrentNivel()->setComidaRestante(this->getCurrentNivel()->getComidaRestante()-1);
                 this->puntos += 10;
+                playPacmanEatSound();
             }else{
             }
         }else{
@@ -287,4 +293,20 @@ void Game::setFirstGeneration(bool newValue) {
 
 bool Game::getFirstGeneration() {
     return this->firstGeneration;
+}
+
+void Game::playBackgroundMusic() {
+    backgroundMusic.play();
+}
+
+void Game::playPacmanEatSound() {
+    pacmanEatSound.play();
+}
+
+void Game::playVictorySound() {
+    victorySound.play();
+}
+
+void Game::playDeathSound() {
+    deathSound.play();
 }
