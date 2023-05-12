@@ -4,6 +4,7 @@
 #include <utility>
 #include <unordered_set>
 #include <queue>
+#include <QDebug>
 
 Ghost::Ghost(Nodo* currentPosition): direction(0), currentPosition(currentPosition), reloadTime(8000){}   
 
@@ -113,7 +114,7 @@ int Ghost::getDirectionPacMan(int** matriz, Nodo* final, Nodo* inicio, int rows,
     }
 
     delete start; // Limpiamos la memoria que asignamos
-    return -1; // Si no se encontró un camino, devolvemos -1
+    return 0; // Si no se encontró un camino, devolvemos -1
 }
 
 void Ghost::setCurrentPosition(Nodo* newCurrentPosition){

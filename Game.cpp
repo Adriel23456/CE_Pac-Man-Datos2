@@ -321,18 +321,18 @@ void Game::update(){
             Ghost* ghost1 = ghosts[0];
             int newRowG1 = ghost1->getCurrentPosition()->getRow();
             int newColG1 = ghost1->getCurrentPosition()->getCol();
-            qDebug() << "Se va a intentar aplicar el codigo de obtencion de una nueva direccion";
             int directionG1 = ghost1->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost1->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
+            qDebug() << (QString("Se va a intentar aplicar el codigo de obtencion de una nueva direccion:%1").arg(directionG1));
             //Codigo para actualizar la posicion de los fantasmas:
-            if(directionG1 == 0){
-            }else if(directionG1 == 1){
+            if(directionG1 == 1){
                 newColG1--;
             }else if(directionG1 == 2){
                 newRowG1--;
             }else if(directionG1 == 3){
                 newColG1++;
-            }else{
+            }else if(directionG1 == 4){
                 newRowG1++;
+            }else{
             }
             Nodo* nuevoNodoGhost1 = this->getCurrentNivel()->getNode(newRowG1, newColG1);
             ghost1->setCurrentPosition(nuevoNodoGhost1);
