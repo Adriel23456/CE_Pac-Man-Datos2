@@ -63,7 +63,7 @@ Game::Game(QWidget* parent): QGraphicsView(parent) {
     // Configura un temporizador para controlar la velocidad de actualización del juego
     timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, QOverload<>::of(&Game::update));
-    timer->start(850); // Actualiza cada 850 ms
+    timer->start(150); // Actualiza cada 850 ms
 }
 
 Game::~Game() {
@@ -81,6 +81,8 @@ QGraphicsScene* Game::getScene(){
 }
 
 void Game::update(){
+    // Comprueba si se debe cambiar de nivel
+    this->cambiaNivel();
     if(this->getFirstGeneration() == true){
         //Se establecen las alturas y anchuras relativas del nivel actual
         int anchoCelda = this->width() / this->getCurrentNivel()->getColumns();
@@ -137,7 +139,7 @@ void Game::update(){
             if (nuevoNodoPacman->getHasFood() == true){
                 nuevoNodoPacman->setHasFood(false);
                 this->getCurrentNivel()->setComidaRestante(this->getCurrentNivel()->getComidaRestante()-1);
-                this->puntos += 50;
+                this->puntos += 10;
             }else{
             }
         }else{
@@ -185,7 +187,7 @@ void Game::update(){
             if (nuevoNodoPacman->getHasFood() == true){
                 nuevoNodoPacman->setHasFood(false);
                 this->getCurrentNivel()->setComidaRestante(this->getCurrentNivel()->getComidaRestante()-1);
-                this->puntos += 50;
+                this->puntos += 10;
             }else{
             }
         }else{
@@ -223,12 +225,10 @@ void Game::update(){
     livesText->setPlainText(QString("Lives: %1").arg(this->getCurrentNivel()->getPacman()->getLives()));
     // Actualizar el texto del nivel
     levelText->setPlainText(QString("Level: %1").arg(this->getCurrentNivel()->getCurrentLevel()));
-    // Comprueba si se debe cambiar de nivel
-    this->cambiaNivel();
 }
 
 void Game::cambiaNivel() {
-    if (this->getCurrentNivel()->getComidaRestante() == -1) {
+    if (this->getCurrentNivel()->getComidaRestante() == 0) {
         int currentLevel = this->getCurrentNivel()->getCurrentLevel();
         // Incrementa el nivel actual
         currentLevel++;

@@ -2,6 +2,19 @@
 #include "Pacman.h"
 #include "Game.h"
 
+//Metodo para contar los ceros en las matrices
+int countZeros(int* matriz, int rows, int cols) {
+    int count = 0;
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            if (matriz[i * cols + j] == 0) {
+                count++;
+            }
+        }
+    }
+    return count;
+}
+
 // Valores para level1
 int level1Data[7][10] = {
     {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
@@ -144,9 +157,9 @@ Nodo* getNodoPrincipio4(std::vector<Nodo*> matrizNodo, int columns){
 
 Nivel::Nivel(){
     this->currentLevel = 1;
-    this->rows = 7;
-    this->columns = 10;
-    this->comidaRestante = 5;
+    this->rows = 7; //rows
+    this->columns = 10; //cols
+    this->comidaRestante = countZeros(&level1Data[0][0], 7, 10);
     this->matrizNodos = initializeLevel1();
     this->nodoPrincipio = getNodoPrincipio1(matrizNodos, columns);
     this->pacman = new Pacman(nodoPrincipio);
@@ -155,23 +168,23 @@ Nivel::Nivel(){
 Nivel::Nivel(int newLevel){
     this->currentLevel = newLevel;
     if (currentLevel == 2){
-        this->rows = 12;
+        this->rows = 14;
         this->columns = 20;
-        this->comidaRestante = 5;
+        this->comidaRestante = countZeros(&level2Data[0][0], 14, 20);
         this->matrizNodos = initializeLevel2();
         this->nodoPrincipio = getNodoPrincipio2(matrizNodos, columns);
         this->pacman = new Pacman(nodoPrincipio);
     }else if(currentLevel == 3){
         this->rows = 12;
         this->columns = 33;
-        this->comidaRestante = 5;
+        this->comidaRestante = countZeros(&level3Data[0][0], 12, 33);
         this->matrizNodos = initializeLevel3();
         this->nodoPrincipio = getNodoPrincipio3(matrizNodos, columns);
         this->pacman = new Pacman(nodoPrincipio);
     }else{
         this->rows = 19;
         this->columns = 29;
-        this->comidaRestante = 5;
+        this->comidaRestante = countZeros(&level4Data[0][0], 19, 29);
         this->matrizNodos = initializeLevel4();
         this->nodoPrincipio = getNodoPrincipio4(matrizNodos, columns);
         this->pacman = new Pacman(nodoPrincipio);
