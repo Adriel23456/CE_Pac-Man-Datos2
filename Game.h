@@ -12,18 +12,24 @@ class Game : public QGraphicsView {
     Q_OBJECT
 
 private:
+    int puntos;
+    bool firstGeneration;
+
     Nivel* nivel;
     QGraphicsScene* scene;
     QTimer* timer;
-    int puntos;
-    bool firstGeneration;
+    
     QPixmap foodPixmap;
     QPixmap nofoodPixmap;
     QPixmap wallPixmap;
     QPixmap pacmanPixmap;
+    QPixmap ghost1Pixmap;
+    QPixmap ghost2Pixmap;
+
     QGraphicsTextItem* scoreText;
     QGraphicsTextItem* livesText;
     QGraphicsTextItem* levelText;
+
     sf::Music backgroundMusic;
     sf::Sound pacmanEatSound;
     sf::SoundBuffer pacmanEatBuffer;

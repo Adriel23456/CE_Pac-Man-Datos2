@@ -1,6 +1,7 @@
 #include "Game.h"
 #include "Nivel.h"
 #include "Pacman.h"
+#include "Ghost.h"
 #include <QDebug>
 #include <QFontDatabase>
 #include <QMessageBox>
@@ -32,6 +33,8 @@ Game::Game(QWidget* parent): QGraphicsView(parent) {
     nofoodPixmap.load("Images/nofood.png");
     wallPixmap.load("Images/wall.png");
     pacmanPixmap.load("Images/pacman.png");
+    ghost1Pixmap.load("Images/ghost1.png");
+    ghost2Pixmap.load("Images/ghost2.png");
 
     // Inicializar el texto del puntaje
     scoreText = new QGraphicsTextItem();
@@ -119,6 +122,8 @@ void Game::update(){
         nofoodPixmap = nofoodPixmap.scaled(anchoCelda, altoCelda, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
         wallPixmap = wallPixmap.scaled(anchoCelda, altoCelda, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
         pacmanPixmap = pacmanPixmap.scaled(anchoCelda, altoCelda, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+        ghost1Pixmap = ghost1Pixmap.scaled(anchoCelda, altoCelda, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+        ghost2Pixmap = ghost2Pixmap.scaled(anchoCelda, altoCelda, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
         //Codigo para dibujar los nodos (El nivel):
         for (int i = 0; i < this->getCurrentNivel()->getRows(); ++i) {
             for (int j = 0; j < this->getCurrentNivel()->getColumns(); ++j) {
@@ -175,11 +180,94 @@ void Game::update(){
         int currentPacmanRow = (this->getCurrentNivel()->getPacman()->getCurrentPosition()->getRow()) * altoCelda;
         int currentPacmanCol = (this->getCurrentNivel()->getPacman()->getCurrentPosition()->getCol())* anchoCelda;
         pacman->setPixmap(pacmanPixmap);
-
-        //Se actualizará la posición del nodo en la escena:
+        //Se actualizará la posición del pacman en la escena:
         pacman->setPos(currentPacmanCol, currentPacmanRow);
         pacman->setZValue(2);
         this->getScene()->addItem(pacman);
+
+        //Codigo para dibujar a los fantasmas:
+        int currentlevelGame = this->getCurrentNivel()->getCurrentLevel();
+        std::vector<Ghost*> ghosts = this->getCurrentNivel()->getGhosts();
+        if (currentlevelGame == 1){
+            Ghost* ghost1 = ghosts[0];
+            int currentGhost1Row = (ghost1->getCurrentPosition()->getRow()) * altoCelda;
+            int currentGhost1Col = (ghost1->getCurrentPosition()->getCol())* anchoCelda;
+            ghost1->setPixmap(ghost1Pixmap);
+            //Se actualizará la posición del nodo en la escena:
+            ghost1->setPos(currentGhost1Col, currentGhost1Row);
+            ghost1->setZValue(2);
+            this->getScene()->addItem(ghost1);
+        }else if(currentlevelGame == 2){
+            Ghost* ghost1 = ghosts[0];
+            Ghost* ghost2 = ghosts[1];
+            int currentGhost1Row = (ghost1->getCurrentPosition()->getRow()) * altoCelda;
+            int currentGhost1Col = (ghost1->getCurrentPosition()->getCol())* anchoCelda;
+            int currentGhost2Row = (ghost2->getCurrentPosition()->getRow()) * altoCelda;
+            int currentGhost2Col = (ghost2->getCurrentPosition()->getCol())* anchoCelda;
+            ghost1->setPixmap(ghost1Pixmap);
+            ghost2->setPixmap(ghost2Pixmap);
+            //Se actualizará la posición del nodo en la escena:
+            ghost1->setPos(currentGhost1Col, currentGhost1Row);
+            ghost1->setZValue(2);
+            this->getScene()->addItem(ghost1);
+            ghost2->setPos(currentGhost2Col, currentGhost2Row);
+            ghost2->setZValue(2);
+            this->getScene()->addItem(ghost2);
+        }else if(currentlevelGame == 3){
+            Ghost* ghost1 = ghosts[0];
+            Ghost* ghost2 = ghosts[1];
+            Ghost* ghost3 = ghosts[2];
+            int currentGhost1Row = (ghost1->getCurrentPosition()->getRow()) * altoCelda;
+            int currentGhost1Col = (ghost1->getCurrentPosition()->getCol())* anchoCelda;
+            int currentGhost2Row = (ghost2->getCurrentPosition()->getRow()) * altoCelda;
+            int currentGhost2Col = (ghost2->getCurrentPosition()->getCol())* anchoCelda;
+            int currentGhost3Row = (ghost3->getCurrentPosition()->getRow()) * altoCelda;
+            int currentGhost3Col = (ghost3->getCurrentPosition()->getCol())* anchoCelda;
+            ghost1->setPixmap(ghost1Pixmap);
+            ghost2->setPixmap(ghost2Pixmap);
+            ghost3->setPixmap(ghost1Pixmap);
+            //Se actualizará la posición del nodo en la escena:
+            ghost1->setPos(currentGhost1Col, currentGhost1Row);
+            ghost1->setZValue(2);
+            this->getScene()->addItem(ghost1);
+            ghost2->setPos(currentGhost2Col, currentGhost2Row);
+            ghost2->setZValue(2);
+            this->getScene()->addItem(ghost2);
+            ghost3->setPos(currentGhost3Col, currentGhost3Row);
+            ghost3->setZValue(2);
+            this->getScene()->addItem(ghost3);
+        }else{
+            Ghost* ghost1 = ghosts[0];
+            Ghost* ghost2 = ghosts[1];
+            Ghost* ghost3 = ghosts[2];
+            Ghost* ghost4 = ghosts[3];
+            int currentGhost1Row = (ghost1->getCurrentPosition()->getRow()) * altoCelda;
+            int currentGhost1Col = (ghost1->getCurrentPosition()->getCol())* anchoCelda;
+            int currentGhost2Row = (ghost2->getCurrentPosition()->getRow()) * altoCelda;
+            int currentGhost2Col = (ghost2->getCurrentPosition()->getCol())* anchoCelda;
+            int currentGhost3Row = (ghost3->getCurrentPosition()->getRow()) * altoCelda;
+            int currentGhost3Col = (ghost3->getCurrentPosition()->getCol())* anchoCelda;
+            int currentGhost4Row = (ghost4->getCurrentPosition()->getRow()) * altoCelda;
+            int currentGhost4Col = (ghost4->getCurrentPosition()->getCol())* anchoCelda;
+            ghost1->setPixmap(ghost1Pixmap);
+            ghost2->setPixmap(ghost2Pixmap);
+            ghost3->setPixmap(ghost1Pixmap);
+            ghost4->setPixmap(ghost2Pixmap);
+            //Se actualizará la posición del nodo en la escena:
+            ghost1->setPos(currentGhost1Col, currentGhost1Row);
+            ghost1->setZValue(2);
+            this->getScene()->addItem(ghost1);
+            ghost2->setPos(currentGhost2Col, currentGhost2Row);
+            ghost2->setZValue(2);
+            this->getScene()->addItem(ghost2);
+            ghost3->setPos(currentGhost3Col, currentGhost3Row);
+            ghost3->setZValue(2);
+            this->getScene()->addItem(ghost3);
+            ghost4->setPos(currentGhost4Col, currentGhost4Row);
+            ghost4->setZValue(2);
+            this->getScene()->addItem(ghost4);
+        }
+
         //Ya no se estaran generando los objetos:
         this->setFirstGeneration(false);
     }else{

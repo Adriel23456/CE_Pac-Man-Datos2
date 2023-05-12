@@ -317,3 +317,7 @@ Pacman* Nivel::getPacman(){
 void Nivel::setComidaRestante(int newComida){
     comidaRestante = newComida;
 }
+
+std::vector<Ghost*> Nivel::getGhosts(){
+    return enemigos;
+}
