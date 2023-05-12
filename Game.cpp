@@ -81,7 +81,6 @@ QGraphicsScene* Game::getScene(){
 }
 
 void Game::update(){
-    qDebug() << "Actualizado de pantalla...";
     if(this->getFirstGeneration() == true){
         //Se establecen las alturas y anchuras relativas del nivel actual
         int anchoCelda = this->width() / this->getCurrentNivel()->getColumns();
@@ -120,8 +119,6 @@ void Game::update(){
         Pacman* pacman = this->getCurrentNivel()->getPacman();
         int newRow = this->getCurrentNivel()->getPacman()->getCurrentPosition()->getRow();
         int newCol = this->getCurrentNivel()->getPacman()->getCurrentPosition()->getCol();
-        qDebug() << QString("La posicion actual del PacMan es, fila: %1").arg(newRow);
-        qDebug() << QString("La posicion actual del PacMan es, columna: %1").arg(newCol);
         int direction = this->getCurrentNivel()->getPacman()->getDirection();
         if(direction == 0){
         }else if(direction == 1){
@@ -134,8 +131,6 @@ void Game::update(){
             newRow++;
         }
         Nodo* nuevoNodoPacman = this->getCurrentNivel()->getNode(newRow, newCol);
-        qDebug() << QString("EL nodo del posible movimiento es, fila: %1").arg(newRow);
-        qDebug() << QString("EL nodo del posible movimiento es, columna: %1").arg(newCol);
         if(pacman->canMove(nuevoNodoPacman)){
             pacman->setCurrentPosition(nuevoNodoPacman);
             //Se debe de cambiar la informacion del nodo para que ya no tenga comida...
@@ -158,7 +153,6 @@ void Game::update(){
         this->getScene()->addItem(pacman);
         //Ya no se estaran generando los objetos:
         this->setFirstGeneration(false);
-        qDebug() << QString("Se inicializan los objetos...");
     }else{
         //Se establecen las alturas y anchuras relativas del nivel actual
         int anchoCelda = this->width() / this->getCurrentNivel()->getColumns();
@@ -173,8 +167,6 @@ void Game::update(){
         Pacman* pacman = this->getCurrentNivel()->getPacman();
         int newRow = this->getCurrentNivel()->getPacman()->getCurrentPosition()->getRow();
         int newCol = this->getCurrentNivel()->getPacman()->getCurrentPosition()->getCol();
-        qDebug() << QString("La posicion actual del PacMan es, fila: %1").arg(newRow);
-        qDebug() << QString("La posicion actual del PacMan es, columna: %1").arg(newCol);
         int direction = this->getCurrentNivel()->getPacman()->getDirection();
         if(direction == 0){
         }else if(direction == 1){
@@ -187,8 +179,6 @@ void Game::update(){
             newRow++;
         }
         Nodo* nuevoNodoPacman = this->getCurrentNivel()->getNode(newRow, newCol);
-        qDebug() << QString("EL nodo del posible movimiento es, fila: %1").arg(newRow);
-        qDebug() << QString("EL nodo del posible movimiento es, columna: %1").arg(newCol);
         if(pacman->canMove(nuevoNodoPacman)){
             pacman->setCurrentPosition(nuevoNodoPacman);
             //Se debe de cambiar la informacion del nodo para que ya no tenga comida...
@@ -240,6 +230,16 @@ void Game::update(){
 void Game::cambiaNivel() {
     if (this->getCurrentNivel()->getComidaRestante() == -1) {
         int currentLevel = this->getCurrentNivel()->getCurrentLevel();
+        // Incrementa el nivel actual
+        currentLevel++;
+        // Elimina el nivel actual
+        delete this->nivel;
+        // Crea un nuevo nivel
+        this->nivel = new Nivel(currentLevel);
+        // Resetea el flag de primera generación
+        this->setFirstGeneration(true);
+        // Actualiza la pantalla
+        this->update();
     }
 }
 

@@ -26,19 +26,20 @@ HEADERS += \
 #include "Game.h"
 
 int main(int argc, char *argv[]) {
+
     QApplication app(argc, argv);
     // Crear la ventana del juego
-    Game gameWindow;
+    Game* gameWindow = new Game();
 
     // Centrar la ventana en la pantalla
     QDesktopWidget desktop;
     int screenWidth = desktop.screen()->width();
     int screenHeight = desktop.screen()->height();
-    int windowWidth = gameWindow.width();
-    int windowHeight = gameWindow.height();
-    gameWindow.setGeometry((screenWidth - windowWidth) / 2, (screenHeight - windowHeight) / 2, windowWidth, windowHeight);
+    int windowWidth = gameWindow->width();
+    int windowHeight = gameWindow->height();
+    gameWindow->setGeometry((screenWidth - windowWidth) / 2, (screenHeight - windowHeight) / 2, windowWidth, windowHeight);
 
     //Inicializa la ventaja del juego...
-    gameWindow.show();
+    gameWindow->show();
     return app.exec();
 }

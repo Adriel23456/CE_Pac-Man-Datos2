@@ -163,14 +163,14 @@ Nivel::Nivel(int newLevel){
         this->pacman = new Pacman(nodoPrincipio);
     }else if(currentLevel == 3){
         this->rows = 12;
-        this->columns = 35;
+        this->columns = 33;
         this->comidaRestante = 5;
         this->matrizNodos = initializeLevel3();
         this->nodoPrincipio = getNodoPrincipio3(matrizNodos, columns);
         this->pacman = new Pacman(nodoPrincipio);
     }else{
         this->rows = 19;
-        this->columns = 35;
+        this->columns = 29;
         this->comidaRestante = 5;
         this->matrizNodos = initializeLevel4();
         this->nodoPrincipio = getNodoPrincipio4(matrizNodos, columns);
