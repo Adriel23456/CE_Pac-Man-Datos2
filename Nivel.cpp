@@ -286,15 +286,64 @@ int Nivel::getColumns(){
     return columns;
 }
 
-int* Nivel::getMatriz(){
+int** get2DArrayPointer1(int arr[7][10], int rows, int cols) {
+    int** array2D = new int*[rows];
+    for(int i = 0; i < rows; i++) {
+        array2D[i] = new int[cols];
+        for(int j = 0; j < cols; j++) {
+            array2D[i][j] = arr[i][j];
+        }
+    }
+    return array2D;
+}
+
+int** get2DArrayPointer2(int arr[14][20], int rows, int cols) {
+    int** array2D = new int*[rows];
+    for(int i = 0; i < rows; i++) {
+        array2D[i] = new int[cols];
+        for(int j = 0; j < cols; j++) {
+            array2D[i][j] = arr[i][j];
+        }
+    }
+    return array2D;
+}
+
+int** get2DArrayPointer3(int arr[12][33], int rows, int cols) {
+    int** array2D = new int*[rows];
+    for(int i = 0; i < rows; i++) {
+        array2D[i] = new int[cols];
+        for(int j = 0; j < cols; j++) {
+            array2D[i][j] = arr[i][j];
+        }
+    }
+    return array2D;
+}
+
+int** get2DArrayPointer4(int arr[19][29], int rows, int cols) {
+    int** array2D = new int*[rows];
+    for(int i = 0; i < rows; i++) {
+        array2D[i] = new int[cols];
+        for(int j = 0; j < cols; j++) {
+            array2D[i][j] = arr[i][j];
+        }
+    }
+    return array2D;
+}
+
+
+int** Nivel::getMatriz(){
     if(currentLevel == 1){
-        return *level1Data;
+        int** ptrMatriz = get2DArrayPointer1(level1Data, rows, columns);
+        return ptrMatriz;
     } else if(currentLevel == 2){
-        return *level2Data;
+        int** ptrMatriz = get2DArrayPointer2(level2Data, rows, columns);
+        return ptrMatriz;
     } else if(currentLevel == 3){
-        return *level3Data;
+        int** ptrMatriz = get2DArrayPointer3(level3Data, rows, columns);
+        return ptrMatriz;
     } else{
-        return *level4Data;
+        int** ptrMatriz = get2DArrayPointer4(level4Data, rows, columns);
+        return ptrMatriz;
     }
 }
 
