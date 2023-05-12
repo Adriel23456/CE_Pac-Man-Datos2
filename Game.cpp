@@ -13,7 +13,7 @@ Game::Game(QWidget* parent): QGraphicsView(parent) {
     this->firstGeneration = true;
 
     //Se añade el font en la aplicacion
-    int id = QFontDatabase::addApplicationFont("/home/adriel/Desktop/Proyecto#2/CE_Pac-Man-Datos2/fonts/Joystix.TTF");
+    int id = QFontDatabase::addApplicationFont("fonts/Joystix.TTF");
     QString family = QFontDatabase::applicationFontFamilies(id).at(0);
     QFont retroFont(family);
 
@@ -27,10 +27,10 @@ Game::Game(QWidget* parent): QGraphicsView(parent) {
     this->setFocus();
 
     //Se cargan las imagenes
-    foodPixmap.load("/home/adriel/Desktop/Proyecto#2/CE_Pac-Man-Datos2/Images/food.png");
-    nofoodPixmap.load("/home/adriel/Desktop/Proyecto#2/CE_Pac-Man-Datos2/Images/nofood.png");
-    wallPixmap.load("/home/adriel/Desktop/Proyecto#2/CE_Pac-Man-Datos2/Images/wall.png");
-    pacmanPixmap.load("/home/adriel/Desktop/Proyecto#2/CE_Pac-Man-Datos2/Images/pacman.png");
+    foodPixmap.load("Images/food.png");
+    nofoodPixmap.load("Images/nofood.png");
+    wallPixmap.load("Images/wall.png");
+    pacmanPixmap.load("Images/pacman.png");
 
     // Inicializar el texto del puntaje
     scoreText = new QGraphicsTextItem();
