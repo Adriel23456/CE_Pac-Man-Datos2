@@ -35,7 +35,7 @@ Game::Game(QWidget* parent): QGraphicsView(parent) {
     // Inicializar el texto del puntaje
     scoreText = new QGraphicsTextItem();
     scoreText->setPlainText(QString("Score: %1").arg(puntos));
-    scoreText->setZValue(1);
+    scoreText->setZValue(3);
     scoreText->setDefaultTextColor(Qt::white);
     scoreText->setFont(retroFont);
     scoreText->setPos(5, 5); // Colocar en la esquina superior izquierda
@@ -43,7 +43,7 @@ Game::Game(QWidget* parent): QGraphicsView(parent) {
 
     // Inicializar el texto de las vidas
     livesText = new QGraphicsTextItem();
-    livesText->setZValue(1);
+    livesText->setZValue(3);
     livesText->setPlainText(QString("Lives: %1").arg(this->getCurrentNivel()->getPacman()->getLives())); // Asumiendo que Pacman tiene un método getLives()
     livesText->setDefaultTextColor(Qt::white);
     livesText->setFont(retroFont);
@@ -52,7 +52,7 @@ Game::Game(QWidget* parent): QGraphicsView(parent) {
 
     // Inicializar el texto del nivel
     levelText = new QGraphicsTextItem();
-    levelText->setZValue(1);
+    levelText->setZValue(3);
     levelText->setPlainText(QString("Level: %1").arg(this->getCurrentNivel()->getCurrentLevel())); // Asumiendo que Nivel tiene un método getCurrentLevel()
     levelText->setDefaultTextColor(Qt::white);
     levelText->setFont(retroFont);
@@ -111,6 +111,7 @@ void Game::update(){
                 //Se actualizara la posicion del nodo y se añadera en la escena:
                 int x = nodo->getCol() * anchoCelda;
                 int y = nodo->getRow() * altoCelda;
+                nodo->setZValue(1);
                 nodo->setPos(x, y);
                 this->getScene()->addItem(nodo);
             }
@@ -153,9 +154,11 @@ void Game::update(){
 
         //Se actualizará la posición del nodo en la escena:
         pacman->setPos(currentPacmanCol, currentPacmanRow);
+        pacman->setZValue(2);
         this->getScene()->addItem(pacman);
         //Ya no se estaran generando los objetos:
         this->setFirstGeneration(false);
+        qDebug() << QString("Se inicializan los objetos...");
     }else{
         //Se establecen las alturas y anchuras relativas del nivel actual
         int anchoCelda = this->width() / this->getCurrentNivel()->getColumns();
@@ -231,16 +234,12 @@ void Game::update(){
     // Actualizar el texto del nivel
     levelText->setPlainText(QString("Level: %1").arg(this->getCurrentNivel()->getCurrentLevel()));
     // Comprueba si se debe cambiar de nivel
-    cambiaNivel();
+    this->cambiaNivel();
 }
 
 void Game::cambiaNivel() {
-    if (nivel->getComidaRestante() == 0) {
-        int currentLevel = nivel->getCurrentLevel();
-        //Se limpia la escena
-        this->getScene()->clear();
-        this->nivel = new Nivel(currentLevel++);
-        this->setFirstGeneration(true);
+    if (this->getCurrentNivel()->getComidaRestante() == -1) {
+        int currentLevel = this->getCurrentNivel()->getCurrentLevel();
     }
 }
 
