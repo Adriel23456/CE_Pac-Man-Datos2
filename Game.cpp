@@ -3,6 +3,8 @@
 #include "Pacman.h"
 #include <QDebug>
 #include <QFontDatabase>
+#include <QMessageBox>
+#include <QCoreApplication>
 
 Game::Game(QWidget* parent): QGraphicsView(parent) {
     //Datos de inicio basicos
@@ -12,11 +14,6 @@ Game::Game(QWidget* parent): QGraphicsView(parent) {
     this->setWindowTitle("CEPac-Man");
     this->firstGeneration = true;
 
-    //Se añade el font en la aplicacion
-    int id = QFontDatabase::addApplicationFont("fonts/Joystix.TTF");
-    QString family = QFontDatabase::applicationFontFamilies(id).at(0);
-    QFont retroFont(family);
-
     //Detalles de la ventana y de la escena
     this->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     this->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -24,6 +21,11 @@ Game::Game(QWidget* parent): QGraphicsView(parent) {
     setScene(this->scene);
     this->setFocusPolicy(Qt::StrongFocus);
     this->setFocus();
+
+    //Se añade el font en la aplicacion
+    int id = QFontDatabase::addApplicationFont("fonts/Joystix.TTF");
+    QString family = QFontDatabase::applicationFontFamilies(id).at(0);
+    QFont retroFont(family);
 
     //Se cargan las imagenes
     foodPixmap.load("Images/food.png");
@@ -63,21 +65,25 @@ Game::Game(QWidget* parent): QGraphicsView(parent) {
     if (!backgroundMusic.openFromFile("sounds/background.ogg"))
         return; // error
     backgroundMusic.setLoop(true); // Repetir indefinidamente
+    backgroundMusic.setVolume(15);
 
     // Cargar el sonido de comer
     if (!pacmanEatBuffer.loadFromFile("sounds/eaten.ogg"))
         return; // error
     pacmanEatSound.setBuffer(pacmanEatBuffer);
+    pacmanEatSound.setVolume(10);
 
     // Cargar el sonido de victoria
     if (!victorySoundBuffer.loadFromFile("sounds/victory.ogg"))
         return; // error
     victorySound.setBuffer(victorySoundBuffer);
+    victorySound.setVolume(20);
 
     // Cargar el sonido de muerte
     if (!deathSoundBuffer.loadFromFile("sounds/death.ogg"))
         return; // error
     deathSound.setBuffer(deathSoundBuffer);
+    deathSound.setVolume(20);
 
     // Configura un temporizador para controlar la velocidad de actualización del juego
     timer = new QTimer(this);
@@ -254,14 +260,29 @@ void Game::cambiaNivel() {
         int currentLevel = this->getCurrentNivel()->getCurrentLevel();
         // Incrementa el nivel actual
         currentLevel++;
-        // Elimina el nivel actual
-        delete this->nivel;
-        // Crea un nuevo nivel
-        this->nivel = new Nivel(currentLevel);
-        // Resetea el flag de primera generación
-        this->setFirstGeneration(true);
-        // Actualiza la pantalla
-        this->update();
+        if(currentLevel == 5){
+            backgroundMusic.stop();
+            playVictorySound();
+            int id = QFontDatabase::addApplicationFont("fonts/Joystix.TTF");
+            QString family = QFontDatabase::applicationFontFamilies(id).at(0);
+            QFont retroFont(family);
+            QMessageBox victoryMessage;
+            victoryMessage.setFont(retroFont);
+            victoryMessage.setWindowTitle("VICTORY!");
+            victoryMessage.setText(QString("¡VICTORY!\n TOTAL POINTS = %1").arg(puntos));
+            victoryMessage.exec();
+            // Cerrar el programa
+            QCoreApplication::quit();
+        }else{
+            // Elimina el nivel actual
+            delete this->nivel;
+            // Crea un nuevo nivel
+            this->nivel = new Nivel(currentLevel);
+            // Resetea el flag de primera generación
+            this->setFirstGeneration(true);
+            // Actualiza la pantalla
+            this->update();
+        }
     }
 }
 
