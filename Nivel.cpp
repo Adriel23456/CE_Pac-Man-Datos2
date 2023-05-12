@@ -95,6 +95,17 @@ std::vector<Nodo*> initializeLevel1(){
     return level1;
 }
 
+std::vector<Ghost*> initializeGhosts1(std::vector<Nodo*> matrizNodo, int columns){
+    std::vector<Ghost*> ghosts1;
+    //Se dejan claros los indices de aparición de los fantasmas
+    int index1 = 1 * columns + 1;
+    // Obtiene el nodo de los fantanstas, los genera en base a ese nodo y los añade a la lista...
+    Nodo* nodo1 = matrizNodo[index1];
+    Ghost* ghost1 = new Ghost(nodo1);
+    ghosts1.push_back(ghost1);
+    return ghosts1;
+}
+
 Nodo* getNodoPrincipio1(std::vector<Nodo*> matrizNodo, int columns){
     int index = 3 * columns + 4;
     Nodo* nodoPrincipio = matrizNodo[index];
@@ -111,6 +122,21 @@ std::vector<Nodo*> initializeLevel2(){
         }
     }
     return level2;
+}
+
+std::vector<Ghost*> initializeGhosts2(std::vector<Nodo*> matrizNodo, int columns){
+    std::vector<Ghost*> ghosts2;
+    //Se dejan claros los indices de aparición de los fantasmas
+    int index1 = 2 * columns + 1;
+    int index2 = 12 * columns + 16;
+    // Obtiene el nodo de los fantanstas, los genera en base a ese nodo y los añade a la lista...
+    Nodo* nodo1 = matrizNodo[index1];
+    Nodo* nodo2 = matrizNodo[index2];
+    Ghost* ghost1 = new Ghost(nodo1);
+    Ghost* ghost2 = new Ghost(nodo2);
+    ghosts2.push_back(ghost1);
+    ghosts2.push_back(ghost2);
+    return ghosts2;
 }
 
 Nodo* getNodoPrincipio2(std::vector<Nodo*> matrizNodo, int columns){
@@ -131,6 +157,25 @@ std::vector<Nodo*> initializeLevel3(){
     return level3;
 }
 
+std::vector<Ghost*> initializeGhosts3(std::vector<Nodo*> matrizNodo, int columns){
+    std::vector<Ghost*> ghosts3;
+    //Se dejan claros los indices de aparición de los fantasmas
+    int index1 = 2 * columns + 1;
+    int index2 = 10 * columns + 1;
+    int index3 = 10 * columns + 31;
+    // Obtiene el nodo de los fantanstas, los genera en base a ese nodo y los añade a la lista...
+    Nodo* nodo1 = matrizNodo[index1];
+    Nodo* nodo2 = matrizNodo[index2];
+    Nodo* nodo3 = matrizNodo[index3];
+    Ghost* ghost1 = new Ghost(nodo1);
+    Ghost* ghost2 = new Ghost(nodo2);
+    Ghost* ghost3 = new Ghost(nodo3);
+    ghosts3.push_back(ghost1);
+    ghosts3.push_back(ghost2);
+    ghosts3.push_back(ghost3);
+    return ghosts3;
+}
+
 Nodo* getNodoPrincipio3(std::vector<Nodo*> matrizNodo, int columns){
     int index = 6 * columns + 15;
     Nodo* nodoPrincipio = matrizNodo[index];
@@ -149,6 +194,29 @@ std::vector<Nodo*> initializeLevel4(){
     return level4;
 }
 
+std::vector<Ghost*> initializeGhosts4(std::vector<Nodo*> matrizNodo, int columns){
+    std::vector<Ghost*> ghosts4;
+    //Se dejan claros los indices de aparición de los fantasmas
+    int index1 = 1 * columns + 1;
+    int index2 = 17 * columns + 1;
+    int index3 = 1 * columns + 26;
+    int index4 = 17 * columns + 26;
+    // Obtiene el nodo de los fantanstas, los genera en base a ese nodo y los añade a la lista...
+    Nodo* nodo1 = matrizNodo[index1];
+    Nodo* nodo2 = matrizNodo[index2];
+    Nodo* nodo3 = matrizNodo[index3];
+    Nodo* nodo4 = matrizNodo[index4];
+    Ghost* ghost1 = new Ghost(nodo1);
+    Ghost* ghost2 = new Ghost(nodo2);
+    Ghost* ghost3 = new Ghost(nodo3);
+    Ghost* ghost4 = new Ghost(nodo4);
+    ghosts4.push_back(ghost1);
+    ghosts4.push_back(ghost2);
+    ghosts4.push_back(ghost3);
+    ghosts4.push_back(ghost4);
+    return ghosts4;
+}
+
 Nodo* getNodoPrincipio4(std::vector<Nodo*> matrizNodo, int columns){
     int index = 9 * columns + 14;
     Nodo* nodoPrincipio = matrizNodo[index];
@@ -161,6 +229,7 @@ Nivel::Nivel(){
     this->columns = 10; //cols
     this->comidaRestante = 5;//countZeros(&level1Data[0][0], 7, 10);
     this->matrizNodos = initializeLevel1();
+    this->enemigos = initializeGhosts1(matrizNodos, columns);
     this->nodoPrincipio = getNodoPrincipio1(matrizNodos, columns);
     this->pacman = new Pacman(nodoPrincipio);
 }
@@ -172,6 +241,7 @@ Nivel::Nivel(int newLevel){
         this->columns = 20;
         this->comidaRestante = 5;//countZeros(&level2Data[0][0], 14, 20);
         this->matrizNodos = initializeLevel2();
+        this->enemigos = initializeGhosts2(matrizNodos, columns);
         this->nodoPrincipio = getNodoPrincipio2(matrizNodos, columns);
         this->pacman = new Pacman(nodoPrincipio);
     }else if(currentLevel == 3){
@@ -179,6 +249,7 @@ Nivel::Nivel(int newLevel){
         this->columns = 33;
         this->comidaRestante = 5;//countZeros(&level3Data[0][0], 12, 33);
         this->matrizNodos = initializeLevel3();
+        this->enemigos = initializeGhosts3(matrizNodos, columns);
         this->nodoPrincipio = getNodoPrincipio3(matrizNodos, columns);
         this->pacman = new Pacman(nodoPrincipio);
     }else{
@@ -186,6 +257,7 @@ Nivel::Nivel(int newLevel){
         this->columns = 29;
         this->comidaRestante = 5;//countZeros(&level4Data[0][0], 19, 29);
         this->matrizNodos = initializeLevel4();
+        this->enemigos = initializeGhosts4(matrizNodos, columns);
         this->nodoPrincipio = getNodoPrincipio4(matrizNodos, columns);
         this->pacman = new Pacman(nodoPrincipio);
     }
@@ -195,6 +267,9 @@ Nivel::~Nivel(){
     delete pacman;
     for (Nodo* nodo : matrizNodos) {
         delete nodo;
+    }
+    for (Ghost* ghost : enemigos) {
+        delete ghost;
     }
 }
 
