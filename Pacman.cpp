@@ -38,3 +38,7 @@ void Pacman::setCurrentPosition(Nodo* newCurrentPosition){
 Nodo* Pacman::getCurrentPosition(){
     return currentPosition;
 }
+
+int Pacman::getReloadTime() const{
+    return reloadTime;
+}

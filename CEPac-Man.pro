@@ -13,13 +13,15 @@ SOURCES += \
         Game.cpp \
         Nodo.cpp \
         Nivel.cpp \
-        Pacman.cpp
+        Pacman.cpp \
+        Ghost.cpp
 
 HEADERS += \
         Game.h \
         Nodo.h \
         Nivel.h \
-        Pacman.h
+        Pacman.h \
+        Ghost.h
 
 FORMS +=
 

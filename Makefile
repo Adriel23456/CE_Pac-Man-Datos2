@@ -56,17 +56,21 @@ SOURCES       = main.cpp \
 		Game.cpp \
 		Nodo.cpp \
 		Nivel.cpp \
-		Pacman.cpp moc_Game.cpp \
+		Pacman.cpp \
+		Ghost.cpp moc_Game.cpp \
 		moc_Nodo.cpp \
-		moc_Pacman.cpp
+		moc_Pacman.cpp \
+		moc_Ghost.cpp
 OBJECTS       = main.o \
 		Game.o \
 		Nodo.o \
 		Nivel.o \
 		Pacman.o \
+		Ghost.o \
 		moc_Game.o \
 		moc_Nodo.o \
-		moc_Pacman.o
+		moc_Pacman.o \
+		moc_Ghost.o
 DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/unix.conf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/linux.conf \
@@ -153,11 +157,13 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		CEPac-Man.pro Game.h \
 		Nodo.h \
 		Nivel.h \
-		Pacman.h main.cpp \
+		Pacman.h \
+		Ghost.h main.cpp \
 		Game.cpp \
 		Nodo.cpp \
 		Nivel.cpp \
-		Pacman.cpp
+		Pacman.cpp \
+		Ghost.cpp
 QMAKE_TARGET  = CEPac-Man
 DESTDIR       = 
 TARGET        = CEPac-Man
@@ -353,8 +359,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents Game.h Nodo.h Nivel.h Pacman.h $(DISTDIR)/
-	$(COPY_FILE) --parents main.cpp Game.cpp Nodo.cpp Nivel.cpp Pacman.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents Game.h Nodo.h Nivel.h Pacman.h Ghost.h $(DISTDIR)/
+	$(COPY_FILE) --parents main.cpp Game.cpp Nodo.cpp Nivel.cpp Pacman.cpp Ghost.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -386,13 +392,14 @@ compiler_moc_predefs_clean:
 moc_predefs.h: /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp
 	g++ -pipe -O2 -std=gnu++11 -Wall -Wextra -dM -E -o moc_predefs.h /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp
 
-compiler_moc_header_make_all: moc_Game.cpp moc_Nodo.cpp moc_Pacman.cpp
+compiler_moc_header_make_all: moc_Game.cpp moc_Nodo.cpp moc_Pacman.cpp moc_Ghost.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) moc_Game.cpp moc_Nodo.cpp moc_Pacman.cpp
+	-$(DEL_FILE) moc_Game.cpp moc_Nodo.cpp moc_Pacman.cpp moc_Ghost.cpp
 moc_Game.cpp: Game.h \
 		Nivel.h \
 		Nodo.h \
 		Pacman.h \
+		Ghost.h \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
 	/usr/lib/qt5/bin/moc $(DEFINES) --include '/home/adriel/Desktop/Proyecto#2/CE_Pac-Man-Datos2/moc_predefs.h' -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I'/home/adriel/Desktop/Proyecto#2/CE_Pac-Man-Datos2' -I'/home/adriel/Desktop/Proyecto#2/CE_Pac-Man-Datos2' -I/usr/include/SFML -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/11 -I/usr/include/x86_64-linux-gnu/c++/11 -I/usr/include/c++/11/backward -I/usr/lib/gcc/x86_64-linux-gnu/11/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include Game.h -o moc_Game.cpp
@@ -407,6 +414,12 @@ moc_Pacman.cpp: Pacman.h \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
 	/usr/lib/qt5/bin/moc $(DEFINES) --include '/home/adriel/Desktop/Proyecto#2/CE_Pac-Man-Datos2/moc_predefs.h' -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I'/home/adriel/Desktop/Proyecto#2/CE_Pac-Man-Datos2' -I'/home/adriel/Desktop/Proyecto#2/CE_Pac-Man-Datos2' -I/usr/include/SFML -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/11 -I/usr/include/x86_64-linux-gnu/c++/11 -I/usr/include/c++/11/backward -I/usr/lib/gcc/x86_64-linux-gnu/11/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include Pacman.h -o moc_Pacman.cpp
+
+moc_Ghost.cpp: Ghost.h \
+		Nodo.h \
+		moc_predefs.h \
+		/usr/lib/qt5/bin/moc
+	/usr/lib/qt5/bin/moc $(DEFINES) --include '/home/adriel/Desktop/Proyecto#2/CE_Pac-Man-Datos2/moc_predefs.h' -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I'/home/adriel/Desktop/Proyecto#2/CE_Pac-Man-Datos2' -I'/home/adriel/Desktop/Proyecto#2/CE_Pac-Man-Datos2' -I/usr/include/SFML -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/11 -I/usr/include/x86_64-linux-gnu/c++/11 -I/usr/include/c++/11/backward -I/usr/lib/gcc/x86_64-linux-gnu/11/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include Ghost.h -o moc_Ghost.cpp
 
 compiler_moc_objc_header_make_all:
 compiler_moc_objc_header_clean:
@@ -427,13 +440,15 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 main.o: main.cpp Game.h \
 		Nivel.h \
 		Nodo.h \
-		Pacman.h
+		Pacman.h \
+		Ghost.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o main.cpp
 
 Game.o: Game.cpp Game.h \
 		Nivel.h \
 		Nodo.h \
-		Pacman.h
+		Pacman.h \
+		Ghost.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Game.o Game.cpp
 
 Nodo.o: Nodo.cpp Nodo.h
@@ -442,12 +457,17 @@ Nodo.o: Nodo.cpp Nodo.h
 Nivel.o: Nivel.cpp Nivel.h \
 		Nodo.h \
 		Pacman.h \
+		Ghost.h \
 		Game.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Nivel.o Nivel.cpp
 
 Pacman.o: Pacman.cpp Pacman.h \
 		Nodo.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Pacman.o Pacman.cpp
+
+Ghost.o: Ghost.cpp Ghost.h \
+		Nodo.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Ghost.o Ghost.cpp
 
 moc_Game.o: moc_Game.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_Game.o moc_Game.cpp
@@ -457,6 +477,9 @@ moc_Nodo.o: moc_Nodo.cpp
 
 moc_Pacman.o: moc_Pacman.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_Pacman.o moc_Pacman.cpp
+
+moc_Ghost.o: moc_Ghost.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_Ghost.o moc_Ghost.cpp
 
 ####### Install
 

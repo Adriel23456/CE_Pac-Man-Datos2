@@ -5,9 +5,12 @@
 //.CEPac-Man
 //-------------------------------------------------------------------------------------------------------
 
-//Cambiar rutas de las siguientes clases:
+//Comandos de descargas de bibliotecas para Ubuntu:
 //-------------------------------------------------------------------------------------------------------
-//Game.cpp (Imagenes y audios)
+//sudo apt-get update
+//sudo apt-get install libsfml-dev
+//sudo apt-get update
+//sudo apt-get install qt5-default
 //-------------------------------------------------------------------------------------------------------
 
 //Configuracion del archivo .pro
