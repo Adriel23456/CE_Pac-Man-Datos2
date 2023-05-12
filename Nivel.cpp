@@ -15,6 +15,50 @@ int countZeros(int* matriz, int rows, int cols) {
     return count;
 }
 
+int** get2DArrayPointer1(int arr[7][10], int rows, int cols) {
+    int** array2D = new int*[rows];
+    for(int i = 0; i < rows; i++) {
+        array2D[i] = new int[cols];
+        for(int j = 0; j < cols; j++) {
+            array2D[i][j] = arr[i][j];
+        }
+    }
+    return array2D;
+}
+
+int** get2DArrayPointer2(int arr[14][20], int rows, int cols) {
+    int** array2D = new int*[rows];
+    for(int i = 0; i < rows; i++) {
+        array2D[i] = new int[cols];
+        for(int j = 0; j < cols; j++) {
+            array2D[i][j] = arr[i][j];
+        }
+    }
+    return array2D;
+}
+
+int** get2DArrayPointer3(int arr[12][33], int rows, int cols) {
+    int** array2D = new int*[rows];
+    for(int i = 0; i < rows; i++) {
+        array2D[i] = new int[cols];
+        for(int j = 0; j < cols; j++) {
+            array2D[i][j] = arr[i][j];
+        }
+    }
+    return array2D;
+}
+
+int** get2DArrayPointer4(int arr[19][29], int rows, int cols) {
+    int** array2D = new int*[rows];
+    for(int i = 0; i < rows; i++) {
+        array2D[i] = new int[cols];
+        for(int j = 0; j < cols; j++) {
+            array2D[i][j] = arr[i][j];
+        }
+    }
+    return array2D;
+}
+
 // Valores para level1
 int level1Data[7][10] = {
     {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
@@ -227,11 +271,12 @@ Nivel::Nivel(){
     this->currentLevel = 1;
     this->rows = 7; //rows
     this->columns = 10; //cols
-    this->comidaRestante = 5;//countZeros(&level1Data[0][0], 7, 10);
+    this->comidaRestante = countZeros(&level1Data[0][0], 7, 10);
     this->matrizNodos = initializeLevel1();
     this->enemigos = initializeGhosts1(matrizNodos, columns);
     this->nodoPrincipio = getNodoPrincipio1(matrizNodos, columns);
     this->pacman = new Pacman(nodoPrincipio);
+    this->currentMatriz = get2DArrayPointer1(level1Data, rows, columns);
 }
 
 Nivel::Nivel(int newLevel){
@@ -239,27 +284,30 @@ Nivel::Nivel(int newLevel){
     if (currentLevel == 2){
         this->rows = 14;
         this->columns = 20;
-        this->comidaRestante = 5;//countZeros(&level2Data[0][0], 14, 20);
+        this->comidaRestante = countZeros(&level2Data[0][0], 14, 20);
         this->matrizNodos = initializeLevel2();
         this->enemigos = initializeGhosts2(matrizNodos, columns);
         this->nodoPrincipio = getNodoPrincipio2(matrizNodos, columns);
         this->pacman = new Pacman(nodoPrincipio);
+        this->currentMatriz = get2DArrayPointer2(level2Data, rows, columns);
     }else if(currentLevel == 3){
         this->rows = 12;
         this->columns = 33;
-        this->comidaRestante = 5;//countZeros(&level3Data[0][0], 12, 33);
+        this->comidaRestante = countZeros(&level3Data[0][0], 12, 33);
         this->matrizNodos = initializeLevel3();
         this->enemigos = initializeGhosts3(matrizNodos, columns);
         this->nodoPrincipio = getNodoPrincipio3(matrizNodos, columns);
         this->pacman = new Pacman(nodoPrincipio);
+        this->currentMatriz = get2DArrayPointer3(level3Data, rows, columns);
     }else{
         this->rows = 19;
         this->columns = 29;
-        this->comidaRestante = 5;//countZeros(&level4Data[0][0], 19, 29);
+        this->comidaRestante = countZeros(&level4Data[0][0], 19, 29);
         this->matrizNodos = initializeLevel4();
         this->enemigos = initializeGhosts4(matrizNodos, columns);
         this->nodoPrincipio = getNodoPrincipio4(matrizNodos, columns);
         this->pacman = new Pacman(nodoPrincipio);
+        this->currentMatriz = get2DArrayPointer4(level4Data, rows, columns);
     }
 }
 
@@ -270,6 +318,27 @@ Nivel::~Nivel(){
     }
     for (Ghost* ghost : enemigos) {
         delete ghost;
+    }
+    if (currentLevel == 1){
+        for(int i = 0; i < 7; i++) {
+            delete[] currentMatriz[i];
+        }
+        delete[] currentMatriz;
+    }else if (currentLevel == 2){
+        for(int i = 0; i < 14; i++) {
+            delete[] currentMatriz[i];
+        }
+        delete[] currentMatriz;
+    }else if (currentLevel == 3){
+        for(int i = 0; i < 12; i++) {
+            delete[] currentMatriz[i];
+        }
+        delete[] currentMatriz;
+    }else{
+        for(int i = 0; i < 19; i++) {
+            delete[] currentMatriz[i];
+        }
+        delete[] currentMatriz;
     }
 }
 
@@ -286,65 +355,8 @@ int Nivel::getColumns(){
     return columns;
 }
 
-int** get2DArrayPointer1(int arr[7][10], int rows, int cols) {
-    int** array2D = new int*[rows];
-    for(int i = 0; i < rows; i++) {
-        array2D[i] = new int[cols];
-        for(int j = 0; j < cols; j++) {
-            array2D[i][j] = arr[i][j];
-        }
-    }
-    return array2D;
-}
-
-int** get2DArrayPointer2(int arr[14][20], int rows, int cols) {
-    int** array2D = new int*[rows];
-    for(int i = 0; i < rows; i++) {
-        array2D[i] = new int[cols];
-        for(int j = 0; j < cols; j++) {
-            array2D[i][j] = arr[i][j];
-        }
-    }
-    return array2D;
-}
-
-int** get2DArrayPointer3(int arr[12][33], int rows, int cols) {
-    int** array2D = new int*[rows];
-    for(int i = 0; i < rows; i++) {
-        array2D[i] = new int[cols];
-        for(int j = 0; j < cols; j++) {
-            array2D[i][j] = arr[i][j];
-        }
-    }
-    return array2D;
-}
-
-int** get2DArrayPointer4(int arr[19][29], int rows, int cols) {
-    int** array2D = new int*[rows];
-    for(int i = 0; i < rows; i++) {
-        array2D[i] = new int[cols];
-        for(int j = 0; j < cols; j++) {
-            array2D[i][j] = arr[i][j];
-        }
-    }
-    return array2D;
-}
-
-
-int** Nivel::getMatriz(){
-    if(currentLevel == 1){
-        int** ptrMatriz = get2DArrayPointer1(level1Data, rows, columns);
-        return ptrMatriz;
-    } else if(currentLevel == 2){
-        int** ptrMatriz = get2DArrayPointer2(level2Data, rows, columns);
-        return ptrMatriz;
-    } else if(currentLevel == 3){
-        int** ptrMatriz = get2DArrayPointer3(level3Data, rows, columns);
-        return ptrMatriz;
-    } else{
-        int** ptrMatriz = get2DArrayPointer4(level4Data, rows, columns);
-        return ptrMatriz;
-    }
+int** Nivel::getCurrentMatriz(){
+    return currentMatriz;
 }
 
 int Nivel::getCurrentLevel(){

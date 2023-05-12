@@ -16,7 +16,6 @@ public:
     Ghost(Nodo* currentPosition);
     ~Ghost();
 
-    void setDirection(int direction); 
     int getDirectionPacMan(int** matriz, Nodo* final, Nodo* inicio, int rows, int columns);
 
     void setCurrentPosition(Nodo* newCurrentPosition);

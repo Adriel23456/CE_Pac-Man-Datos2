@@ -322,7 +322,7 @@ void Game::update(){
             int newRowG1 = ghost1->getCurrentPosition()->getRow();
             int newColG1 = ghost1->getCurrentPosition()->getCol();
             qDebug() << "Se va a intentar aplicar el codigo de obtencion de una nueva direccion";
-            int directionG1 = 3;//ghost1->getDirectionPacMan(this->getCurrentNivel()->getMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost1->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
+            int directionG1 = ghost1->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost1->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
             //Codigo para actualizar la posicion de los fantasmas:
             if(directionG1 == 0){
             }else if(directionG1 == 1){
@@ -348,8 +348,8 @@ void Game::update(){
             int newRowG2 = ghost2->getCurrentPosition()->getRow();
             int newColG2 = ghost2->getCurrentPosition()->getCol();
             qDebug() << "Se va a intentar aplicar el codigo de obtencion de una nueva direccion";
-            int directionG1 = ghost1->getDirectionPacMan(this->getCurrentNivel()->getMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost1->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
-            int directionG2 = ghost2->getDirectionPacMan(this->getCurrentNivel()->getMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost2->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
+            int directionG1 = ghost1->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost1->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
+            int directionG2 = ghost2->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost2->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
             //Codigo para actualizar la posicion de los fantasmas:
             if(directionG1 == 0){
             }else if(directionG1 == 1){
@@ -393,9 +393,9 @@ void Game::update(){
             int newRowG3 = ghost3->getCurrentPosition()->getRow();
             int newColG3 = ghost3->getCurrentPosition()->getCol();
             qDebug() << "Se va a intentar aplicar el codigo de obtencion de una nueva direccion";
-            int directionG1 = ghost1->getDirectionPacMan(this->getCurrentNivel()->getMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost1->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
-            int directionG2 = ghost2->getDirectionPacMan(this->getCurrentNivel()->getMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost2->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
-            int directionG3 = ghost3->getDirectionPacMan(this->getCurrentNivel()->getMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost3->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
+            int directionG1 = ghost1->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost1->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
+            int directionG2 = ghost2->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost2->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
+            int directionG3 = ghost3->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost3->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
             //Codigo para actualizar la posicion de los fantasmas:
             if(directionG1 == 0){
             }else if(directionG1 == 1){
@@ -457,10 +457,10 @@ void Game::update(){
             int newRowG4 = ghost4->getCurrentPosition()->getRow();
             int newColG4 = ghost4->getCurrentPosition()->getCol();
             qDebug() << "Se va a intentar aplicar el codigo de obtencion de una nueva direccion";
-            int directionG1 = ghost1->getDirectionPacMan(this->getCurrentNivel()->getMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost1->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
-            int directionG2 = ghost2->getDirectionPacMan(this->getCurrentNivel()->getMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost2->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
-            int directionG3 = ghost3->getDirectionPacMan(this->getCurrentNivel()->getMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost3->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
-            int directionG4 = ghost4->getDirectionPacMan(this->getCurrentNivel()->getMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost4->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
+            int directionG1 = ghost1->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost1->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
+            int directionG2 = ghost2->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost2->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
+            int directionG3 = ghost3->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost3->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
+            int directionG4 = ghost4->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost4->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
             //Codigo para actualizar la posicion de los fantasmas:
             if(directionG1 == 0){
             }else if(directionG1 == 1){

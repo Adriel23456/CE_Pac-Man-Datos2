@@ -15,6 +15,7 @@ private:
     Nodo* nodoPrincipio; //Nodo donde inicia el jugador
     std::vector<Ghost*> enemigos; //Nodos donde iniciarian los enemigos
     Pacman* pacman; //El jugador que se genera para este nivel
+    int** currentMatriz; //Puntero total de la matriz actual...
     int comidaRestante; //Cuantas celdas con comida quedan...
     int rows; //Filas de este nivel
     int columns; //Columnas de este nivel
@@ -24,7 +25,7 @@ public:
     Nivel(int newLevel); //Constructor de los demas niveles
     ~Nivel(); //Destructor predeterminado
 
-    int** getMatriz(); //Metodo para obtener la matriz con la que esta el nivel
+    int** getCurrentMatriz(); //Metodo para obtener la matriz con la que esta el nivel
     Nodo* getNode(int row, int col); //Metodo para obtener el puntero del nodo dada una posicion (x,y) en la matriz
     int getRows(); //Obtener las filas del nivel
     int getColumns(); //Obtener las columnas del nivel
