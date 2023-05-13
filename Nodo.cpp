@@ -1,11 +1,10 @@
 #include "Nodo.h"
 
-Nodo::Nodo() : type(0), enemyPassed(false), hasFood(false), hasPower(false), row(0), col(0) {
+Nodo::Nodo() : type(0), hasFood(false), hasPower(false), row(0), col(0) {
 }
 
 Nodo::Nodo(int type, int row, int col){
     this->type = type;
-    this->enemyPassed = false;
     this->hasFood = true;
     this->hasPower = false;
     this->row = row;
@@ -22,14 +21,6 @@ int Nodo::getType() const {
 
 void Nodo::setType(int type) {
     this->type = type;
-}
-
-bool Nodo::getEnemyPassed() const {
-    return enemyPassed;
-}
-
-void Nodo::setEnemyPassed(bool enemyPassed) {
-    this->enemyPassed = enemyPassed;
 }
 
 bool Nodo::getHasFood() const {

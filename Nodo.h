@@ -8,7 +8,6 @@ class Nodo : public QObject, public QGraphicsPixmapItem {
 
 private:
     int type;           // 0 para espacio vacío, 1 para pared
-    bool enemyPassed;   // Verdadero si un enemigo ha pasado por esta celda en los últimos 5 frames
     bool hasFood;       // Verdadero si la celda tiene comida
     bool hasPower;      // Verdadero si la celda puede tener un poder
     int row;            //Numero de fila
@@ -22,9 +21,6 @@ public:
 
     int getType() const;
     void setType(int type);
-
-    bool getEnemyPassed() const;
-    void setEnemyPassed(bool enemyPassed);
 
     bool getHasFood() const;
     void setHasFood(bool hasFood);

@@ -6,14 +6,22 @@
 #include <QFontDatabase>
 #include <QMessageBox>
 #include <QCoreApplication>
+#include <cmath>
+#include <climits>
+
+// Función para calcular la distancia euclidiana entre dos puntos
+double distance(int x1, int y1, int x2, int y2) {
+    return sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2));
+}
 
 Game::Game(QWidget* parent): QGraphicsView(parent) {
     //Datos de inicio basicos
     this->nivel = new Nivel();
     this->puntos = 0;
+    this->pacmanDeath = false;
+    this->firstGeneration = true;
     this->setFixedSize(800, 500);
     this->setWindowTitle("CEPac-Man");
-    this->firstGeneration = true;
     //Detalles de la ventana y de la escena
     this->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     this->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -322,7 +330,7 @@ void Game::update(){
             int newRowG1 = ghost1->getCurrentPosition()->getRow();
             int newColG1 = ghost1->getCurrentPosition()->getCol();
             int directionG1;
-            if(this->getCurrentNivel()->getPacman()->getCurrentPosition() == ghost1->getCurrentPosition()){
+            if((this->getCurrentNivel()->getPacman()->getCurrentPosition() == ghost1->getCurrentPosition()) || (pacmanDeath == true)){
                 directionG1 = 0;
             }else{
                 directionG1 = ghost1->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost1->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
@@ -344,6 +352,22 @@ void Game::update(){
             int currentGhost1Col = (ghost1->getCurrentPosition()->getCol())* anchoCelda;
             //Se actualizará la posición de los fanstasmas en la escena:
             ghost1->setPos(currentGhost1Col, currentGhost1Row);
+
+            //Todo el codigo para matar al pacman en caso de que este acabara de morir
+            Nodo* pacmanActualNodo = pacman->getCurrentPosition();
+            if ((nuevoNodoGhost1 == pacmanActualNodo) && (pacmanDeath == false)){
+                playDeathSound();
+                pacmanDeath = true;
+                pacman->loseLife();
+                if(pacman->getLives() == 0){
+                    gameOver();
+                }
+                pacman->hide();
+                timerPacman = new QTimer(this);
+                timerPacman->setSingleShot(true); // Este timer solo se activará una vez
+                connect(timerPacman, &QTimer::timeout, this, &Game::respawnPacMan);
+                timerPacman->start(pacman->getReloadTime()); // Comienza el timer para 3 segundos (3000 milisegundos)
+            }
         }else if(currentlevelGame == 2){
             Ghost* ghost1 = ghosts[0];
             Ghost* ghost2 = ghosts[1];
@@ -353,12 +377,12 @@ void Game::update(){
             int newColG2 = ghost2->getCurrentPosition()->getCol();
             int directionG1;
             int directionG2;
-            if(this->getCurrentNivel()->getPacman()->getCurrentPosition() == ghost1->getCurrentPosition()){
+            if((this->getCurrentNivel()->getPacman()->getCurrentPosition() == ghost1->getCurrentPosition()) || (pacmanDeath == true)){
                 directionG1 = 0;
             }else{
                 directionG1 = ghost1->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost1->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
             }
-            if(this->getCurrentNivel()->getPacman()->getCurrentPosition() == ghost2->getCurrentPosition()){
+            if((this->getCurrentNivel()->getPacman()->getCurrentPosition() == ghost2->getCurrentPosition()) || (pacmanDeath == true)){
                 directionG2 = 0;
             }else{
                 directionG2 = ghost2->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost2->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
@@ -395,6 +419,23 @@ void Game::update(){
             //Se actualizará la posición de los fanstasmas en la escena:
             ghost1->setPos(currentGhost1Col, currentGhost1Row);
             ghost2->setPos(currentGhost2Col, currentGhost2Row);
+            //Todo el codigo para matar al pacman en caso de que este acabara de morir
+            Nodo* pacmanActualNodo = pacman->getCurrentPosition();
+            if (((nuevoNodoGhost1 == pacmanActualNodo) && (pacmanDeath == false))||((nuevoNodoGhost2 == pacmanActualNodo) && (pacmanDeath == false))){
+                playDeathSound();
+                pacmanDeath = true;
+                pacman->loseLife();
+                if(pacman->getLives() == 0){
+                    gameOver();
+                }
+                pacman->hide();
+                timerPacman = new QTimer(this);
+                timerPacman->setSingleShot(true); // Este timer solo se activará una vez
+                connect(timerPacman, &QTimer::timeout, this, &Game::respawnPacMan);
+                timerPacman->start(pacman->getReloadTime()); // Comienza el timer para 3 segundos (3000 milisegundos)
+            }
+
+
         }else if(currentlevelGame == 3){
             Ghost* ghost1 = ghosts[0];
             Ghost* ghost2 = ghosts[1];
@@ -408,17 +449,17 @@ void Game::update(){
             int directionG1;
             int directionG2;
             int directionG3;
-            if(this->getCurrentNivel()->getPacman()->getCurrentPosition() == ghost1->getCurrentPosition()){
+            if((this->getCurrentNivel()->getPacman()->getCurrentPosition() == ghost1->getCurrentPosition()) || (pacmanDeath == true)){
                 directionG1 = 0;
             }else{
                 directionG1 = ghost1->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost1->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
             }
-            if(this->getCurrentNivel()->getPacman()->getCurrentPosition() == ghost2->getCurrentPosition()){
+            if((this->getCurrentNivel()->getPacman()->getCurrentPosition() == ghost2->getCurrentPosition()) || (pacmanDeath == true)){
                 directionG2 = 0;
             }else{
                 directionG2 = ghost2->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost2->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
             }
-            if(this->getCurrentNivel()->getPacman()->getCurrentPosition() == ghost3->getCurrentPosition()){
+            if((this->getCurrentNivel()->getPacman()->getCurrentPosition() == ghost3->getCurrentPosition()) || (pacmanDeath == true)){
                 directionG3 = 0;
             }else{
                 directionG3 = ghost3->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost3->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
@@ -470,6 +511,21 @@ void Game::update(){
             ghost1->setPos(currentGhost1Col, currentGhost1Row);
             ghost2->setPos(currentGhost2Col, currentGhost2Row);
             ghost3->setPos(currentGhost3Col, currentGhost3Row);
+            //Todo el codigo para matar al pacman en caso de que este acabara de morir
+            Nodo* pacmanActualNodo = pacman->getCurrentPosition();
+            if (((nuevoNodoGhost1 == pacmanActualNodo) && (pacmanDeath == false))||((nuevoNodoGhost2 == pacmanActualNodo) && (pacmanDeath == false))||((nuevoNodoGhost3 == pacmanActualNodo) && (pacmanDeath == false))){
+                playDeathSound();
+                pacmanDeath = true;
+                pacman->loseLife();
+                if(pacman->getLives() == 0){
+                    gameOver();
+                }
+                pacman->hide();
+                timerPacman = new QTimer(this);
+                timerPacman->setSingleShot(true); // Este timer solo se activará una vez
+                connect(timerPacman, &QTimer::timeout, this, &Game::respawnPacMan);
+                timerPacman->start(pacman->getReloadTime()); // Comienza el timer para 3 segundos (3000 milisegundos)
+            }
         }else{
             Ghost* ghost1 = ghosts[0];
             Ghost* ghost2 = ghosts[1];
@@ -487,22 +543,22 @@ void Game::update(){
             int directionG2;
             int directionG3;
             int directionG4;
-            if(this->getCurrentNivel()->getPacman()->getCurrentPosition() == ghost1->getCurrentPosition()){
+            if((this->getCurrentNivel()->getPacman()->getCurrentPosition() == ghost1->getCurrentPosition()) || (pacmanDeath == true)){
                 directionG1 = 0;
             }else{
                 directionG1 = ghost1->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost1->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
             }
-            if(this->getCurrentNivel()->getPacman()->getCurrentPosition() == ghost2->getCurrentPosition()){
+            if((this->getCurrentNivel()->getPacman()->getCurrentPosition() == ghost2->getCurrentPosition()) || (pacmanDeath == true)){
                 directionG2 = 0;
             }else{
                 directionG2 = ghost2->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost2->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
             }
-            if(this->getCurrentNivel()->getPacman()->getCurrentPosition() == ghost3->getCurrentPosition()){
+            if((this->getCurrentNivel()->getPacman()->getCurrentPosition() == ghost3->getCurrentPosition()) || (pacmanDeath == true)){
                 directionG3 = 0;
             }else{
                 directionG3 = ghost3->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost3->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
             }
-            if(this->getCurrentNivel()->getPacman()->getCurrentPosition() == ghost4->getCurrentPosition()){
+            if((this->getCurrentNivel()->getPacman()->getCurrentPosition() == ghost4->getCurrentPosition()) || (pacmanDeath == true)){
                 directionG4 = 0;
             }else{
                 directionG4 = ghost4->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost4->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
@@ -569,6 +625,21 @@ void Game::update(){
             ghost2->setPos(currentGhost2Col, currentGhost2Row);
             ghost3->setPos(currentGhost3Col, currentGhost3Row);
             ghost4->setPos(currentGhost4Col, currentGhost4Row);
+            //Todo el codigo para matar al pacman en caso de que este acabara de morir
+            Nodo* pacmanActualNodo = pacman->getCurrentPosition();
+            if (((nuevoNodoGhost1 == pacmanActualNodo) && (pacmanDeath == false))||((nuevoNodoGhost2 == pacmanActualNodo) && (pacmanDeath == false))||((nuevoNodoGhost3 == pacmanActualNodo) && (pacmanDeath == false))||((nuevoNodoGhost4 == pacmanActualNodo) && (pacmanDeath == false))){
+                playDeathSound();
+                pacmanDeath = true;
+                pacman->loseLife();
+                if(pacman->getLives() == 0){
+                    gameOver();
+                }
+                pacman->hide();
+                timerPacman = new QTimer(this);
+                timerPacman->setSingleShot(true); // Este timer solo se activará una vez
+                connect(timerPacman, &QTimer::timeout, this, &Game::respawnPacMan);
+                timerPacman->start(pacman->getReloadTime()); // Comienza el timer para 3 segundos (3000 milisegundos)
+            }
         }
         // Actualizar los objetos
         this->getScene()->update();
@@ -614,7 +685,9 @@ void Game::cambiaNivel() {
 
 void Game::keyPressEvent(QKeyEvent* event) {
     int valor = 0;
-    switch (event->key()) {
+    if(pacmanDeath == true){
+    }else{
+        switch (event->key()) {
         case Qt::Key_W:
             valor = 2;
             this->getCurrentNivel()->getPacman()->setDirection(valor);
@@ -631,7 +704,159 @@ void Game::keyPressEvent(QKeyEvent* event) {
             valor = 3;
             this->getCurrentNivel()->getPacman()->setDirection(valor);
             break;
+        }
     }
+}
+
+
+void Game::respawnPacMan() {
+    Pacman* pacman = this->getCurrentNivel()->getPacman();
+    pacman->show(); // Hacemos reaparecer al PacMan
+    pacmanDeath = false; // Resetear el estado de muerte del PacMan
+    pacman->setCurrentPosition(farAwayNode());
+    delete timerPacman; // Eliminar el timer
+    timerPacman = nullptr; // Asegurarse de que el puntero del timer esté a nullptr
+}
+
+int* Game::nodeAway(int* puntos, int** matrizBase, int x_Max, int y_Max, int arraySize) {
+    // inicializar la distancia máxima a -1 y las coordenadas del punto más alejado a -1
+    double maxDistance = -1;
+    static int farthestPoint[2] = {-1, -1};
+    qDebug() << QString("Valor de la primer arreglo x: %1").arg(puntos[0]);
+    qDebug() << QString("Valor de la primer arreglo y: %1").arg(puntos[1]);
+    qDebug() << QString("Valor de maximo de columnas (x): %1").arg(x_Max);
+    qDebug() << QString("Valor de maximo de filas (y): %1").arg(y_Max);
+    qDebug() << QString("Tamaño maximo del arreglo actual: %1").arg(arraySize);
+    // recorrer la matriz
+        for (int j = 0; j < y_Max; j++) {
+        for (int i = 0; i < x_Max; i++) {
+            // si el valor de la matriz es 0
+            if (matrizBase[j][i] == 0) {
+                // calcular la distancia desde el punto actual a los puntos proporcionados
+                double dist = distance(puntos[0], puntos[1], i, j);
+                if (arraySize == 4) {
+                    double dist2 = distance(puntos[2], puntos[3], i, j);
+                    dist = (dist < dist2) ? dist : dist2;
+                }
+                // si la distancia es mayor que la distancia máxima registrada hasta ahora
+                if (dist > maxDistance) {
+                    // actualizar la distancia máxima y las coordenadas del punto más alejado
+                    maxDistance = dist;
+                    farthestPoint[0] = i;
+                    farthestPoint[1] = j;
+                }
+            }
+        }
+    }
+    // devolver las coordenadas del punto más alejado
+    return farthestPoint;
+}
+
+// En otro lugar en tu clase
+Nodo* Game::farAwayNode() {
+    std::vector<Ghost*> ghosts = this->getCurrentNivel()->getGhosts();
+    int currentLevel = this->getCurrentNivel()->getCurrentLevel();
+    if(currentLevel == 1){
+        Ghost* ghost1 = ghosts[0];
+        int xG1 = ghost1->getCurrentPosition()->getCol();
+        int yG1 = ghost1->getCurrentPosition()->getRow();
+        int arrayG1[2] = {xG1,yG1};
+        int* ptrArray = arrayG1;
+        int** matrizBase = this->getCurrentNivel()->getCurrentMatriz();
+        int x_Max = this->getCurrentNivel()->getColumns();
+        int y_Max = this->getCurrentNivel()->getRows();
+        int arraySize = 2;
+        qDebug() << QString("INTENTA APLICAR EL CODIGO DE NODEAWAY");
+        int* arrayResult = nodeAway(ptrArray, matrizBase, x_Max, y_Max, arraySize);
+        int xFinal = arrayResult[0];
+        int yFinal = arrayResult[1];
+        qDebug() << QString("Esta sera la posicion de x nueva: %1").arg(xFinal);
+        qDebug() << QString("Esta sera la posicion de y nueva: %1").arg(yFinal);
+        Nodo* nodo = this->getCurrentNivel()->getNode(yFinal,xFinal);
+        return nodo;
+    }else if(currentLevel == 2){
+        Ghost* ghost1 = ghosts[0];
+        Ghost* ghost2 = ghosts[1];
+        int xG1 = ghost1->getCurrentPosition()->getCol();
+        int yG1 = ghost1->getCurrentPosition()->getRow();
+        int xG2 = ghost2->getCurrentPosition()->getCol();
+        int yG2 = ghost2->getCurrentPosition()->getRow();
+        int arrayG2[4] = {xG1,yG1,xG2,yG2};
+        int* ptrArray = arrayG2;
+        int** matrizBase = this->getCurrentNivel()->getCurrentMatriz();
+        int x_Max = this->getCurrentNivel()->getColumns();
+        int y_Max = this->getCurrentNivel()->getRows();
+        int arraySize = 4;
+        int* arrayResult = nodeAway(ptrArray, matrizBase, x_Max, y_Max, arraySize);
+        // Acceder a los valores del arreglo
+        int xFinal = arrayResult[0];
+        int yFinal = arrayResult[1];
+        Nodo* nodo = this->getCurrentNivel()->getNode(yFinal,xFinal);
+        return nodo;
+    }else if(currentLevel == 3){
+        Ghost* ghost1 = ghosts[0];
+        Ghost* ghost2 = ghosts[1];
+        Ghost* ghost3 = ghosts[2];
+        int xG1 = ghost1->getCurrentPosition()->getCol();
+        int yG1 = ghost1->getCurrentPosition()->getRow();
+        int xG2 = ghost2->getCurrentPosition()->getCol();
+        int yG2 = ghost2->getCurrentPosition()->getRow();
+        int xG3 = ghost3->getCurrentPosition()->getCol();
+        int yG3 = ghost3->getCurrentPosition()->getRow();
+        int arrayG3[6] = {xG1,yG1,xG2,yG2,xG3,yG3};
+        int* ptrArray = arrayG3;
+        int** matrizBase = this->getCurrentNivel()->getCurrentMatriz();
+        int x_Max = this->getCurrentNivel()->getColumns();
+        int y_Max = this->getCurrentNivel()->getRows();
+        int arraySize = 6;
+        int* arrayResult = nodeAway(ptrArray, matrizBase, x_Max, y_Max, arraySize);
+        // Acceder a los valores del arreglo
+        int xFinal = arrayResult[0];
+        int yFinal = arrayResult[1];
+        Nodo* nodo = this->getCurrentNivel()->getNode(yFinal,xFinal);
+        return nodo;
+    }else{
+        Ghost* ghost1 = ghosts[0];
+        Ghost* ghost2 = ghosts[1];
+        Ghost* ghost3 = ghosts[2];
+        Ghost* ghost4 = ghosts[3];
+        int xG1 = ghost1->getCurrentPosition()->getCol();
+        int yG1 = ghost1->getCurrentPosition()->getRow();
+        int xG2 = ghost2->getCurrentPosition()->getCol();
+        int yG2 = ghost2->getCurrentPosition()->getRow();
+        int xG3 = ghost3->getCurrentPosition()->getCol();
+        int yG3 = ghost3->getCurrentPosition()->getRow();
+        int xG4 = ghost4->getCurrentPosition()->getCol();
+        int yG4 = ghost4->getCurrentPosition()->getRow();
+        int arrayG4[8] = {xG1,yG1,xG2,yG2,xG3,yG3,xG4,yG4};
+        int* ptrArray = arrayG4;
+        int** matrizBase = this->getCurrentNivel()->getCurrentMatriz();
+        int x_Max = this->getCurrentNivel()->getColumns();
+        int y_Max = this->getCurrentNivel()->getRows();
+        int arraySize = 8;
+        int* arrayResult = nodeAway(ptrArray, matrizBase, x_Max, y_Max, arraySize);
+        // Acceder a los valores del arreglo
+        int xFinal = arrayResult[0];
+        int yFinal = arrayResult[1];
+        Nodo* nodo = this->getCurrentNivel()->getNode(yFinal,xFinal);
+        return nodo;
+    }
+}
+
+// En otro lugar en tu clase
+void Game::gameOver() {
+    backgroundMusic.stop();
+    //playGameOverSound();
+    int id = QFontDatabase::addApplicationFont("fonts/Joystix.TTF");
+    QString family = QFontDatabase::applicationFontFamilies(id).at(0);
+    QFont retroFont(family);
+    QMessageBox gameOveryMessage;
+    gameOveryMessage.setFont(retroFont);
+    gameOveryMessage.setWindowTitle("GAME OVER");
+    gameOveryMessage.setText(QString("GAME OVER\n TOTAL POINTS = %1").arg(puntos));
+    gameOveryMessage.exec();
+    // Cerrar el programa
+    QCoreApplication::quit();
 }
 
 void Game::setFirstGeneration(bool newValue) {
@@ -640,6 +865,14 @@ void Game::setFirstGeneration(bool newValue) {
 
 bool Game::getFirstGeneration() {
     return this->firstGeneration;
+}
+
+void Game::setPacmanDeath(bool newValue) {
+    this->pacmanDeath = newValue;
+}
+
+bool Game::getPacmanDeath() {
+    return this->pacmanDeath;
 }
 
 void Game::playBackgroundMusic() {

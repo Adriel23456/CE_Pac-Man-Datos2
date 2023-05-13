@@ -57,6 +57,7 @@
         "typeinfo": "cpp",
         "qgraphicsscene": "cpp",
         "qgraphicsrectitem": "cpp",
-        "set": "cpp"
+        "set": "cpp",
+        "unordered_set": "cpp"
     }
 }

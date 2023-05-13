@@ -14,10 +14,12 @@ class Game : public QGraphicsView {
 private:
     int puntos;
     bool firstGeneration;
+    bool pacmanDeath;
 
     Nivel* nivel;
     QGraphicsScene* scene;
     QTimer* timer;
+    QTimer* timerPacman;
     
     QPixmap foodPixmap;
     QPixmap nofoodPixmap;
@@ -43,14 +45,20 @@ public:
     ~Game();
     Nivel* getCurrentNivel();
     void update();
+    void respawnPacMan();
     void cambiaNivel();
+    void gameOver();
+    Nodo* farAwayNode();
     QGraphicsScene* getScene();
     void setFirstGeneration(bool newValue);
     bool getFirstGeneration();
+    void setPacmanDeath(bool newValue);
+    bool getPacmanDeath();
     void playBackgroundMusic();
     void playPacmanEatSound();
     void playVictorySound();
     void playDeathSound();
+    int* nodeAway(int* puntos, int** matrizBase, int x_Max, int y_Max, int arraySize);
 protected:
     void keyPressEvent(QKeyEvent *event);
 };
