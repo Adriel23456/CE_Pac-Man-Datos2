@@ -80,7 +80,7 @@ Game::Game(QWidget* parent): QGraphicsView(parent) {
     // Configura un temporizador para controlar la velocidad de actualización del juego
     timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, QOverload<>::of(&Game::update));
-    timer->start(1000); // Actualiza cada 1s
+    timer->start(500); // Actualiza cada 500ms
     playBackgroundMusic();
 }
 
@@ -322,7 +322,6 @@ void Game::update(){
             int newRowG1 = ghost1->getCurrentPosition()->getRow();
             int newColG1 = ghost1->getCurrentPosition()->getCol();
             int directionG1 = ghost1->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost1->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
-            qDebug() << (QString("Se va a intentar aplicar el codigo de obtencion de una nueva direccion:%1").arg(directionG1));
             //Codigo para actualizar la posicion de los fantasmas:
             if(directionG1 == 1){
                 newColG1--;
@@ -347,7 +346,6 @@ void Game::update(){
             int newColG1 = ghost1->getCurrentPosition()->getCol();
             int newRowG2 = ghost2->getCurrentPosition()->getRow();
             int newColG2 = ghost2->getCurrentPosition()->getCol();
-            qDebug() << "Se va a intentar aplicar el codigo de obtencion de una nueva direccion";
             int directionG1 = ghost1->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost1->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
             int directionG2 = ghost2->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost2->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
             //Codigo para actualizar la posicion de los fantasmas:
@@ -392,7 +390,6 @@ void Game::update(){
             int newColG2 = ghost2->getCurrentPosition()->getCol();
             int newRowG3 = ghost3->getCurrentPosition()->getRow();
             int newColG3 = ghost3->getCurrentPosition()->getCol();
-            qDebug() << "Se va a intentar aplicar el codigo de obtencion de una nueva direccion";
             int directionG1 = ghost1->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost1->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
             int directionG2 = ghost2->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost2->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
             int directionG3 = ghost3->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost3->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
@@ -456,7 +453,6 @@ void Game::update(){
             int newColG3 = ghost3->getCurrentPosition()->getCol();
             int newRowG4 = ghost4->getCurrentPosition()->getRow();
             int newColG4 = ghost4->getCurrentPosition()->getCol();
-            qDebug() << "Se va a intentar aplicar el codigo de obtencion de una nueva direccion";
             int directionG1 = ghost1->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost1->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
             int directionG2 = ghost2->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost2->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
             int directionG3 = ghost3->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost3->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
