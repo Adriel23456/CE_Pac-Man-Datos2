@@ -321,7 +321,12 @@ void Game::update(){
             Ghost* ghost1 = ghosts[0];
             int newRowG1 = ghost1->getCurrentPosition()->getRow();
             int newColG1 = ghost1->getCurrentPosition()->getCol();
-            int directionG1 = ghost1->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost1->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
+            int directionG1;
+            if(this->getCurrentNivel()->getPacman()->getCurrentPosition() == ghost1->getCurrentPosition()){
+                directionG1 = 0;
+            }else{
+                directionG1 = ghost1->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost1->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
+            }
             //Codigo para actualizar la posicion de los fantasmas:
             if(directionG1 == 1){
                 newColG1--;
@@ -346,28 +351,38 @@ void Game::update(){
             int newColG1 = ghost1->getCurrentPosition()->getCol();
             int newRowG2 = ghost2->getCurrentPosition()->getRow();
             int newColG2 = ghost2->getCurrentPosition()->getCol();
-            int directionG1 = ghost1->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost1->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
-            int directionG2 = ghost2->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost2->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
+            int directionG1;
+            int directionG2;
+            if(this->getCurrentNivel()->getPacman()->getCurrentPosition() == ghost1->getCurrentPosition()){
+                directionG1 = 0;
+            }else{
+                directionG1 = ghost1->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost1->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
+            }
+            if(this->getCurrentNivel()->getPacman()->getCurrentPosition() == ghost2->getCurrentPosition()){
+                directionG2 = 0;
+            }else{
+                directionG2 = ghost2->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost2->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
+            }
             //Codigo para actualizar la posicion de los fantasmas:
-            if(directionG1 == 0){
-            }else if(directionG1 == 1){
+            if(directionG1 == 1){
                 newColG1--;
             }else if(directionG1 == 2){
                 newRowG1--;
             }else if(directionG1 == 3){
                 newColG1++;
-            }else{
+            }else if(directionG1 == 4){
                 newRowG1++;
+            }else{
             }
-            if(directionG2 == 0){
-            }else if(directionG2 == 1){
+            if(directionG2 == 1){
                 newColG2--;
             }else if(directionG2 == 2){
                 newRowG2--;
             }else if(directionG2 == 3){
                 newColG2++;
-            }else{
+            }else if(directionG2 == 4){
                 newRowG2++;
+            }else{
             }
             Nodo* nuevoNodoGhost1 = this->getCurrentNivel()->getNode(newRowG1, newColG1);
             ghost1->setCurrentPosition(nuevoNodoGhost1);
@@ -390,39 +405,54 @@ void Game::update(){
             int newColG2 = ghost2->getCurrentPosition()->getCol();
             int newRowG3 = ghost3->getCurrentPosition()->getRow();
             int newColG3 = ghost3->getCurrentPosition()->getCol();
-            int directionG1 = ghost1->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost1->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
-            int directionG2 = ghost2->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost2->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
-            int directionG3 = ghost3->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost3->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
+            int directionG1;
+            int directionG2;
+            int directionG3;
+            if(this->getCurrentNivel()->getPacman()->getCurrentPosition() == ghost1->getCurrentPosition()){
+                directionG1 = 0;
+            }else{
+                directionG1 = ghost1->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost1->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
+            }
+            if(this->getCurrentNivel()->getPacman()->getCurrentPosition() == ghost2->getCurrentPosition()){
+                directionG2 = 0;
+            }else{
+                directionG2 = ghost2->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost2->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
+            }
+            if(this->getCurrentNivel()->getPacman()->getCurrentPosition() == ghost3->getCurrentPosition()){
+                directionG3 = 0;
+            }else{
+                directionG3 = ghost3->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost3->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
+            }
             //Codigo para actualizar la posicion de los fantasmas:
-            if(directionG1 == 0){
-            }else if(directionG1 == 1){
+            if(directionG1 == 1){
                 newColG1--;
             }else if(directionG1 == 2){
                 newRowG1--;
             }else if(directionG1 == 3){
                 newColG1++;
-            }else{
+            }else if(directionG1 == 4){
                 newRowG1++;
+            }else{
             }
-            if(directionG2 == 0){
-            }else if(directionG2 == 1){
+            if(directionG2 == 1){
                 newColG2--;
             }else if(directionG2 == 2){
                 newRowG2--;
             }else if(directionG2 == 3){
                 newColG2++;
-            }else{
+            }else if(directionG2 == 4){
                 newRowG2++;
+            }else{
             }
-            if(directionG3 == 0){
-            }else if(directionG3 == 1){
+            if(directionG3 == 1){
                 newColG3--;
             }else if(directionG3 == 2){
                 newRowG3--;
             }else if(directionG3 == 3){
                 newColG3++;
-            }else{
+            }else if(directionG3 == 4){
                 newRowG3++;
+            }else{
             }
             Nodo* nuevoNodoGhost1 = this->getCurrentNivel()->getNode(newRowG1, newColG1);
             ghost1->setCurrentPosition(nuevoNodoGhost1);
@@ -453,50 +483,70 @@ void Game::update(){
             int newColG3 = ghost3->getCurrentPosition()->getCol();
             int newRowG4 = ghost4->getCurrentPosition()->getRow();
             int newColG4 = ghost4->getCurrentPosition()->getCol();
-            int directionG1 = ghost1->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost1->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
-            int directionG2 = ghost2->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost2->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
-            int directionG3 = ghost3->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost3->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
-            int directionG4 = ghost4->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost4->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
+            int directionG1;
+            int directionG2;
+            int directionG3;
+            int directionG4;
+            if(this->getCurrentNivel()->getPacman()->getCurrentPosition() == ghost1->getCurrentPosition()){
+                directionG1 = 0;
+            }else{
+                directionG1 = ghost1->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost1->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
+            }
+            if(this->getCurrentNivel()->getPacman()->getCurrentPosition() == ghost2->getCurrentPosition()){
+                directionG2 = 0;
+            }else{
+                directionG2 = ghost2->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost2->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
+            }
+            if(this->getCurrentNivel()->getPacman()->getCurrentPosition() == ghost3->getCurrentPosition()){
+                directionG3 = 0;
+            }else{
+                directionG3 = ghost3->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost3->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
+            }
+            if(this->getCurrentNivel()->getPacman()->getCurrentPosition() == ghost4->getCurrentPosition()){
+                directionG4 = 0;
+            }else{
+                directionG4 = ghost4->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost4->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
+            }
             //Codigo para actualizar la posicion de los fantasmas:
-            if(directionG1 == 0){
-            }else if(directionG1 == 1){
+            if(directionG1 == 1){
                 newColG1--;
             }else if(directionG1 == 2){
                 newRowG1--;
             }else if(directionG1 == 3){
                 newColG1++;
-            }else{
+            }else if(directionG1 == 4){
                 newRowG1++;
+            }else{
             }
-            if(directionG2 == 0){
-            }else if(directionG2 == 1){
+            if(directionG2 == 1){
                 newColG2--;
             }else if(directionG2 == 2){
                 newRowG2--;
             }else if(directionG2 == 3){
                 newColG2++;
-            }else{
+            }else if(directionG2 == 4){
                 newRowG2++;
+            }else{
             }
-            if(directionG3 == 0){
-            }else if(directionG3 == 1){
+            if(directionG3 == 1){
                 newColG3--;
             }else if(directionG3 == 2){
                 newRowG3--;
             }else if(directionG3 == 3){
                 newColG3++;
-            }else{
+            }else if(directionG3 == 4){
                 newRowG3++;
+            }else{
             }
-            if(directionG4 == 0){
-            }else if(directionG4 == 1){
+            if(directionG4 == 1){
                 newColG4--;
             }else if(directionG4 == 2){
                 newRowG4--;
             }else if(directionG4 == 3){
                 newColG4++;
-            }else{
+            }else if(directionG4 == 4){
                 newRowG4++;
+            }else{
             }
             Nodo* nuevoNodoGhost1 = this->getCurrentNivel()->getNode(newRowG1, newColG1);
             ghost1->setCurrentPosition(nuevoNodoGhost1);
