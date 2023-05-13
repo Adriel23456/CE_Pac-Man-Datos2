@@ -851,7 +851,6 @@ Nodo* Game::farAwayNode() {
 // En otro lugar en tu clase
 void Game::gameOver() {
     backgroundMusic.stop();
-    //playGameOverSound();
     int id = QFontDatabase::addApplicationFont("fonts/Joystix.TTF");
     QString family = QFontDatabase::applicationFontFamilies(id).at(0);
     QFont retroFont(family);
