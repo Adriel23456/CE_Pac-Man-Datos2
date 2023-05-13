@@ -88,7 +88,7 @@ Game::Game(QWidget* parent): QGraphicsView(parent) {
     // Configura un temporizador para controlar la velocidad de actualización del juego
     timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, QOverload<>::of(&Game::update));
-    timer->start(250); // Actualiza cada 250ms
+    timer->start(850); // Actualiza cada 850ms
     playBackgroundMusic();
 }
 
