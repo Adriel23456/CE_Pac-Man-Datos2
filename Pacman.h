@@ -12,6 +12,7 @@ private:
     int direction; //Puede ser 0(Nula), 1(Izquierda), 2(Arriba), 3(Derecha) o 4(Abajo)
     Nodo* currentPosition; //Nodo donde se encuentra
     const int reloadTime; // Tiempo de reaparición en milisegundos
+    bool powerUpOn; //Variable para saber si la colision elimina al fantasma o al pacman...
 
 public:
     Pacman(Nodo* currentPosition);
@@ -24,6 +25,9 @@ public:
 
     void setDirection(int direction); 
     int getDirection();
+
+    void setPowerOn(bool newValue); 
+    bool getPowerOn();
 
     void setCurrentPosition(Nodo* newCurrentPosition);
     Nodo* getCurrentPosition();

@@ -1,7 +1,7 @@
 #include "Pacman.h"
 #include <QKeyEvent>
 
-Pacman::Pacman(Nodo* currentPosition): lives(3), direction(0), currentPosition(currentPosition), reloadTime(3000){}   
+Pacman::Pacman(Nodo* currentPosition): lives(3), direction(0), currentPosition(currentPosition), reloadTime(3000), powerUpOn(false){}   
 
 Pacman::~Pacman() {
     // No hay nada que hacer aquí porque no hay asignacion de memoria dinamica...
@@ -29,6 +29,14 @@ void Pacman::setDirection(int newDirection){
 
 int Pacman::getDirection(){
     return direction;
+}
+
+void Pacman::setPowerOn(bool newValue){
+    this->powerUpOn = newValue;
+}
+
+bool Pacman::getPowerOn(){
+    return powerUpOn;
 }
 
 void Pacman::setCurrentPosition(Nodo* newCurrentPosition){

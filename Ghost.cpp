@@ -5,7 +5,7 @@
 #include <climits>
 #include <cmath>
 
-Ghost::Ghost(Nodo* currentPosition): direction(0), currentPosition(currentPosition), reloadTime(8000){}   
+Ghost::Ghost(Nodo* currentPosition): direction(0), currentPosition(currentPosition), reloadTime(8000), death(false){}   
 
 Ghost::~Ghost() {
     // No hay nada que hacer aquí porque no hay asignacion de memoria dinamica...
@@ -131,6 +131,14 @@ void Ghost::setCurrentPosition(Nodo* newCurrentPosition){
 
 Nodo* Ghost::getCurrentPosition(){
     return currentPosition;
+}
+
+void Ghost::setDeath(bool newValue){
+    this->death = newValue;
+}
+
+bool Ghost::getDeath(){
+    return death;
 }
 
 int Ghost::getReloadTime() const{

@@ -18,6 +18,9 @@ Game::Game(QWidget* parent): QGraphicsView(parent) {
     //Datos de inicio basicos
     this->nivel = new Nivel();
     this->puntos = 0;
+    this->pointsForActive = 250;
+    this->powerUpActive = false;
+    this->powerUps = 0;
     this->pacmanDeath = false;
     this->firstGeneration = true;
     this->setFixedSize(800, 500);
@@ -35,6 +38,7 @@ Game::Game(QWidget* parent): QGraphicsView(parent) {
     QFont retroFont(family);
     //Se cargan las imagenes
     foodPixmap.load("Images/food.png");
+    specialFoodPixmap.load("Images/specialFood.png");
     nofoodPixmap.load("Images/nofood.png");
     wallPixmap.load("Images/wall.png");
     pacmanPixmap.load("Images/pacman.png");
@@ -70,6 +74,11 @@ Game::Game(QWidget* parent): QGraphicsView(parent) {
         return; // error
     backgroundMusic.setLoop(true); // Repetir indefinidamente
     backgroundMusic.setVolume(15);
+    // Cargar la música de poder
+    if (!powerUpMusic.openFromFile("sounds/powerUp.ogg"))
+        return; // error
+    powerUpMusic.setLoop(true); // Repetir indefinidamente
+    powerUpMusic.setVolume(15);
     // Cargar el sonido de comer
     if (!pacmanEatBuffer.loadFromFile("sounds/eaten.ogg"))
         return; // error
@@ -88,7 +97,7 @@ Game::Game(QWidget* parent): QGraphicsView(parent) {
     // Configura un temporizador para controlar la velocidad de actualización del juego
     timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, QOverload<>::of(&Game::update));
-    timer->start(850); // Actualiza cada 850ms
+    timer->start(350); // Actualiza cada 350ms
     playBackgroundMusic();
 }
 
@@ -114,6 +123,7 @@ void Game::update(){
         int anchoCelda = this->width() / this->getCurrentNivel()->getColumns();
         int altoCelda = this->height() / this->getCurrentNivel()->getRows();
         // Cambia el tamaño de las imagenes para que quepan en un celda del nivel actual
+        specialFoodPixmap = specialFoodPixmap.scaled(anchoCelda, altoCelda, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
         foodPixmap = foodPixmap.scaled(anchoCelda, altoCelda, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
         nofoodPixmap = nofoodPixmap.scaled(anchoCelda, altoCelda, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
         wallPixmap = wallPixmap.scaled(anchoCelda, altoCelda, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
@@ -129,7 +139,11 @@ void Game::update(){
                     //Pared
                     nodo->setPixmap(wallPixmap);
                 } else {
-                    if(nodo->getHasFood()==true){
+                    if(nodo->getHasPower() == true){
+                        //Poder
+                        nodo->setPixmap(specialFoodPixmap);
+                    }
+                    else if(nodo->getHasFood()==true){
                         //Comida
                         nodo->setPixmap(foodPixmap);
                     } else{
@@ -168,6 +182,17 @@ void Game::update(){
                 nuevoNodoPacman->setHasFood(false);
                 this->getCurrentNivel()->setComidaRestante(this->getCurrentNivel()->getComidaRestante()-1);
                 this->puntos += 10;
+                playPacmanEatSound();
+            }
+            //O poner mamadisimo al pacman si este nodo tenia power...
+            if (nuevoNodoPacman->getHasPower() == true){
+                pacman->setPowerOn(true);
+                stopBackgroundMusic();
+                playPowerMusic();
+                timerPower = new QTimer(this);
+                timerPower->setSingleShot(true); // Este timer solo se activará una vez
+                connect(timerPower, &QTimer::timeout, this, &Game::deactivatePower);
+                timerPower->start(8000); // Comienza el timer para 3 segundos (3000 milisegundos)
             }
         }
 
@@ -268,6 +293,7 @@ void Game::update(){
         int anchoCelda = this->width() / this->getCurrentNivel()->getColumns();
         int altoCelda = this->height() / this->getCurrentNivel()->getRows();
         // Cambia el tamaño de las imagenes para que quepan en un celda del nivel actual
+        specialFoodPixmap = specialFoodPixmap.scaled(anchoCelda, altoCelda, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
         foodPixmap = foodPixmap.scaled(anchoCelda, altoCelda, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
         nofoodPixmap = nofoodPixmap.scaled(anchoCelda, altoCelda, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
         wallPixmap = wallPixmap.scaled(anchoCelda, altoCelda, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
@@ -296,7 +322,17 @@ void Game::update(){
                 this->getCurrentNivel()->setComidaRestante(this->getCurrentNivel()->getComidaRestante()-1);
                 this->puntos += 10;
                 playPacmanEatSound();
-            }else{
+            }
+            //O poner mamadisimo al pacman si este nodo tenia power...
+            if (nuevoNodoPacman->getHasPower() == true){
+                nuevoNodoPacman->setHasPower(false);
+                pacman->setPowerOn(true);
+                stopBackgroundMusic();
+                playPowerMusic();
+                timerPower = new QTimer(this);
+                timerPower->setSingleShot(true); // Este timer solo se activará una vez
+                connect(timerPower, &QTimer::timeout, this, &Game::deactivatePower);
+                timerPower->start(8000); // Comienza el timer para 3 segundos (3000 milisegundos)
             }
         }
         //Codigo para dibujar al PacMan:
@@ -312,7 +348,11 @@ void Game::update(){
                 if (nodo->getType() == 1) {
                     //Pared
                 } else {
-                    if(nodo->getHasFood()==true){
+                    if(nodo->getHasPower() == true){
+                        //Poder
+                        nodo->setPixmap(specialFoodPixmap);
+                    }
+                    else if(nodo->getHasFood()==true){
                         //Comida
                         nodo->setPixmap(foodPixmap);
                     } else{
@@ -336,13 +376,13 @@ void Game::update(){
                 directionG1 = ghost1->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost1->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
             }
             //Codigo para actualizar la posicion de los fantasmas:
-            if(directionG1 == 1){
+            if((directionG1 == 1) && (ghost1->getDeath()==false)){
                 newColG1--;
-            }else if(directionG1 == 2){
+            }else if((directionG1 == 2) && (ghost1->getDeath()==false)){
                 newRowG1--;
-            }else if(directionG1 == 3){
+            }else if((directionG1 == 3) && (ghost1->getDeath()==false)){
                 newColG1++;
-            }else if(directionG1 == 4){
+            }else if((directionG1 == 4) && (ghost1->getDeath()==false)){
                 newRowG1++;
             }else{
             }
@@ -353,9 +393,19 @@ void Game::update(){
             //Se actualizará la posición de los fanstasmas en la escena:
             ghost1->setPos(currentGhost1Col, currentGhost1Row);
 
-            //Todo el codigo para matar al pacman en caso de que este acabara de morir
+            //Todo el codigo para matar al pacman/fantasma en caso de que este acabara de morir
             Nodo* pacmanActualNodo = pacman->getCurrentPosition();
-            if ((nuevoNodoGhost1 == pacmanActualNodo) && (pacmanDeath == false)){
+            if ((pacman->getPowerOn() == true) && (nuevoNodoGhost1 == pacmanActualNodo) && (ghost1->getDeath() == false)){
+                playPacmanEatSound();
+                puntos = puntos + 50; //Se suma un extra de 50pts
+                ghost1->setDeath(true);
+                ghost1->hide();
+                timerGhost1 = new QTimer(this);
+                timerGhost1->setSingleShot(true);
+                connect(timerGhost1, &QTimer::timeout, this, &Game::respawnGhost1);
+                timerGhost1->start(4000); // Comienza el timer para 4 segundos
+            }
+            if ((nuevoNodoGhost1 == pacmanActualNodo) && (pacmanDeath == false) && (pacman->getPowerOn() == false)){
                 playDeathSound();
                 pacmanDeath = true;
                 this->getCurrentNivel()->getPacman()->setDirection(0);
@@ -389,23 +439,23 @@ void Game::update(){
                 directionG2 = ghost2->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost2->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
             }
             //Codigo para actualizar la posicion de los fantasmas:
-            if(directionG1 == 1){
+            if((directionG1 == 1) && (ghost1->getDeath()==false)){
                 newColG1--;
-            }else if(directionG1 == 2){
+            }else if((directionG1 == 2) && (ghost1->getDeath()==false)){
                 newRowG1--;
-            }else if(directionG1 == 3){
+            }else if((directionG1 == 3) && (ghost1->getDeath()==false)){
                 newColG1++;
-            }else if(directionG1 == 4){
+            }else if((directionG1 == 4) && (ghost1->getDeath()==false)){
                 newRowG1++;
             }else{
             }
-            if(directionG2 == 1){
+            if((directionG2 == 1) && (ghost2->getDeath()==false)){
                 newColG2--;
-            }else if(directionG2 == 2){
+            }else if((directionG2 == 2) && (ghost2->getDeath()==false)){
                 newRowG2--;
-            }else if(directionG2 == 3){
+            }else if((directionG2 == 3) && (ghost2->getDeath()==false)){
                 newColG2++;
-            }else if(directionG2 == 4){
+            }else if((directionG2 == 4) && (ghost2->getDeath()==false)){
                 newRowG2++;
             }else{
             }
@@ -420,9 +470,29 @@ void Game::update(){
             //Se actualizará la posición de los fanstasmas en la escena:
             ghost1->setPos(currentGhost1Col, currentGhost1Row);
             ghost2->setPos(currentGhost2Col, currentGhost2Row);
-            //Todo el codigo para matar al pacman en caso de que este acabara de morir
+            //Todo el codigo para matar al pacman/fantasma en caso de que este acabara de morir
             Nodo* pacmanActualNodo = pacman->getCurrentPosition();
-            if (((nuevoNodoGhost1 == pacmanActualNodo) && (pacmanDeath == false))||((nuevoNodoGhost2 == pacmanActualNodo) && (pacmanDeath == false))){
+            if ((pacman->getPowerOn() == true) && (nuevoNodoGhost1 == pacmanActualNodo) && (ghost1->getDeath() == false)){
+                playPacmanEatSound();
+                puntos = puntos + 50; //Se suma un extra de 50pts
+                ghost1->setDeath(true);
+                ghost1->hide();
+                timerGhost1 = new QTimer(this);
+                timerGhost1->setSingleShot(true);
+                connect(timerGhost1, &QTimer::timeout, this, &Game::respawnGhost1);
+                timerGhost1->start(4000); // Comienza el timer para 4 segundos
+            }
+            if ((pacman->getPowerOn() == true) && (nuevoNodoGhost2 == pacmanActualNodo) && (ghost2->getDeath() == false)){
+                playPacmanEatSound();
+                puntos = puntos + 50; //Se suma un extra de 50pts
+                ghost2->setDeath(true);
+                ghost2->hide();
+                timerGhost2 = new QTimer(this);
+                timerGhost2->setSingleShot(true);
+                connect(timerGhost2, &QTimer::timeout, this, &Game::respawnGhost2);
+                timerGhost2->start(4000); // Comienza el timer para 4 segundos
+            }
+            if ((((nuevoNodoGhost1 == pacmanActualNodo) && (pacmanDeath == false))||((nuevoNodoGhost2 == pacmanActualNodo) && (pacmanDeath == false))) && (pacman->getPowerOn() == false)){
                 playDeathSound();
                 pacmanDeath = true;
                 this->getCurrentNivel()->getPacman()->setDirection(0);
@@ -467,33 +537,33 @@ void Game::update(){
                 directionG3 = ghost3->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost3->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
             }
             //Codigo para actualizar la posicion de los fantasmas:
-            if(directionG1 == 1){
+            if((directionG1 == 1) && (ghost1->getDeath()==false)){
                 newColG1--;
-            }else if(directionG1 == 2){
+            }else if((directionG1 == 2) && (ghost1->getDeath()==false)){
                 newRowG1--;
-            }else if(directionG1 == 3){
+            }else if((directionG1 == 3) && (ghost1->getDeath()==false)){
                 newColG1++;
-            }else if(directionG1 == 4){
+            }else if((directionG1 == 4) && (ghost1->getDeath()==false)){
                 newRowG1++;
             }else{
             }
-            if(directionG2 == 1){
+            if((directionG2 == 1) && (ghost2->getDeath()==false)){
                 newColG2--;
-            }else if(directionG2 == 2){
+            }else if((directionG2 == 2) && (ghost2->getDeath()==false)){
                 newRowG2--;
-            }else if(directionG2 == 3){
+            }else if((directionG2 == 3) && (ghost2->getDeath()==false)){
                 newColG2++;
-            }else if(directionG2 == 4){
+            }else if((directionG2 == 4) && (ghost2->getDeath()==false)){
                 newRowG2++;
             }else{
             }
-            if(directionG3 == 1){
+            if((directionG3 == 1) && (ghost3->getDeath()==false)){
                 newColG3--;
-            }else if(directionG3 == 2){
+            }else if((directionG3 == 2) && (ghost3->getDeath()==false)){
                 newRowG3--;
-            }else if(directionG3 == 3){
+            }else if((directionG3 == 3) && (ghost3->getDeath()==false)){
                 newColG3++;
-            }else if(directionG3 == 4){
+            }else if((directionG3 == 4) && (ghost3->getDeath()==false)){
                 newRowG3++;
             }else{
             }
@@ -513,9 +583,39 @@ void Game::update(){
             ghost1->setPos(currentGhost1Col, currentGhost1Row);
             ghost2->setPos(currentGhost2Col, currentGhost2Row);
             ghost3->setPos(currentGhost3Col, currentGhost3Row);
-            //Todo el codigo para matar al pacman en caso de que este acabara de morir
+            //Todo el codigo para matar al pacman/fantasma en caso de que este acabara de morir
             Nodo* pacmanActualNodo = pacman->getCurrentPosition();
-            if (((nuevoNodoGhost1 == pacmanActualNodo) && (pacmanDeath == false))||((nuevoNodoGhost2 == pacmanActualNodo) && (pacmanDeath == false))||((nuevoNodoGhost3 == pacmanActualNodo) && (pacmanDeath == false))){
+            if ((pacman->getPowerOn() == true) && (nuevoNodoGhost1 == pacmanActualNodo) && (ghost1->getDeath() == false)){
+                playPacmanEatSound();
+                puntos = puntos + 50; //Se suma un extra de 50pts
+                ghost1->setDeath(true);
+                ghost1->hide();
+                timerGhost1 = new QTimer(this);
+                timerGhost1->setSingleShot(true);
+                connect(timerGhost1, &QTimer::timeout, this, &Game::respawnGhost1);
+                timerGhost1->start(4000); // Comienza el timer para 4 segundos
+            }
+            if ((pacman->getPowerOn() == true) && (nuevoNodoGhost2 == pacmanActualNodo) && (ghost2->getDeath() == false)){
+                playPacmanEatSound();
+                puntos = puntos + 50; //Se suma un extra de 50pts
+                ghost2->setDeath(true);
+                ghost2->hide();
+                timerGhost2 = new QTimer(this);
+                timerGhost2->setSingleShot(true);
+                connect(timerGhost2, &QTimer::timeout, this, &Game::respawnGhost2);
+                timerGhost2->start(4000); // Comienza el timer para 4 segundos
+            }
+            if ((pacman->getPowerOn() == true) && (nuevoNodoGhost3 == pacmanActualNodo) && (ghost3->getDeath() == false)){
+                playPacmanEatSound();
+                puntos = puntos + 50; //Se suma un extra de 50pts
+                ghost3->setDeath(true);
+                ghost3->hide();
+                timerGhost3 = new QTimer(this);
+                timerGhost3->setSingleShot(true);
+                connect(timerGhost3, &QTimer::timeout, this, &Game::respawnGhost3);
+                timerGhost3->start(4000); // Comienza el timer para 4 segundos
+            }
+            if ((((nuevoNodoGhost1 == pacmanActualNodo) && (pacmanDeath == false))||((nuevoNodoGhost2 == pacmanActualNodo) && (pacmanDeath == false))||((nuevoNodoGhost3 == pacmanActualNodo) && (pacmanDeath == false)))&& (pacman->getPowerOn() == false)){
                 playDeathSound();
                 pacmanDeath = true;
                 this->getCurrentNivel()->getPacman()->setDirection(0);
@@ -567,43 +667,43 @@ void Game::update(){
                 directionG4 = ghost4->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost4->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
             }
             //Codigo para actualizar la posicion de los fantasmas:
-            if(directionG1 == 1){
+            if((directionG1 == 1) && (ghost1->getDeath()==false)){
                 newColG1--;
-            }else if(directionG1 == 2){
+            }else if((directionG1 == 2) && (ghost1->getDeath()==false)){
                 newRowG1--;
-            }else if(directionG1 == 3){
+            }else if((directionG1 == 3) && (ghost1->getDeath()==false)){
                 newColG1++;
-            }else if(directionG1 == 4){
+            }else if((directionG1 == 4) && (ghost1->getDeath()==false)){
                 newRowG1++;
             }else{
             }
-            if(directionG2 == 1){
+            if((directionG2 == 1) && (ghost2->getDeath()==false)){
                 newColG2--;
-            }else if(directionG2 == 2){
+            }else if((directionG2 == 2) && (ghost2->getDeath()==false)){
                 newRowG2--;
-            }else if(directionG2 == 3){
+            }else if((directionG2 == 3) && (ghost2->getDeath()==false)){
                 newColG2++;
-            }else if(directionG2 == 4){
+            }else if((directionG2 == 4) && (ghost2->getDeath()==false)){
                 newRowG2++;
             }else{
             }
-            if(directionG3 == 1){
+            if((directionG3 == 1)&& (ghost3->getDeath()==false)){
                 newColG3--;
-            }else if(directionG3 == 2){
+            }else if((directionG3 == 2) && (ghost3->getDeath()==false)){
                 newRowG3--;
-            }else if(directionG3 == 3){
+            }else if((directionG3 == 3) && (ghost3->getDeath()==false)){
                 newColG3++;
-            }else if(directionG3 == 4){
+            }else if((directionG3 == 4) && (ghost3->getDeath()==false)){
                 newRowG3++;
             }else{
             }
-            if(directionG4 == 1){
+            if((directionG4 == 1) && (ghost4->getDeath()==false)){
                 newColG4--;
-            }else if(directionG4 == 2){
+            }else if((directionG4 == 2) && (ghost4->getDeath()==false)){
                 newRowG4--;
-            }else if(directionG4 == 3){
+            }else if((directionG4 == 3) && (ghost4->getDeath()==false)){
                 newColG4++;
-            }else if(directionG4 == 4){
+            }else if((directionG4 == 4) && (ghost4->getDeath()==false)){
                 newRowG4++;
             }else{
             }
@@ -630,7 +730,47 @@ void Game::update(){
             ghost4->setPos(currentGhost4Col, currentGhost4Row);
             //Todo el codigo para matar al pacman en caso de que este acabara de morir
             Nodo* pacmanActualNodo = pacman->getCurrentPosition();
-            if (((nuevoNodoGhost1 == pacmanActualNodo) && (pacmanDeath == false))||((nuevoNodoGhost2 == pacmanActualNodo) && (pacmanDeath == false))||((nuevoNodoGhost3 == pacmanActualNodo) && (pacmanDeath == false))||((nuevoNodoGhost4 == pacmanActualNodo) && (pacmanDeath == false))){
+            if ((pacman->getPowerOn() == true) && (nuevoNodoGhost1 == pacmanActualNodo) && (ghost1->getDeath() == false)){
+                playPacmanEatSound();
+                puntos = puntos + 50; //Se suma un extra de 50pts
+                ghost1->setDeath(true);
+                ghost1->hide();
+                timerGhost1 = new QTimer(this);
+                timerGhost1->setSingleShot(true);
+                connect(timerGhost1, &QTimer::timeout, this, &Game::respawnGhost1);
+                timerGhost1->start(4000); // Comienza el timer para 4 segundos
+            }
+            if ((pacman->getPowerOn() == true) && (nuevoNodoGhost2 == pacmanActualNodo) && (ghost2->getDeath() == false)){
+                playPacmanEatSound();
+                puntos = puntos + 50; //Se suma un extra de 50pts
+                ghost2->setDeath(true);
+                ghost2->hide();
+                timerGhost2 = new QTimer(this);
+                timerGhost2->setSingleShot(true);
+                connect(timerGhost2, &QTimer::timeout, this, &Game::respawnGhost2);
+                timerGhost2->start(4000); // Comienza el timer para 4 segundos
+            }
+            if ((pacman->getPowerOn() == true) && (nuevoNodoGhost3 == pacmanActualNodo) && (ghost3->getDeath() == false)){
+                playPacmanEatSound();
+                puntos = puntos + 50; //Se suma un extra de 50pts
+                ghost3->setDeath(true);
+                ghost3->hide();
+                timerGhost3 = new QTimer(this);
+                timerGhost3->setSingleShot(true);
+                connect(timerGhost3, &QTimer::timeout, this, &Game::respawnGhost3);
+                timerGhost3->start(4000); // Comienza el timer para 4 segundos
+            }
+            if ((pacman->getPowerOn() == true) && (nuevoNodoGhost4 == pacmanActualNodo) && (ghost4->getDeath() == false)){
+                playPacmanEatSound();
+                puntos = puntos + 50; //Se suma un extra de 50pts
+                ghost4->setDeath(true);
+                ghost4->hide();
+                timerGhost4 = new QTimer(this);
+                timerGhost4->setSingleShot(true);
+                connect(timerGhost4, &QTimer::timeout, this, &Game::respawnGhost4);
+                timerGhost4->start(4000); // Comienza el timer para 4 segundos
+            }
+            if ((((nuevoNodoGhost1 == pacmanActualNodo) && (pacmanDeath == false))||((nuevoNodoGhost2 == pacmanActualNodo) && (pacmanDeath == false))||((nuevoNodoGhost3 == pacmanActualNodo) && (pacmanDeath == false))||((nuevoNodoGhost4 == pacmanActualNodo) && (pacmanDeath == false))) && (pacman->getPowerOn() == false)){
                 playDeathSound();
                 pacmanDeath = true;
                 this->getCurrentNivel()->getPacman()->setDirection(0);
@@ -647,6 +787,22 @@ void Game::update(){
         }
         // Actualizar los objetos
         this->getScene()->update();
+    }
+    if(this->getPowerUps() != 0){
+        //Codigo para activar el funcionamiento diferente de los fantasmas
+    }
+    if(this->puntos >= pointsForActive){
+        this->setPowerUpActive(true);
+        this->setPowerUps(this->getPowerUps()+1);
+        pointsForActive = pointsForActive + 250;
+        //Codigo para agarrar un nodo alejado y  establecerlo como el nuevo nodo con power up...
+        Nodo* nodoAway = farAwayNode();
+        nodoAway->setHasPower(true);
+        if (nodoAway->getHasFood() == true){
+        }else{
+            nodoAway->setHasFood(true);
+            this->getCurrentNivel()->setComidaRestante(this->getCurrentNivel()->getComidaRestante()+1);
+        }
     }
     // Actualizar el texto del puntaje
     scoreText->setPlainText(QString("Score: %1").arg(this->puntos));
@@ -687,6 +843,16 @@ void Game::cambiaNivel() {
     }
 }
 
+void Game::deactivatePower() {
+    Pacman* pacman = this->getCurrentNivel()->getPacman();
+    pacman->setPowerOn(false);
+    stopPowerMusic();
+    playBackgroundMusic();
+    delete timerPower; // Eliminar el timer
+    timerPower = nullptr; // Asegurarse de que el puntero del timer esté a nullptr
+}
+
+
 void Game::keyPressEvent(QKeyEvent* event) {
     int valor = 0;
     if(pacmanDeath == true){
@@ -723,15 +889,50 @@ void Game::respawnPacMan() {
     timerPacman = nullptr; // Asegurarse de que el puntero del timer esté a nullptr
 }
 
+void Game::respawnGhost1() {
+    ///Codigo para agarrar al fantasma 1 y asignarle una nueva posicion y luego mostrarlo
+    Ghost* ghost1 = (this->getCurrentNivel()->getGhosts())[0];
+    ghost1->setDeath(false);
+    ghost1->show();
+    ghost1->setCurrentPosition(farAwayNode());
+    delete timerGhost1; // Eliminar el timer
+    timerGhost1 = nullptr; // Asegurarse de que el puntero del timer esté a nullptr
+}
+
+void Game::respawnGhost2() {
+    ///Codigo para agarrar al fantasma 1 y asignarle una nueva posicion y luego mostrarlo
+    Ghost* ghost2 = (this->getCurrentNivel()->getGhosts())[1];
+    ghost2->setDeath(false);
+    ghost2->show();
+    ghost2->setCurrentPosition(farAwayNode());
+    delete timerGhost2; // Eliminar el timer
+    timerGhost2 = nullptr; // Asegurarse de que el puntero del timer esté a nullptr
+}
+
+void Game::respawnGhost3() {
+    ///Codigo para agarrar al fantasma 1 y asignarle una nueva posicion y luego mostrarlo
+    Ghost* ghost3 = (this->getCurrentNivel()->getGhosts())[2];
+    ghost3->setDeath(false);
+    ghost3->show();
+    ghost3->setCurrentPosition(farAwayNode());
+    delete timerGhost3; // Eliminar el timer
+    timerGhost3 = nullptr; // Asegurarse de que el puntero del timer esté a nullptr
+}
+
+void Game::respawnGhost4() {
+    ///Codigo para agarrar al fantasma 1 y asignarle una nueva posicion y luego mostrarlo
+    Ghost* ghost4 = (this->getCurrentNivel()->getGhosts())[3];
+    ghost4->setDeath(false);
+    ghost4->show();
+    ghost4->setCurrentPosition(farAwayNode());
+    delete timerGhost4; // Eliminar el timer
+    timerGhost4 = nullptr; // Asegurarse de que el puntero del timer esté a nullptr
+}
+
 int* Game::nodeAway(int* puntos, int** matrizBase, int x_Max, int y_Max, int arraySize) {
     // inicializar la distancia máxima a -1 y las coordenadas del punto más alejado a -1
     double maxDistance = -1;
     static int farthestPoint[2] = {-1, -1};
-    qDebug() << QString("Valor de la primer arreglo x: %1").arg(puntos[0]);
-    qDebug() << QString("Valor de la primer arreglo y: %1").arg(puntos[1]);
-    qDebug() << QString("Valor de maximo de columnas (x): %1").arg(x_Max);
-    qDebug() << QString("Valor de maximo de filas (y): %1").arg(y_Max);
-    qDebug() << QString("Tamaño maximo del arreglo actual: %1").arg(arraySize);
     // recorrer la matriz
         for (int j = 0; j < y_Max; j++) {
         for (int i = 0; i < x_Max; i++) {
@@ -771,12 +972,9 @@ Nodo* Game::farAwayNode() {
         int x_Max = this->getCurrentNivel()->getColumns();
         int y_Max = this->getCurrentNivel()->getRows();
         int arraySize = 2;
-        qDebug() << QString("INTENTA APLICAR EL CODIGO DE NODEAWAY");
         int* arrayResult = nodeAway(ptrArray, matrizBase, x_Max, y_Max, arraySize);
         int xFinal = arrayResult[0];
         int yFinal = arrayResult[1];
-        qDebug() << QString("Esta sera la posicion de x nueva: %1").arg(xFinal);
-        qDebug() << QString("Esta sera la posicion de y nueva: %1").arg(yFinal);
         Nodo* nodo = this->getCurrentNivel()->getNode(yFinal,xFinal);
         return nodo;
     }else if(currentLevel == 2){
@@ -879,8 +1077,36 @@ bool Game::getPacmanDeath() {
     return this->pacmanDeath;
 }
 
+void Game::setPowerUpActive(bool newValue) {
+    this->powerUpActive = newValue;
+}
+
+bool Game::getPowerUpActive() {
+    return this->powerUpActive;
+}
+
+void Game::setPointsForActive(int newValue) {
+    this->pointsForActive = newValue;
+}
+
+bool Game::getPointsForActive() {
+    return this->pointsForActive;
+}
+
+void Game::setPowerUps(int newValue) {
+    this->powerUps = newValue;
+}
+
+int Game::getPowerUps() {
+    return this->powerUps;
+}
+
 void Game::playBackgroundMusic() {
     backgroundMusic.play();
+}
+
+void Game::stopBackgroundMusic() {
+    backgroundMusic.stop();
 }
 
 void Game::playPacmanEatSound() {
@@ -889,6 +1115,14 @@ void Game::playPacmanEatSound() {
 
 void Game::playVictorySound() {
     victorySound.play();
+}
+
+void Game::playPowerMusic() {
+    powerUpMusic.play();
+}
+
+void Game::stopPowerMusic() {
+    powerUpMusic.stop();
 }
 
 void Game::playDeathSound() {
