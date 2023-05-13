@@ -18,7 +18,7 @@ Game::Game(QWidget* parent): QGraphicsView(parent) {
     //Datos de inicio basicos
     this->nivel = new Nivel();
     this->puntos = 0;
-    this->pointsForActive = 250;
+    this->pointsForActive = 200;
     this->powerUpActive = false;
     this->powerUps = 0;
     this->pacmanDeath = false;
@@ -403,7 +403,7 @@ void Game::update(){
                 timerGhost1 = new QTimer(this);
                 timerGhost1->setSingleShot(true);
                 connect(timerGhost1, &QTimer::timeout, this, &Game::respawnGhost1);
-                timerGhost1->start(4000); // Comienza el timer para 4 segundos
+                timerGhost1->start(5000); // Comienza el timer para 5 segundos
             }
             if ((nuevoNodoGhost1 == pacmanActualNodo) && (pacmanDeath == false) && (pacman->getPowerOn() == false)){
                 playDeathSound();
@@ -480,7 +480,7 @@ void Game::update(){
                 timerGhost1 = new QTimer(this);
                 timerGhost1->setSingleShot(true);
                 connect(timerGhost1, &QTimer::timeout, this, &Game::respawnGhost1);
-                timerGhost1->start(4000); // Comienza el timer para 4 segundos
+                timerGhost1->start(5000); // Comienza el timer para 5 segundos
             }
             if ((pacman->getPowerOn() == true) && (nuevoNodoGhost2 == pacmanActualNodo) && (ghost2->getDeath() == false)){
                 playPacmanEatSound();
@@ -490,7 +490,7 @@ void Game::update(){
                 timerGhost2 = new QTimer(this);
                 timerGhost2->setSingleShot(true);
                 connect(timerGhost2, &QTimer::timeout, this, &Game::respawnGhost2);
-                timerGhost2->start(4000); // Comienza el timer para 4 segundos
+                timerGhost2->start(5000); // Comienza el timer para 5 segundos
             }
             if ((((nuevoNodoGhost1 == pacmanActualNodo) && (pacmanDeath == false))||((nuevoNodoGhost2 == pacmanActualNodo) && (pacmanDeath == false))) && (pacman->getPowerOn() == false)){
                 playDeathSound();
@@ -593,7 +593,7 @@ void Game::update(){
                 timerGhost1 = new QTimer(this);
                 timerGhost1->setSingleShot(true);
                 connect(timerGhost1, &QTimer::timeout, this, &Game::respawnGhost1);
-                timerGhost1->start(4000); // Comienza el timer para 4 segundos
+                timerGhost1->start(5000); // Comienza el timer para 5 segundos
             }
             if ((pacman->getPowerOn() == true) && (nuevoNodoGhost2 == pacmanActualNodo) && (ghost2->getDeath() == false)){
                 playPacmanEatSound();
@@ -603,7 +603,7 @@ void Game::update(){
                 timerGhost2 = new QTimer(this);
                 timerGhost2->setSingleShot(true);
                 connect(timerGhost2, &QTimer::timeout, this, &Game::respawnGhost2);
-                timerGhost2->start(4000); // Comienza el timer para 4 segundos
+                timerGhost2->start(5000); // Comienza el timer para 5 segundos
             }
             if ((pacman->getPowerOn() == true) && (nuevoNodoGhost3 == pacmanActualNodo) && (ghost3->getDeath() == false)){
                 playPacmanEatSound();
@@ -613,7 +613,7 @@ void Game::update(){
                 timerGhost3 = new QTimer(this);
                 timerGhost3->setSingleShot(true);
                 connect(timerGhost3, &QTimer::timeout, this, &Game::respawnGhost3);
-                timerGhost3->start(4000); // Comienza el timer para 4 segundos
+                timerGhost3->start(5000); // Comienza el timer para 5 segundos
             }
             if ((((nuevoNodoGhost1 == pacmanActualNodo) && (pacmanDeath == false))||((nuevoNodoGhost2 == pacmanActualNodo) && (pacmanDeath == false))||((nuevoNodoGhost3 == pacmanActualNodo) && (pacmanDeath == false)))&& (pacman->getPowerOn() == false)){
                 playDeathSound();
@@ -738,7 +738,7 @@ void Game::update(){
                 timerGhost1 = new QTimer(this);
                 timerGhost1->setSingleShot(true);
                 connect(timerGhost1, &QTimer::timeout, this, &Game::respawnGhost1);
-                timerGhost1->start(4000); // Comienza el timer para 4 segundos
+                timerGhost1->start(5000); // Comienza el timer para 5 segundos
             }
             if ((pacman->getPowerOn() == true) && (nuevoNodoGhost2 == pacmanActualNodo) && (ghost2->getDeath() == false)){
                 playPacmanEatSound();
@@ -748,7 +748,7 @@ void Game::update(){
                 timerGhost2 = new QTimer(this);
                 timerGhost2->setSingleShot(true);
                 connect(timerGhost2, &QTimer::timeout, this, &Game::respawnGhost2);
-                timerGhost2->start(4000); // Comienza el timer para 4 segundos
+                timerGhost2->start(5000); // Comienza el timer para 5 segundos
             }
             if ((pacman->getPowerOn() == true) && (nuevoNodoGhost3 == pacmanActualNodo) && (ghost3->getDeath() == false)){
                 playPacmanEatSound();
@@ -758,7 +758,7 @@ void Game::update(){
                 timerGhost3 = new QTimer(this);
                 timerGhost3->setSingleShot(true);
                 connect(timerGhost3, &QTimer::timeout, this, &Game::respawnGhost3);
-                timerGhost3->start(4000); // Comienza el timer para 4 segundos
+                timerGhost3->start(5000); // Comienza el timer para 5 segundos
             }
             if ((pacman->getPowerOn() == true) && (nuevoNodoGhost4 == pacmanActualNodo) && (ghost4->getDeath() == false)){
                 playPacmanEatSound();
@@ -768,7 +768,7 @@ void Game::update(){
                 timerGhost4 = new QTimer(this);
                 timerGhost4->setSingleShot(true);
                 connect(timerGhost4, &QTimer::timeout, this, &Game::respawnGhost4);
-                timerGhost4->start(4000); // Comienza el timer para 4 segundos
+                timerGhost4->start(5000); // Comienza el timer para 5 segundos
             }
             if ((((nuevoNodoGhost1 == pacmanActualNodo) && (pacmanDeath == false))||((nuevoNodoGhost2 == pacmanActualNodo) && (pacmanDeath == false))||((nuevoNodoGhost3 == pacmanActualNodo) && (pacmanDeath == false))||((nuevoNodoGhost4 == pacmanActualNodo) && (pacmanDeath == false))) && (pacman->getPowerOn() == false)){
                 playDeathSound();
@@ -794,7 +794,7 @@ void Game::update(){
     if(this->puntos >= pointsForActive){
         this->setPowerUpActive(true);
         this->setPowerUps(this->getPowerUps()+1);
-        pointsForActive = pointsForActive + 250;
+        pointsForActive = pointsForActive + 200;
         //Codigo para agarrar un nodo alejado y  establecerlo como el nuevo nodo con power up...
         Nodo* nodoAway = farAwayNode();
         nodoAway->setHasPower(true);
