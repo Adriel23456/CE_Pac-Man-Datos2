@@ -88,7 +88,7 @@ Game::Game(QWidget* parent): QGraphicsView(parent) {
     // Configura un temporizador para controlar la velocidad de actualización del juego
     timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, QOverload<>::of(&Game::update));
-    timer->start(500); // Actualiza cada 500ms
+    timer->start(250); // Actualiza cada 250ms
     playBackgroundMusic();
 }
 
@@ -358,6 +358,7 @@ void Game::update(){
             if ((nuevoNodoGhost1 == pacmanActualNodo) && (pacmanDeath == false)){
                 playDeathSound();
                 pacmanDeath = true;
+                this->getCurrentNivel()->getPacman()->setDirection(0);
                 pacman->loseLife();
                 if(pacman->getLives() == 0){
                     gameOver();
@@ -424,6 +425,7 @@ void Game::update(){
             if (((nuevoNodoGhost1 == pacmanActualNodo) && (pacmanDeath == false))||((nuevoNodoGhost2 == pacmanActualNodo) && (pacmanDeath == false))){
                 playDeathSound();
                 pacmanDeath = true;
+                this->getCurrentNivel()->getPacman()->setDirection(0);
                 pacman->loseLife();
                 if(pacman->getLives() == 0){
                     gameOver();
@@ -516,6 +518,7 @@ void Game::update(){
             if (((nuevoNodoGhost1 == pacmanActualNodo) && (pacmanDeath == false))||((nuevoNodoGhost2 == pacmanActualNodo) && (pacmanDeath == false))||((nuevoNodoGhost3 == pacmanActualNodo) && (pacmanDeath == false))){
                 playDeathSound();
                 pacmanDeath = true;
+                this->getCurrentNivel()->getPacman()->setDirection(0);
                 pacman->loseLife();
                 if(pacman->getLives() == 0){
                     gameOver();
@@ -630,6 +633,7 @@ void Game::update(){
             if (((nuevoNodoGhost1 == pacmanActualNodo) && (pacmanDeath == false))||((nuevoNodoGhost2 == pacmanActualNodo) && (pacmanDeath == false))||((nuevoNodoGhost3 == pacmanActualNodo) && (pacmanDeath == false))||((nuevoNodoGhost4 == pacmanActualNodo) && (pacmanDeath == false))){
                 playDeathSound();
                 pacmanDeath = true;
+                this->getCurrentNivel()->getPacman()->setDirection(0);
                 pacman->loseLife();
                 if(pacman->getLives() == 0){
                     gameOver();
@@ -686,6 +690,7 @@ void Game::cambiaNivel() {
 void Game::keyPressEvent(QKeyEvent* event) {
     int valor = 0;
     if(pacmanDeath == true){
+        this->getCurrentNivel()->getPacman()->setDirection(0);
     }else{
         switch (event->key()) {
         case Qt::Key_W:
