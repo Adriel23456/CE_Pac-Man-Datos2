@@ -70,9 +70,12 @@ struct Pos {
     Pos(int x = 0, int y = 0) : x(x), y(y) {}
 };
 
-bool isSafe(int x, int y, int** matriz, std::vector<std::vector<bool>>& visited, int max_xMatriz, int max_yMatriz) {
-    return x >= 0 && y >= 0 && x < max_xMatriz && y < max_yMatriz && matriz[y][x] == 0 && !visited[y][x];
-}
+struct Node2{
+    Pos pos;
+    std::vector<Node2*> children;
+    Node2* parent;
+    Node2(Pos pos, Node2* parent = nullptr) : pos(pos), parent(parent) {}
+};
 
 // Función para calcular la distancia de Manhattan entre dos puntos
 int manhattanDistance2(Pos a, Pos b) {
@@ -82,49 +85,73 @@ int manhattanDistance2(Pos a, Pos b) {
 // Función para ordenar las direcciones posibles basándose en la distancia de Manhattan hasta el destino
 std::vector<Pos> getOrderedDirections(Pos current, Pos destination) {
     std::vector<Pos> directions = {{0, -1}, {-1, 0}, {0, 1}, {1, 0}};
-    std::sort(directions.begin(), directions.end(),
-              [&current, &destination](Pos dir1, Pos dir2) {
-                  Pos newPos1(current.x + dir1.x, current.y + dir1.y);
-                  Pos newPos2(current.x + dir2.x, current.y + dir2.y);
-                  return manhattanDistance2(newPos1, destination) < manhattanDistance2(newPos2, destination);
-              });
-    return directions;
+    // Crear un vector de pares, donde el primer elemento del par es la dirección y el segundo elemento es la distancia
+    std::vector<std::pair<Pos, int>> distances;
+    for (const auto& dir : directions) {
+        Pos newPos(current.x + dir.x, current.y + dir.y);
+        distances.push_back({dir, manhattanDistance2(newPos, destination)});
+    }
+    // Ordenar el vector de pares basándose en la distancia
+    std::sort(distances.begin(), distances.end(), [](const std::pair<Pos, int>& a, const std::pair<Pos, int>& b) {
+        return a.second < b.second;
+    });
+    // Crear un nuevo vector de direcciones ordenadas
+    std::vector<Pos> orderedDirections;
+    for (const auto& pair : distances) {
+        orderedDirections.push_back(pair.first);
+    }
+    return orderedDirections;
 }
 
-
-// Función recursiva para resolver el laberinto utilizando backtracking
-bool solveMaze(int x, int y, int xFinish, int yFinish, std::vector<Pos>& path, int** matriz, std::vector<std::vector<bool>>& visited, int max_xMatriz, int max_yMatriz) {
-    // Si hemos llegado al destino, añadimos la celda actual al camino y devolvemos true
-    if (x == xFinish && y == yFinish) {
-        return true;
+void printTree(Node2* node, int level = 0) {
+    qDebug() << QString(level, ' ') << "(" << node->pos.x << ", " << node->pos.y << ")";
+    for (Node2* child : node->children) {
+        printTree(child, level + 1);
     }
-    // Marcamos la celda actual como visitada
+}
+
+bool isSafe(int x, int y, int** matriz, std::vector<std::vector<bool>>& visited, int max_xMatriz, int max_yMatriz) {
+    return x >= 0 && y >= 0 && x < max_xMatriz && y < max_yMatriz && matriz[y][x] == 0 && !visited[y][x];
+}
+
+Node2* exploreMaze(int x, int y, int xFinish, int yFinish, Node2* parentNode, int** matriz, std::vector<std::vector<bool>>& visited, int max_xMatriz, int max_yMatriz) {
     visited[y][x] = true;
-    // Definimos las posibles direcciones en las que podemos movernos
-    //std::vector<Pos> directions = {{0, -1}, {-1, 0}, {0, 1}, {1, 0}};
-    // Recorremos todas las direcciones posibles
+    Node2* currentNode = new Node2(Pos(x, y), parentNode);
+    if (x == xFinish && y == yFinish) {
+        return currentNode;
+    }
     std::vector<Pos> directions = getOrderedDirections(Pos(x, y), Pos(xFinish, yFinish));
-    // Recorremos todas las direcciones posibles
     for (const auto& dir : directions) {
         int newX = x + dir.x;
         int newY = y + dir.y;
-        // Si la celda es válida y no ha sido visitada, y es transitable
         if (isSafe(newX, newY, matriz, visited, max_xMatriz, max_yMatriz)) {
-            path.push_back(Pos(newX, newY));
-            // Imprimir el camino actual.
-            qDebug() << "Current path:";
-            for(const auto& pos : path) {
-                qDebug() << "(" << pos.x << ", " << pos.y << ")";
+            Node2* result = exploreMaze(newX, newY, xFinish, yFinish, currentNode, matriz, visited, max_xMatriz, max_yMatriz);
+            if (result != nullptr) {
+                currentNode->children.push_back(result);
+                return currentNode;
             }
-            if (solveMaze(newX, newY, xFinish, yFinish, path, matriz, visited, max_xMatriz, max_yMatriz)) {
-                // Si podemos resolverlo, añadimos la celda al camino y devolvemos true
-                return true;
-            }
-            path.pop_back();
         }
     }
-    // Si no podemos resolver el laberinto a partir de la celda actual, devolvemos false
-    return false;
+    delete currentNode;
+    return nullptr;
+}
+
+int getFirstDirectionB(Node2* node) {
+    if (node == nullptr || node->parent == nullptr) {
+        return 0;
+    }
+    Pos parentPos = node->parent->pos;
+    Pos currentPos = node->pos;
+    if (currentPos.x < parentPos.x) {
+        return 1;
+    } else if (currentPos.y < parentPos.y) {
+        return 2;
+    } else if (currentPos.x > parentPos.x) {
+        return 3;
+    } else if (currentPos.y > parentPos.y) {
+        return 4;
+    }
+    return 0;
 }
 
 // Función para obtener la dirección del primer movimiento en backtracking
@@ -285,28 +312,51 @@ int Ghost::getDirectionPowerA(int** matriz, Nodo* final, Nodo* inicio, int rows,
     return -1; 
 }
 
-//Metodo de aplicacion del algoritmo de Backtracking a los fatasmas correctos
-int Ghost::getDirectionPowerB(int** matriz, Nodo* final, Nodo* inicio, int rows, int columns){
+int Ghost::getDirectionPowerB(int** matriz, Nodo* final, Nodo* inicio, int rows, int columns) {
     int xStart = inicio->getCol();
     int yStart = inicio->getRow();
     int xFinish = final->getCol();
     int yFinish = final->getRow();
     int max_xMatriz = columns;
     int max_yMatriz = rows;
-
     std::vector<std::vector<bool>> visited(max_yMatriz, std::vector<bool>(max_xMatriz, false));
-    // Vector para almacenar el camino desde el inicio hasta el destino
-    std::vector<Pos> path;
-    path.clear();  // Limpiar la lista del camino
-    path.push_back(Pos(xStart, yStart));
-    // Intentamos resolver el laberinto utilizando backtracking
-    if (!solveMaze(xStart, yStart, xFinish, yFinish, path, matriz, visited, max_xMatriz, max_yMatriz)) {
-        return -1; // Si no encontramos una solución, regresamos -1
+    Node2* root = exploreMaze(xStart, yStart, xFinish, yFinish, nullptr, matriz, visited, max_xMatriz, max_yMatriz);
+    printTree(root);
+    if (root == nullptr) {    return -1; // Si no encontramos una solución, regresamos -1
     }
-    // Si encontramos una solución, obtenemos la dirección del primer movimiento
-    int direction = getFirstDirectionB(path);
+
+    // Buscamos el nodo objetivo en el árbol
+    std::queue<Node2*> queue;
+    Node2* targetNode = nullptr;
+    queue.push(root);
+    while (!queue.empty()) {
+        Node2* node = queue.front();
+        queue.pop();
+        if (node->pos.x == xFinish && node->pos.y == yFinish) {
+            targetNode = node;
+            break;
+        }
+        for (Node2* child : node->children) {
+            queue.push(child);
+        }
+    }
+
+    // Si no encontramos el nodo objetivo, regresamos -1
+    if (targetNode == nullptr) {
+        return -1;
+    }
+
+    // Retrocedemos desde el nodo objetivo hasta el nodo raíz para encontrar el primer movimiento
+    Node2* node = targetNode;
+    while (node->parent != nullptr && node->parent->parent != nullptr) {
+        node = node->parent;
+    }
+
+    // Obtenemos la dirección del primer movimiento
+    int direction = getFirstDirectionB(node);
     return direction;
 }
+
 
 void Ghost::setCurrentPosition(Nodo* newCurrentPosition){
     this->currentPosition = newCurrentPosition;

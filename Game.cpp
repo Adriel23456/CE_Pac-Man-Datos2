@@ -73,7 +73,7 @@ Game::Game(QWidget* parent): QGraphicsView(parent) {
     if (!backgroundMusic.openFromFile("sounds/background.ogg"))
         return; // error
     backgroundMusic.setLoop(true); // Repetir indefinidamente
-    backgroundMusic.setVolume(1);
+    backgroundMusic.setVolume(15);
     // Cargar la música de poder
     if (!powerUpMusic.openFromFile("sounds/powerUp.ogg"))
         return; // error
@@ -97,7 +97,7 @@ Game::Game(QWidget* parent): QGraphicsView(parent) {
     // Configura un temporizador para controlar la velocidad de actualización del juego
     timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, QOverload<>::of(&Game::update));
-    timer->start(450); // Actualiza cada 350ms
+    timer->start(450); // Actualiza cada 450ms
     playBackgroundMusic();
 }
 
