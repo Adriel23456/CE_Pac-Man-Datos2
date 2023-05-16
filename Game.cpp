@@ -387,6 +387,13 @@ void Game::update(){
             }else{
             }
             Nodo* nuevoNodoGhost1 = this->getCurrentNivel()->getNode(newRowG1, newColG1);
+            if(nuevoNodoGhost1->getHasPower() == true){
+                nuevoNodoGhost1->setHasPower(false);
+                if(nuevoNodoGhost1->getHasFood() == true){
+                    nuevoNodoGhost1->setHasFood(false);
+                    this->getCurrentNivel()->setComidaRestante(this->getCurrentNivel()->getComidaRestante()-1);
+                }
+            }
             ghost1->setCurrentPosition(nuevoNodoGhost1);
             int currentGhost1Row = (ghost1->getCurrentPosition()->getRow()) * altoCelda;
             int currentGhost1Col = (ghost1->getCurrentPosition()->getCol())* anchoCelda;
@@ -463,6 +470,20 @@ void Game::update(){
             ghost1->setCurrentPosition(nuevoNodoGhost1);
             Nodo* nuevoNodoGhost2 = this->getCurrentNivel()->getNode(newRowG2, newColG2);
             ghost2->setCurrentPosition(nuevoNodoGhost2);
+            if(nuevoNodoGhost1->getHasPower() == true){
+                nuevoNodoGhost1->setHasPower(false);
+                if(nuevoNodoGhost1->getHasFood() == true){
+                    nuevoNodoGhost1->setHasFood(false);
+                    this->getCurrentNivel()->setComidaRestante(this->getCurrentNivel()->getComidaRestante()-1);
+                }
+            }
+            if(nuevoNodoGhost2->getHasPower() == true){
+                nuevoNodoGhost2->setHasPower(false);
+                if(nuevoNodoGhost2->getHasFood() == true){
+                    nuevoNodoGhost2->setHasFood(false);
+                    this->getCurrentNivel()->setComidaRestante(this->getCurrentNivel()->getComidaRestante()-1);
+                }
+            }
             int currentGhost1Row = (ghost1->getCurrentPosition()->getRow()) * altoCelda;
             int currentGhost1Col = (ghost1->getCurrentPosition()->getCol())* anchoCelda;
             int currentGhost2Row = (ghost2->getCurrentPosition()->getRow()) * altoCelda;
@@ -506,8 +527,6 @@ void Game::update(){
                 connect(timerPacman, &QTimer::timeout, this, &Game::respawnPacMan);
                 timerPacman->start(pacman->getReloadTime()); // Comienza el timer para 3 segundos (3000 milisegundos)
             }
-
-
         }else if(currentlevelGame == 3){
             Ghost* ghost1 = ghosts[0];
             Ghost* ghost2 = ghosts[1];
@@ -573,6 +592,27 @@ void Game::update(){
             ghost2->setCurrentPosition(nuevoNodoGhost2);
             Nodo* nuevoNodoGhost3 = this->getCurrentNivel()->getNode(newRowG3, newColG3);
             ghost3->setCurrentPosition(nuevoNodoGhost3);
+            if(nuevoNodoGhost1->getHasPower() == true){
+                nuevoNodoGhost1->setHasPower(false);
+                if(nuevoNodoGhost1->getHasFood() == true){
+                    nuevoNodoGhost1->setHasFood(false);
+                    this->getCurrentNivel()->setComidaRestante(this->getCurrentNivel()->getComidaRestante()-1);
+                }
+            }
+            if(nuevoNodoGhost2->getHasPower() == true){
+                nuevoNodoGhost2->setHasPower(false);
+                if(nuevoNodoGhost2->getHasFood() == true){
+                    nuevoNodoGhost2->setHasFood(false);
+                    this->getCurrentNivel()->setComidaRestante(this->getCurrentNivel()->getComidaRestante()-1);
+                }
+            }
+            if(nuevoNodoGhost3->getHasPower() == true){
+                nuevoNodoGhost3->setHasPower(false);
+                if(nuevoNodoGhost3->getHasFood() == true){
+                    nuevoNodoGhost3->setHasFood(false);
+                    this->getCurrentNivel()->setComidaRestante(this->getCurrentNivel()->getComidaRestante()-1);
+                }
+            }
             int currentGhost1Row = (ghost1->getCurrentPosition()->getRow()) * altoCelda;
             int currentGhost1Col = (ghost1->getCurrentPosition()->getCol())* anchoCelda;
             int currentGhost2Row = (ghost2->getCurrentPosition()->getRow()) * altoCelda;
@@ -715,6 +755,34 @@ void Game::update(){
             ghost3->setCurrentPosition(nuevoNodoGhost3);
             Nodo* nuevoNodoGhost4 = this->getCurrentNivel()->getNode(newRowG4, newColG4);
             ghost4->setCurrentPosition(nuevoNodoGhost4);
+            if(nuevoNodoGhost1->getHasPower() == true){
+                nuevoNodoGhost1->setHasPower(false);
+                if(nuevoNodoGhost1->getHasFood() == true){
+                    nuevoNodoGhost1->setHasFood(false);
+                    this->getCurrentNivel()->setComidaRestante(this->getCurrentNivel()->getComidaRestante()-1);
+                }
+            }
+            if(nuevoNodoGhost2->getHasPower() == true){
+                nuevoNodoGhost2->setHasPower(false);
+                if(nuevoNodoGhost2->getHasFood() == true){
+                    nuevoNodoGhost2->setHasFood(false);
+                    this->getCurrentNivel()->setComidaRestante(this->getCurrentNivel()->getComidaRestante()-1);
+                }
+            }
+            if(nuevoNodoGhost3->getHasPower() == true){
+                nuevoNodoGhost3->setHasPower(false);
+                if(nuevoNodoGhost3->getHasFood() == true){
+                    nuevoNodoGhost3->setHasFood(false);
+                    this->getCurrentNivel()->setComidaRestante(this->getCurrentNivel()->getComidaRestante()-1);
+                }
+            }
+            if(nuevoNodoGhost4->getHasPower() == true){
+                nuevoNodoGhost4->setHasPower(false);
+                if(nuevoNodoGhost4->getHasFood() == true){
+                    nuevoNodoGhost4->setHasFood(false);
+                    this->getCurrentNivel()->setComidaRestante(this->getCurrentNivel()->getComidaRestante()-1);
+                }
+            }
             int currentGhost1Row = (ghost1->getCurrentPosition()->getRow()) * altoCelda;
             int currentGhost1Col = (ghost1->getCurrentPosition()->getCol())* anchoCelda;
             int currentGhost2Row = (ghost2->getCurrentPosition()->getRow()) * altoCelda;
@@ -958,7 +1026,7 @@ int* Game::nodeAway(int* puntos, int** matrizBase, int x_Max, int y_Max, int arr
     return farthestPoint;
 }
 
-// En otro lugar en tu clase
+
 Nodo* Game::farAwayNode() {
     std::vector<Ghost*> ghosts = this->getCurrentNivel()->getGhosts();
     int currentLevel = this->getCurrentNivel()->getCurrentLevel();
