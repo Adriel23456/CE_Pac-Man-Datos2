@@ -391,7 +391,7 @@ void Game::update(){
                 directionG1 = 0;
             }else{
                 if(this->getPowerUpActive() == true){
-                    directionG1 = ghost1->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getFirstPowerUpNode(),ghost1->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
+                    directionG1 = ghost1->getDirectionPowerA(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getFirstPowerUpNode(),ghost1->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
                 }else{
                     directionG1 = ghost1->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost1->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
                 }
@@ -462,7 +462,7 @@ void Game::update(){
                 directionG1 = 0;
             }else{
                 if(this->getPowerUpActive() == true){
-                    directionG1 = ghost1->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getFirstPowerUpNode(),ghost1->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
+                    directionG1 = ghost1->getDirectionPowerA(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getFirstPowerUpNode(),ghost1->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
                 }else{
                     directionG1 = ghost1->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost1->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
                 }
@@ -471,7 +471,7 @@ void Game::update(){
                 directionG2 = 0;
             }else{
                 if(this->getPowerUpActive() == true){
-                    directionG2 = ghost2->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getFirstPowerUpNode(),ghost2->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
+                    directionG2 = ghost2->getDirectionPowerB(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getFirstPowerUpNode(),ghost2->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
                 }else{
                     directionG2 = ghost2->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost2->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
                 }
@@ -581,7 +581,7 @@ void Game::update(){
                 directionG1 = 0;
             }else{
                 if(this->getPowerUpActive() == true){
-                    directionG1 = ghost1->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getFirstPowerUpNode(),ghost1->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
+                    directionG1 = ghost1->getDirectionPowerA(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getFirstPowerUpNode(),ghost1->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
                 }else{
                     directionG1 = ghost1->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost1->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
                 }
@@ -590,7 +590,7 @@ void Game::update(){
                 directionG2 = 0;
             }else{
                 if(this->getPowerUpActive() == true){
-                    directionG2 = ghost2->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getFirstPowerUpNode(),ghost2->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
+                    directionG2 = ghost2->getDirectionPowerB(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getFirstPowerUpNode(),ghost2->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
                 }else{
                     directionG2 = ghost2->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost2->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
                 }
@@ -599,7 +599,7 @@ void Game::update(){
                 directionG3 = 0;
             }else{
                 if(this->getPowerUpActive() == true){
-                    directionG3 = ghost3->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getFirstPowerUpNode(),ghost3->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
+                    directionG3 = ghost3->getDirectionPowerA(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getFirstPowerUpNode(),ghost3->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
                 }else{
                     directionG3 = ghost3->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost3->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
                 }
@@ -748,7 +748,7 @@ void Game::update(){
                 directionG1 = 0;
             }else{
                 if(this->getPowerUpActive() == true){
-                    directionG1 = ghost1->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getFirstPowerUpNode(),ghost1->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
+                    directionG1 = ghost1->getDirectionPowerA(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getFirstPowerUpNode(),ghost1->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
                 }else{
                     directionG1 = ghost1->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost1->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
                 }
@@ -757,7 +757,7 @@ void Game::update(){
                 directionG2 = 0;
             }else{
                 if(this->getPowerUpActive() == true){
-                    directionG2 = ghost2->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getFirstPowerUpNode(),ghost2->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
+                    directionG2 = ghost2->getDirectionPowerB(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getFirstPowerUpNode(),ghost2->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
                 }else{
                     directionG2 = ghost2->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost2->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
                 }
@@ -766,7 +766,7 @@ void Game::update(){
                 directionG3 = 0;
             }else{
                 if(this->getPowerUpActive() == true){
-                    directionG3 = ghost3->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getFirstPowerUpNode(),ghost3->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
+                    directionG3 = ghost3->getDirectionPowerA(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getFirstPowerUpNode(),ghost3->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
                 }else{
                     directionG3 = ghost3->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost3->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
                 }
@@ -775,7 +775,7 @@ void Game::update(){
                 directionG4 = 0;
             }else{
                 if(this->getPowerUpActive() == true){
-                    directionG4 = ghost4->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getFirstPowerUpNode(),ghost4->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
+                    directionG4 = ghost4->getDirectionPowerB(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getFirstPowerUpNode(),ghost4->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
                 }else{
                     directionG4 = ghost4->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost4->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
                 }

@@ -19,6 +19,10 @@ public:
 
     int getDirectionPacMan(int** matriz, Nodo* final, Nodo* inicio, int rows, int columns);
 
+    int getDirectionPowerA(int** matriz, Nodo* final, Nodo* inicio, int rows, int columns); //Algoritmo A*
+
+    int getDirectionPowerB(int** matriz, Nodo* final, Nodo* inicio, int rows, int columns); //Algoritmo de Backtracking con un arbol
+
     void setCurrentPosition(Nodo* newCurrentPosition);
     Nodo* getCurrentPosition();
 

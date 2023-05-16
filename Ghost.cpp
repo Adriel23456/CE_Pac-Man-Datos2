@@ -4,6 +4,7 @@
 #include <unordered_set>
 #include <climits>
 #include <cmath>
+#include <QDebug>
 
 Ghost::Ghost(Nodo* currentPosition): direction(0), currentPosition(currentPosition), reloadTime(8000), death(false){}   
 
@@ -62,6 +63,134 @@ int getFirstDirection(Node* start, Node* end) {
 }
 
 int Ghost::getDirectionPacMan(int** matriz, Nodo* final, Nodo* inicio, int rows, int columns){
+    std::unordered_set<std::pair<int, int>, pair_hash> visited;
+    int xStart = inicio->getCol();
+    int yStart = inicio->getRow();
+    int xFinish = final->getCol();
+    int yFinish = final->getRow();
+    int max_xMatriz = columns;
+    int max_yMatriz = rows;
+    std::priority_queue<Node*, std::vector<Node*>, Compare> pq;
+
+    // Vector para almacenar todos los nodos creados
+    std::vector<Node*> allNodes;
+
+    Node* start = new Node(xStart, yStart);
+    start->g = 0;
+    start->h = manhattanDistance(xStart, yStart, xFinish, yFinish);
+    
+    // Agregamos el nodo inicial al vector
+    allNodes.push_back(start);
+
+    pq.push(start);
+
+    while(!pq.empty()) {
+        Node* current = pq.top();
+        pq.pop();
+
+        if (visited.find(std::make_pair(current->x, current->y)) != visited.end()) {
+            continue;
+        }
+        visited.insert(std::make_pair(current->x, current->y));
+
+        // Si hemos llegado al destino, eliminamos todos los nodos y devolvemos la dirección del primer movimiento
+        if(current->x == xFinish && current->y == yFinish) {
+            int direction = getFirstDirection(start, current);
+            for (Node* node : allNodes) {
+                delete node;
+            }
+            return direction;
+        }
+
+        // Visitamos los vecinos
+        std::vector<std::pair<int, int>> directions = {{0, -1}, {-1, 0}, {0, 1}, {1, 0}};
+        for(auto& dir : directions) {
+            int newX = current->x + dir.first;
+            int newY = current->y + dir.second;
+            // Verificamos si la nueva posición está dentro de los límites y si es una celda transitable
+            if(newX >= 0 && newX < max_xMatriz && newY >= 0 && newY < max_yMatriz && matriz[newY][newX] == 0 && visited.find(std::make_pair(newX, newY)) == visited.end()) {
+                Node* neighbor = new Node(newX, newY, current);
+                neighbor->g = current->g + 1;
+                neighbor->h = manhattanDistance(newX, newY, xFinish, yFinish);
+                // Agregamos el nodo vecino al vector
+                allNodes.push_back(neighbor);
+                pq.push(neighbor);
+            }
+        }
+    }
+
+    // Si no se encontró un camino, eliminamos todos los nodos y devolvemos -1
+    for (Node* node : allNodes) {
+        delete node;
+    }
+    return -1; 
+}
+
+int Ghost::getDirectionPowerA(int** matriz, Nodo* final, Nodo* inicio, int rows, int columns){
+    std::unordered_set<std::pair<int, int>, pair_hash> visited;
+    int xStart = inicio->getCol();
+    int yStart = inicio->getRow();
+    int xFinish = final->getCol();
+    int yFinish = final->getRow();
+    int max_xMatriz = columns;
+    int max_yMatriz = rows;
+    std::priority_queue<Node*, std::vector<Node*>, Compare> pq;
+
+    // Vector para almacenar todos los nodos creados
+    std::vector<Node*> allNodes;
+
+    Node* start = new Node(xStart, yStart);
+    start->g = 0;
+    start->h = manhattanDistance(xStart, yStart, xFinish, yFinish);
+    
+    // Agregamos el nodo inicial al vector
+    allNodes.push_back(start);
+
+    pq.push(start);
+
+    while(!pq.empty()) {
+        Node* current = pq.top();
+        pq.pop();
+
+        if (visited.find(std::make_pair(current->x, current->y)) != visited.end()) {
+            continue;
+        }
+        visited.insert(std::make_pair(current->x, current->y));
+
+        // Si hemos llegado al destino, eliminamos todos los nodos y devolvemos la dirección del primer movimiento
+        if(current->x == xFinish && current->y == yFinish) {
+            int direction = getFirstDirection(start, current);
+            for (Node* node : allNodes) {
+                delete node;
+            }
+            return direction;
+        }
+
+        // Visitamos los vecinos
+        std::vector<std::pair<int, int>> directions = {{0, -1}, {-1, 0}, {0, 1}, {1, 0}};
+        for(auto& dir : directions) {
+            int newX = current->x + dir.first;
+            int newY = current->y + dir.second;
+            // Verificamos si la nueva posición está dentro de los límites y si es una celda transitable
+            if(newX >= 0 && newX < max_xMatriz && newY >= 0 && newY < max_yMatriz && matriz[newY][newX] == 0 && visited.find(std::make_pair(newX, newY)) == visited.end()) {
+                Node* neighbor = new Node(newX, newY, current);
+                neighbor->g = current->g + 1;
+                neighbor->h = manhattanDistance(newX, newY, xFinish, yFinish);
+                // Agregamos el nodo vecino al vector
+                allNodes.push_back(neighbor);
+                pq.push(neighbor);
+            }
+        }
+    }
+
+    // Si no se encontró un camino, eliminamos todos los nodos y devolvemos -1
+    for (Node* node : allNodes) {
+        delete node;
+    }
+    return -1; 
+}
+
+int Ghost::getDirectionPowerB(int** matriz, Nodo* final, Nodo* inicio, int rows, int columns){
     std::unordered_set<std::pair<int, int>, pair_hash> visited;
     int xStart = inicio->getCol();
     int yStart = inicio->getRow();
