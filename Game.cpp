@@ -343,7 +343,6 @@ void Game::update(){
                 stopBackgroundMusic();
                 playPowerMusic();
                 if(this->getPowerUps() == 0){
-                    qDebug() << "Ya no quedan poderes...";
                     this->setPowerUpActive(false);
                 }
                 timerPower = new QTimer(this);
@@ -391,6 +390,7 @@ void Game::update(){
                 directionG1 = 0;
             }else{
                 if(this->getPowerUpActive() == true){
+                    qDebug() << "Algoritmo A* para el fanstasma 1:";
                     directionG1 = ghost1->getDirectionPowerA(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getFirstPowerUpNode(),ghost1->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
                 }else{
                     directionG1 = ghost1->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost1->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
@@ -462,6 +462,7 @@ void Game::update(){
                 directionG1 = 0;
             }else{
                 if(this->getPowerUpActive() == true){
+                    qDebug() << "Algoritmo A* para el fanstasma 1:";
                     directionG1 = ghost1->getDirectionPowerA(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getFirstPowerUpNode(),ghost1->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
                 }else{
                     directionG1 = ghost1->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost1->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
@@ -471,6 +472,7 @@ void Game::update(){
                 directionG2 = 0;
             }else{
                 if(this->getPowerUpActive() == true){
+                    qDebug() << "Algoritmo Backtracking para el fanstasma 2:";
                     directionG2 = ghost2->getDirectionPowerB(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getFirstPowerUpNode(),ghost2->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
                 }else{
                     directionG2 = ghost2->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost2->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
@@ -581,6 +583,7 @@ void Game::update(){
                 directionG1 = 0;
             }else{
                 if(this->getPowerUpActive() == true){
+                    qDebug() << "Algoritmo A* para el fanstasma 1:";
                     directionG1 = ghost1->getDirectionPowerA(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getFirstPowerUpNode(),ghost1->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
                 }else{
                     directionG1 = ghost1->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost1->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
@@ -590,6 +593,7 @@ void Game::update(){
                 directionG2 = 0;
             }else{
                 if(this->getPowerUpActive() == true){
+                    qDebug() << "Algoritmo Backtracking para el fanstasma 2:";
                     directionG2 = ghost2->getDirectionPowerB(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getFirstPowerUpNode(),ghost2->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
                 }else{
                     directionG2 = ghost2->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost2->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
@@ -599,6 +603,7 @@ void Game::update(){
                 directionG3 = 0;
             }else{
                 if(this->getPowerUpActive() == true){
+                    qDebug() << "Algoritmo A* para el fanstasma 3:";
                     directionG3 = ghost3->getDirectionPowerA(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getFirstPowerUpNode(),ghost3->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
                 }else{
                     directionG3 = ghost3->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost3->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
@@ -748,6 +753,7 @@ void Game::update(){
                 directionG1 = 0;
             }else{
                 if(this->getPowerUpActive() == true){
+                    qDebug() << "Algoritmo A* para el fanstasma 1:";
                     directionG1 = ghost1->getDirectionPowerA(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getFirstPowerUpNode(),ghost1->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
                 }else{
                     directionG1 = ghost1->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost1->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
@@ -757,6 +763,7 @@ void Game::update(){
                 directionG2 = 0;
             }else{
                 if(this->getPowerUpActive() == true){
+                    qDebug() << "Algoritmo Backtracking para el fanstasma 2:";
                     directionG2 = ghost2->getDirectionPowerB(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getFirstPowerUpNode(),ghost2->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
                 }else{
                     directionG2 = ghost2->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost2->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
@@ -766,6 +773,7 @@ void Game::update(){
                 directionG3 = 0;
             }else{
                 if(this->getPowerUpActive() == true){
+                    qDebug() << "Algoritmo A* para el fanstasma 3:";
                     directionG3 = ghost3->getDirectionPowerA(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getFirstPowerUpNode(),ghost3->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
                 }else{
                     directionG3 = ghost3->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost3->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
@@ -775,6 +783,7 @@ void Game::update(){
                 directionG4 = 0;
             }else{
                 if(this->getPowerUpActive() == true){
+                    qDebug() << "Algoritmo Backtracking para el fanstasma 4:";
                     directionG4 = ghost4->getDirectionPowerB(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getFirstPowerUpNode(),ghost4->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
                 }else{
                     directionG4 = ghost4->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost4->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
