@@ -5,6 +5,8 @@
 #include <climits>
 #include <cmath>
 #include <QDebug>
+#include <algorithm>
+#include <random>
 
 Ghost::Ghost(Nodo* currentPosition): direction(0), currentPosition(currentPosition), reloadTime(8000), death(false){}   
 
@@ -72,6 +74,24 @@ bool isSafe(int x, int y, int** matriz, std::vector<std::vector<bool>>& visited,
     return x >= 0 && y >= 0 && x < max_xMatriz && y < max_yMatriz && matriz[y][x] == 0 && !visited[y][x];
 }
 
+// Función para calcular la distancia de Manhattan entre dos puntos
+int manhattanDistance2(Pos a, Pos b) {
+    return abs(a.x - b.x) + abs(a.y - b.y);
+}
+
+// Función para ordenar las direcciones posibles basándose en la distancia de Manhattan hasta el destino
+std::vector<Pos> getOrderedDirections(Pos current, Pos destination) {
+    std::vector<Pos> directions = {{0, -1}, {-1, 0}, {0, 1}, {1, 0}};
+    std::sort(directions.begin(), directions.end(),
+              [&current, &destination](Pos dir1, Pos dir2) {
+                  Pos newPos1(current.x + dir1.x, current.y + dir1.y);
+                  Pos newPos2(current.x + dir2.x, current.y + dir2.y);
+                  return manhattanDistance2(newPos1, destination) < manhattanDistance2(newPos2, destination);
+              });
+    return directions;
+}
+
+
 // Función recursiva para resolver el laberinto utilizando backtracking
 bool solveMaze(int x, int y, int xFinish, int yFinish, std::vector<Pos>& path, int** matriz, std::vector<std::vector<bool>>& visited, int max_xMatriz, int max_yMatriz) {
     // Si hemos llegado al destino, añadimos la celda actual al camino y devolvemos true
@@ -81,7 +101,9 @@ bool solveMaze(int x, int y, int xFinish, int yFinish, std::vector<Pos>& path, i
     // Marcamos la celda actual como visitada
     visited[y][x] = true;
     // Definimos las posibles direcciones en las que podemos movernos
-    std::vector<Pos> directions = {{0, -1}, {-1, 0}, {0, 1}, {1, 0}};
+    //std::vector<Pos> directions = {{0, -1}, {-1, 0}, {0, 1}, {1, 0}};
+    // Recorremos todas las direcciones posibles
+    std::vector<Pos> directions = getOrderedDirections(Pos(x, y), Pos(xFinish, yFinish));
     // Recorremos todas las direcciones posibles
     for (const auto& dir : directions) {
         int newX = x + dir.x;
@@ -275,6 +297,7 @@ int Ghost::getDirectionPowerB(int** matriz, Nodo* final, Nodo* inicio, int rows,
     std::vector<std::vector<bool>> visited(max_yMatriz, std::vector<bool>(max_xMatriz, false));
     // Vector para almacenar el camino desde el inicio hasta el destino
     std::vector<Pos> path;
+    path.clear();  // Limpiar la lista del camino
     path.push_back(Pos(xStart, yStart));
     // Intentamos resolver el laberinto utilizando backtracking
     if (!solveMaze(xStart, yStart, xFinish, yFinish, path, matriz, visited, max_xMatriz, max_yMatriz)) {
