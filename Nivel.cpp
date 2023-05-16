@@ -277,6 +277,7 @@ Nivel::Nivel(){
     this->nodoPrincipio = getNodoPrincipio1(matrizNodos, columns);
     this->pacman = new Pacman(nodoPrincipio);
     this->currentMatriz = get2DArrayPointer1(level1Data, rows, columns);
+    this->powerUpNodes;
 }
 
 Nivel::Nivel(int newLevel){
@@ -290,6 +291,7 @@ Nivel::Nivel(int newLevel){
         this->nodoPrincipio = getNodoPrincipio2(matrizNodos, columns);
         this->pacman = new Pacman(nodoPrincipio);
         this->currentMatriz = get2DArrayPointer2(level2Data, rows, columns);
+        this->powerUpNodes;
     }else if(currentLevel == 3){
         this->rows = 12;
         this->columns = 33;
@@ -299,6 +301,7 @@ Nivel::Nivel(int newLevel){
         this->nodoPrincipio = getNodoPrincipio3(matrizNodos, columns);
         this->pacman = new Pacman(nodoPrincipio);
         this->currentMatriz = get2DArrayPointer3(level3Data, rows, columns);
+        this->powerUpNodes;
     }else{
         this->rows = 19;
         this->columns = 29;
@@ -308,6 +311,7 @@ Nivel::Nivel(int newLevel){
         this->nodoPrincipio = getNodoPrincipio4(matrizNodos, columns);
         this->pacman = new Pacman(nodoPrincipio);
         this->currentMatriz = get2DArrayPointer4(level4Data, rows, columns);
+        this->powerUpNodes;
     }
 }
 
@@ -381,4 +385,26 @@ void Nivel::setComidaRestante(int newComida){
 
 std::vector<Ghost*> Nivel::getGhosts(){
     return enemigos;
+}
+
+std::vector<Nodo*> Nivel::getPowerUpNodes(){
+    return powerUpNodes;
+}
+
+void Nivel::addPowerUpNode(Nodo* newNodo){
+    this->powerUpNodes.push_back(newNodo);
+}
+
+void Nivel::deleteFirstPowerUpNode(){
+    if(!this->powerUpNodes.empty()) {
+        this->powerUpNodes.erase(this->powerUpNodes.begin());
+    }
+}
+
+Nodo* Nivel::getFirstPowerUpNode(){
+    if(!this->powerUpNodes.empty()) {
+        Nodo* firstNodo = this->powerUpNodes[0];
+        return firstNodo;
+    }
+    return nullptr;
 }

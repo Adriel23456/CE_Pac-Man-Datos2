@@ -116,6 +116,10 @@ QGraphicsScene* Game::getScene(){
 }
 
 void Game::update(){
+    //Comprobar si esta activado en el tablero algun PowerUp
+    if(this->getPowerUps() == 0){
+        this->setPowerUpActive(false);
+    }
     // Comprueba si se debe cambiar de nivel
     this->cambiaNivel();
     if(this->getFirstGeneration() == true){
@@ -186,9 +190,15 @@ void Game::update(){
             }
             //O poner mamadisimo al pacman si este nodo tenia power...
             if (nuevoNodoPacman->getHasPower() == true){
+                this->getCurrentNivel()->deleteFirstPowerUpNode();
+                this->setPowerUps(this->getPowerUps()-1);
                 pacman->setPowerOn(true);
                 stopBackgroundMusic();
                 playPowerMusic();
+                if(this->getPowerUps() == 0){
+                    qDebug() << "El PacMan se lo comio y ya no quedan poderes...";
+                    this->setPowerUpActive(false);
+                }
                 timerPower = new QTimer(this);
                 timerPower->setSingleShot(true); // Este timer solo se activará una vez
                 connect(timerPower, &QTimer::timeout, this, &Game::deactivatePower);
@@ -325,10 +335,17 @@ void Game::update(){
             }
             //O poner mamadisimo al pacman si este nodo tenia power...
             if (nuevoNodoPacman->getHasPower() == true){
+                nuevoNodoPacman->setHasFood(false);
                 nuevoNodoPacman->setHasPower(false);
+                this->getCurrentNivel()->deleteFirstPowerUpNode();
+                this->setPowerUps(this->getPowerUps()-1);
                 pacman->setPowerOn(true);
                 stopBackgroundMusic();
                 playPowerMusic();
+                if(this->getPowerUps() == 0){
+                    qDebug() << "Ya no quedan poderes...";
+                    this->setPowerUpActive(false);
+                }
                 timerPower = new QTimer(this);
                 timerPower->setSingleShot(true); // Este timer solo se activará una vez
                 connect(timerPower, &QTimer::timeout, this, &Game::deactivatePower);
@@ -370,10 +387,14 @@ void Game::update(){
             int newRowG1 = ghost1->getCurrentPosition()->getRow();
             int newColG1 = ghost1->getCurrentPosition()->getCol();
             int directionG1;
-            if((this->getCurrentNivel()->getPacman()->getCurrentPosition() == ghost1->getCurrentPosition()) || (pacmanDeath == true)){
+            if((this->getCurrentNivel()->getPacman()->getCurrentPosition() == ghost1->getCurrentPosition()) || (pacmanDeath == true) || (this->getCurrentNivel()->getFirstPowerUpNode() == ghost1->getCurrentPosition())){
                 directionG1 = 0;
             }else{
-                directionG1 = ghost1->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost1->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
+                if(this->getPowerUpActive() == true){
+                    directionG1 = ghost1->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getFirstPowerUpNode(),ghost1->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
+                }else{
+                    directionG1 = ghost1->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost1->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
+                }
             }
             //Codigo para actualizar la posicion de los fantasmas:
             if((directionG1 == 1) && (ghost1->getDeath()==false)){
@@ -387,19 +408,21 @@ void Game::update(){
             }else{
             }
             Nodo* nuevoNodoGhost1 = this->getCurrentNivel()->getNode(newRowG1, newColG1);
+            ghost1->setCurrentPosition(nuevoNodoGhost1);
             if(nuevoNodoGhost1->getHasPower() == true){
+                this->setPowerUps(this->getPowerUps()-1);
+                this->getCurrentNivel()->deleteFirstPowerUpNode();
                 nuevoNodoGhost1->setHasPower(false);
-                if(nuevoNodoGhost1->getHasFood() == true){
-                    nuevoNodoGhost1->setHasFood(false);
-                    this->getCurrentNivel()->setComidaRestante(this->getCurrentNivel()->getComidaRestante()-1);
+                nuevoNodoGhost1->setHasFood(false);
+                this->getCurrentNivel()->setComidaRestante(this->getCurrentNivel()->getComidaRestante()-1);
+                if(this->getPowerUps() == 0){
+                    this->setPowerUpActive(false);
                 }
             }
-            ghost1->setCurrentPosition(nuevoNodoGhost1);
             int currentGhost1Row = (ghost1->getCurrentPosition()->getRow()) * altoCelda;
             int currentGhost1Col = (ghost1->getCurrentPosition()->getCol())* anchoCelda;
             //Se actualizará la posición de los fanstasmas en la escena:
             ghost1->setPos(currentGhost1Col, currentGhost1Row);
-
             //Todo el codigo para matar al pacman/fantasma en caso de que este acabara de morir
             Nodo* pacmanActualNodo = pacman->getCurrentPosition();
             if ((pacman->getPowerOn() == true) && (nuevoNodoGhost1 == pacmanActualNodo) && (ghost1->getDeath() == false)){
@@ -435,15 +458,23 @@ void Game::update(){
             int newColG2 = ghost2->getCurrentPosition()->getCol();
             int directionG1;
             int directionG2;
-            if((this->getCurrentNivel()->getPacman()->getCurrentPosition() == ghost1->getCurrentPosition()) || (pacmanDeath == true)){
+            if((this->getCurrentNivel()->getPacman()->getCurrentPosition() == ghost1->getCurrentPosition()) || (pacmanDeath == true) || (this->getCurrentNivel()->getFirstPowerUpNode() == ghost1->getCurrentPosition())){
                 directionG1 = 0;
             }else{
-                directionG1 = ghost1->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost1->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
+                if(this->getPowerUpActive() == true){
+                    directionG1 = ghost1->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getFirstPowerUpNode(),ghost1->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
+                }else{
+                    directionG1 = ghost1->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost1->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
+                }
             }
-            if((this->getCurrentNivel()->getPacman()->getCurrentPosition() == ghost2->getCurrentPosition()) || (pacmanDeath == true)){
+            if((this->getCurrentNivel()->getPacman()->getCurrentPosition() == ghost2->getCurrentPosition()) || (pacmanDeath == true) || (this->getCurrentNivel()->getFirstPowerUpNode() == ghost2->getCurrentPosition())){
                 directionG2 = 0;
             }else{
-                directionG2 = ghost2->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost2->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
+                if(this->getPowerUpActive() == true){
+                    directionG2 = ghost2->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getFirstPowerUpNode(),ghost2->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
+                }else{
+                    directionG2 = ghost2->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost2->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
+                }
             }
             //Codigo para actualizar la posicion de los fantasmas:
             if((directionG1 == 1) && (ghost1->getDeath()==false)){
@@ -471,17 +502,23 @@ void Game::update(){
             Nodo* nuevoNodoGhost2 = this->getCurrentNivel()->getNode(newRowG2, newColG2);
             ghost2->setCurrentPosition(nuevoNodoGhost2);
             if(nuevoNodoGhost1->getHasPower() == true){
+                this->setPowerUps(this->getPowerUps()-1);
+                this->getCurrentNivel()->deleteFirstPowerUpNode();
                 nuevoNodoGhost1->setHasPower(false);
-                if(nuevoNodoGhost1->getHasFood() == true){
-                    nuevoNodoGhost1->setHasFood(false);
-                    this->getCurrentNivel()->setComidaRestante(this->getCurrentNivel()->getComidaRestante()-1);
+                nuevoNodoGhost1->setHasFood(false);
+                this->getCurrentNivel()->setComidaRestante(this->getCurrentNivel()->getComidaRestante()-1);
+                if(this->getPowerUps() == 0){
+                    this->setPowerUpActive(false);
                 }
             }
             if(nuevoNodoGhost2->getHasPower() == true){
+                this->setPowerUps(this->getPowerUps()-1);
+                this->getCurrentNivel()->deleteFirstPowerUpNode();
                 nuevoNodoGhost2->setHasPower(false);
-                if(nuevoNodoGhost2->getHasFood() == true){
-                    nuevoNodoGhost2->setHasFood(false);
-                    this->getCurrentNivel()->setComidaRestante(this->getCurrentNivel()->getComidaRestante()-1);
+                nuevoNodoGhost2->setHasFood(false);
+                this->getCurrentNivel()->setComidaRestante(this->getCurrentNivel()->getComidaRestante()-1);
+                if(this->getPowerUps() == 0){
+                    this->setPowerUpActive(false);
                 }
             }
             int currentGhost1Row = (ghost1->getCurrentPosition()->getRow()) * altoCelda;
@@ -540,20 +577,32 @@ void Game::update(){
             int directionG1;
             int directionG2;
             int directionG3;
-            if((this->getCurrentNivel()->getPacman()->getCurrentPosition() == ghost1->getCurrentPosition()) || (pacmanDeath == true)){
+            if((this->getCurrentNivel()->getPacman()->getCurrentPosition() == ghost1->getCurrentPosition()) || (pacmanDeath == true) || (this->getCurrentNivel()->getFirstPowerUpNode() == ghost1->getCurrentPosition())){
                 directionG1 = 0;
             }else{
-                directionG1 = ghost1->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost1->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
+                if(this->getPowerUpActive() == true){
+                    directionG1 = ghost1->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getFirstPowerUpNode(),ghost1->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
+                }else{
+                    directionG1 = ghost1->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost1->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
+                }
             }
-            if((this->getCurrentNivel()->getPacman()->getCurrentPosition() == ghost2->getCurrentPosition()) || (pacmanDeath == true)){
+            if((this->getCurrentNivel()->getPacman()->getCurrentPosition() == ghost2->getCurrentPosition()) || (pacmanDeath == true) || (this->getCurrentNivel()->getFirstPowerUpNode() == ghost2->getCurrentPosition())){
                 directionG2 = 0;
             }else{
-                directionG2 = ghost2->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost2->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
+                if(this->getPowerUpActive() == true){
+                    directionG2 = ghost2->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getFirstPowerUpNode(),ghost2->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
+                }else{
+                    directionG2 = ghost2->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost2->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
+                }
             }
-            if((this->getCurrentNivel()->getPacman()->getCurrentPosition() == ghost3->getCurrentPosition()) || (pacmanDeath == true)){
+            if((this->getCurrentNivel()->getPacman()->getCurrentPosition() == ghost3->getCurrentPosition()) || (pacmanDeath == true) || (this->getCurrentNivel()->getFirstPowerUpNode() == ghost3->getCurrentPosition())){
                 directionG3 = 0;
             }else{
-                directionG3 = ghost3->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost3->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
+                if(this->getPowerUpActive() == true){
+                    directionG3 = ghost3->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getFirstPowerUpNode(),ghost3->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
+                }else{
+                    directionG3 = ghost3->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost3->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
+                }
             }
             //Codigo para actualizar la posicion de los fantasmas:
             if((directionG1 == 1) && (ghost1->getDeath()==false)){
@@ -593,24 +642,33 @@ void Game::update(){
             Nodo* nuevoNodoGhost3 = this->getCurrentNivel()->getNode(newRowG3, newColG3);
             ghost3->setCurrentPosition(nuevoNodoGhost3);
             if(nuevoNodoGhost1->getHasPower() == true){
+                this->setPowerUps(this->getPowerUps()-1);
+                this->getCurrentNivel()->deleteFirstPowerUpNode();
                 nuevoNodoGhost1->setHasPower(false);
-                if(nuevoNodoGhost1->getHasFood() == true){
-                    nuevoNodoGhost1->setHasFood(false);
-                    this->getCurrentNivel()->setComidaRestante(this->getCurrentNivel()->getComidaRestante()-1);
+                nuevoNodoGhost1->setHasFood(false);
+                this->getCurrentNivel()->setComidaRestante(this->getCurrentNivel()->getComidaRestante()-1);
+                if(this->getPowerUps() == 0){
+                    this->setPowerUpActive(false);
                 }
             }
             if(nuevoNodoGhost2->getHasPower() == true){
+                this->setPowerUps(this->getPowerUps()-1);
+                this->getCurrentNivel()->deleteFirstPowerUpNode();
                 nuevoNodoGhost2->setHasPower(false);
-                if(nuevoNodoGhost2->getHasFood() == true){
-                    nuevoNodoGhost2->setHasFood(false);
-                    this->getCurrentNivel()->setComidaRestante(this->getCurrentNivel()->getComidaRestante()-1);
+                nuevoNodoGhost2->setHasFood(false);
+                this->getCurrentNivel()->setComidaRestante(this->getCurrentNivel()->getComidaRestante()-1);
+                if(this->getPowerUps() == 0){
+                    this->setPowerUpActive(false);
                 }
             }
             if(nuevoNodoGhost3->getHasPower() == true){
+                this->setPowerUps(this->getPowerUps()-1);
+                this->getCurrentNivel()->deleteFirstPowerUpNode();
                 nuevoNodoGhost3->setHasPower(false);
-                if(nuevoNodoGhost3->getHasFood() == true){
-                    nuevoNodoGhost3->setHasFood(false);
-                    this->getCurrentNivel()->setComidaRestante(this->getCurrentNivel()->getComidaRestante()-1);
+                nuevoNodoGhost3->setHasFood(false);
+                this->getCurrentNivel()->setComidaRestante(this->getCurrentNivel()->getComidaRestante()-1);
+                if(this->getPowerUps() == 0){
+                    this->setPowerUpActive(false);
                 }
             }
             int currentGhost1Row = (ghost1->getCurrentPosition()->getRow()) * altoCelda;
@@ -686,25 +744,41 @@ void Game::update(){
             int directionG2;
             int directionG3;
             int directionG4;
-            if((this->getCurrentNivel()->getPacman()->getCurrentPosition() == ghost1->getCurrentPosition()) || (pacmanDeath == true)){
+            if((this->getCurrentNivel()->getPacman()->getCurrentPosition() == ghost1->getCurrentPosition()) || (pacmanDeath == true) || (this->getCurrentNivel()->getFirstPowerUpNode() == ghost1->getCurrentPosition())){
                 directionG1 = 0;
             }else{
-                directionG1 = ghost1->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost1->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
+                if(this->getPowerUpActive() == true){
+                    directionG1 = ghost1->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getFirstPowerUpNode(),ghost1->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
+                }else{
+                    directionG1 = ghost1->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost1->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
+                }
             }
-            if((this->getCurrentNivel()->getPacman()->getCurrentPosition() == ghost2->getCurrentPosition()) || (pacmanDeath == true)){
+            if((this->getCurrentNivel()->getPacman()->getCurrentPosition() == ghost2->getCurrentPosition()) || (pacmanDeath == true) || (this->getCurrentNivel()->getFirstPowerUpNode() == ghost2->getCurrentPosition())){
                 directionG2 = 0;
             }else{
-                directionG2 = ghost2->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost2->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
+                if(this->getPowerUpActive() == true){
+                    directionG2 = ghost2->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getFirstPowerUpNode(),ghost2->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
+                }else{
+                    directionG2 = ghost2->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost2->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
+                }
             }
-            if((this->getCurrentNivel()->getPacman()->getCurrentPosition() == ghost3->getCurrentPosition()) || (pacmanDeath == true)){
+            if((this->getCurrentNivel()->getPacman()->getCurrentPosition() == ghost3->getCurrentPosition()) || (pacmanDeath == true) || (this->getCurrentNivel()->getFirstPowerUpNode() == ghost3->getCurrentPosition())){
                 directionG3 = 0;
             }else{
-                directionG3 = ghost3->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost3->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
+                if(this->getPowerUpActive() == true){
+                    directionG3 = ghost3->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getFirstPowerUpNode(),ghost3->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
+                }else{
+                    directionG3 = ghost3->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost3->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
+                }
             }
-            if((this->getCurrentNivel()->getPacman()->getCurrentPosition() == ghost4->getCurrentPosition()) || (pacmanDeath == true)){
+            if((this->getCurrentNivel()->getPacman()->getCurrentPosition() == ghost4->getCurrentPosition()) || (pacmanDeath == true) || (this->getCurrentNivel()->getFirstPowerUpNode() == ghost4->getCurrentPosition())){
                 directionG4 = 0;
             }else{
-                directionG4 = ghost4->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost4->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
+                if(this->getPowerUpActive() == true){
+                    directionG4 = ghost4->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getFirstPowerUpNode(),ghost4->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
+                }else{
+                    directionG4 = ghost4->getDirectionPacMan(this->getCurrentNivel()->getCurrentMatriz(),this->getCurrentNivel()->getPacman()->getCurrentPosition(),ghost4->getCurrentPosition(), this->getCurrentNivel()->getRows(), this->getCurrentNivel()->getColumns());
+                }
             }
             //Codigo para actualizar la posicion de los fantasmas:
             if((directionG1 == 1) && (ghost1->getDeath()==false)){
@@ -756,31 +830,43 @@ void Game::update(){
             Nodo* nuevoNodoGhost4 = this->getCurrentNivel()->getNode(newRowG4, newColG4);
             ghost4->setCurrentPosition(nuevoNodoGhost4);
             if(nuevoNodoGhost1->getHasPower() == true){
+                this->setPowerUps(this->getPowerUps()-1);
+                this->getCurrentNivel()->deleteFirstPowerUpNode();
                 nuevoNodoGhost1->setHasPower(false);
-                if(nuevoNodoGhost1->getHasFood() == true){
-                    nuevoNodoGhost1->setHasFood(false);
-                    this->getCurrentNivel()->setComidaRestante(this->getCurrentNivel()->getComidaRestante()-1);
+                nuevoNodoGhost1->setHasFood(false);
+                this->getCurrentNivel()->setComidaRestante(this->getCurrentNivel()->getComidaRestante()-1);
+                if(this->getPowerUps() == 0){
+                    this->setPowerUpActive(false);
                 }
             }
             if(nuevoNodoGhost2->getHasPower() == true){
+                this->setPowerUps(this->getPowerUps()-1);
+                this->getCurrentNivel()->deleteFirstPowerUpNode();
                 nuevoNodoGhost2->setHasPower(false);
-                if(nuevoNodoGhost2->getHasFood() == true){
-                    nuevoNodoGhost2->setHasFood(false);
-                    this->getCurrentNivel()->setComidaRestante(this->getCurrentNivel()->getComidaRestante()-1);
+                nuevoNodoGhost2->setHasFood(false);
+                this->getCurrentNivel()->setComidaRestante(this->getCurrentNivel()->getComidaRestante()-1);
+                if(this->getPowerUps() == 0){
+                    this->setPowerUpActive(false);
                 }
             }
             if(nuevoNodoGhost3->getHasPower() == true){
+                this->setPowerUps(this->getPowerUps()-1);
+                this->getCurrentNivel()->deleteFirstPowerUpNode();
                 nuevoNodoGhost3->setHasPower(false);
-                if(nuevoNodoGhost3->getHasFood() == true){
-                    nuevoNodoGhost3->setHasFood(false);
-                    this->getCurrentNivel()->setComidaRestante(this->getCurrentNivel()->getComidaRestante()-1);
+                nuevoNodoGhost3->setHasFood(false);
+                this->getCurrentNivel()->setComidaRestante(this->getCurrentNivel()->getComidaRestante()-1);
+                if(this->getPowerUps() == 0){
+                    this->setPowerUpActive(false);
                 }
             }
             if(nuevoNodoGhost4->getHasPower() == true){
+                this->setPowerUps(this->getPowerUps()-1);
+                this->getCurrentNivel()->deleteFirstPowerUpNode();
                 nuevoNodoGhost4->setHasPower(false);
-                if(nuevoNodoGhost4->getHasFood() == true){
-                    nuevoNodoGhost4->setHasFood(false);
-                    this->getCurrentNivel()->setComidaRestante(this->getCurrentNivel()->getComidaRestante()-1);
+                nuevoNodoGhost4->setHasFood(false);
+                this->getCurrentNivel()->setComidaRestante(this->getCurrentNivel()->getComidaRestante()-1);
+                if(this->getPowerUps() == 0){
+                    this->setPowerUpActive(false);
                 }
             }
             int currentGhost1Row = (ghost1->getCurrentPosition()->getRow()) * altoCelda;
@@ -856,15 +942,13 @@ void Game::update(){
         // Actualizar los objetos
         this->getScene()->update();
     }
-    if(this->getPowerUps() != 0){
-        //Codigo para activar el funcionamiento diferente de los fantasmas
-    }
     if(this->puntos >= pointsForActive){
         this->setPowerUpActive(true);
         this->setPowerUps(this->getPowerUps()+1);
         pointsForActive = pointsForActive + 200;
         //Codigo para agarrar un nodo alejado y  establecerlo como el nuevo nodo con power up...
         Nodo* nodoAway = farAwayNode();
+        this->getCurrentNivel()->addPowerUpNode(nodoAway);
         nodoAway->setHasPower(true);
         if (nodoAway->getHasFood() == true){
         }else{
