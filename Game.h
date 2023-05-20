@@ -66,6 +66,7 @@ public:
     void deactivatePower();
     Nodo* farAwayNode();
     QGraphicsScene* getScene();
+    void SocketControl();
     void setFirstGeneration(bool newValue);
     bool getFirstGeneration();
     void setPacmanDeath(bool newValue);

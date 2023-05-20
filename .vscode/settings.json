@@ -58,6 +58,8 @@
         "qgraphicsscene": "cpp",
         "qgraphicsrectitem": "cpp",
         "set": "cpp",
-        "unordered_set": "cpp"
-    }
+        "unordered_set": "cpp",
+        "cinttypes": "cpp"
+    },
+    "C_Cpp.errorSquiggles": "enabled"
 }
