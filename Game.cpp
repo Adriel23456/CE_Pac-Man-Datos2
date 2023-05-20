@@ -6,6 +6,7 @@
 #include <QFontDatabase>
 #include <QMessageBox>
 #include <QCoreApplication>
+#include <QtConcurrent/QtConcurrent>
 #include <cmath>
 #include <climits>
 #include <netinet/in.h>
@@ -957,6 +958,7 @@ void Game::update(){
         }
         // Actualizar los objetos
         this->getScene()->update();
+        QtConcurrent::run([this] { this->socketControl(); });
     }
     if(this->puntos >= pointsForActive){
         this->setPowerUpActive(true);
@@ -978,8 +980,6 @@ void Game::update(){
     livesText->setPlainText(QString("Lives: %1").arg(this->getCurrentNivel()->getPacman()->getLives()));
     // Actualizar el texto del nivel
     levelText->setPlainText(QString("Level: %1").arg(this->getCurrentNivel()->getCurrentLevel()));
-
-    this->socketControl();
 }
 
 void Game::cambiaNivel() {
@@ -1239,9 +1239,7 @@ bool Game::getFirstGeneration() {
 }
 
 void Game::socketControl(){
-
-    try
-    {
+    try{
         int server_fd, new_socket, valread;
         struct sockaddr_in address;
         int opt = 1;
@@ -1289,18 +1287,15 @@ void Game::socketControl(){
         printf("%s\n", buffer);
         int value = (int)buffer[0];
         value = value - 47;
-        this->getCurrentNivel()->getPacman()->setDirection(value);
-        //send(new_socket, hello, strlen(hello), 0);
-
+        if(pacmanDeath == true){
+        }else{
+            this->getCurrentNivel()->getPacman()->setDirection(value);
+        }
         // closing the connected socket
         close(new_socket);
         // closing the listening socket
         shutdown(server_fd, SHUT_RDWR);
-    }
-    catch (int e)
-    {
-
-    }
+    }catch (int e){}
 }
 
 void Game::setPacmanDeath(bool newValue) {

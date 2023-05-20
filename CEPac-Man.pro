@@ -3,6 +3,7 @@ TARGET = CEPac-Man
 INCLUDEPATH += .
 
 QT += core gui widgets
+QT += core gui concurrent
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
