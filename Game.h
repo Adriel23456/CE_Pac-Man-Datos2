@@ -60,6 +60,7 @@ public:
     void respawnGhost2();
     void respawnGhost3();
     void respawnGhost4();
+    void socketControl();
     void cambiaNivel();
     void gameOver();
     void deactivatePower();

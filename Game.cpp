@@ -9,6 +9,7 @@
 #include <cmath>
 #include <climits>
 
+
 // Función para calcular la distancia euclidiana entre dos puntos
 double distance(int x1, int y1, int x2, int y2) {
     return sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2));
@@ -1040,7 +1041,6 @@ void Game::keyPressEvent(QKeyEvent* event) {
     }
 }
 
-
 void Game::respawnPacMan() {
     Pacman* pacman = this->getCurrentNivel()->getPacman();
     pacman->show(); // Hacemos reaparecer al PacMan
@@ -1228,6 +1228,10 @@ void Game::setFirstGeneration(bool newValue) {
 
 bool Game::getFirstGeneration() {
     return this->firstGeneration;
+}
+
+void Game::socketControl(){
+
 }
 
 void Game::setPacmanDeath(bool newValue) {

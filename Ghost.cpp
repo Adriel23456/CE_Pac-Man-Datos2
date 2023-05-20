@@ -168,7 +168,6 @@ int getFirstDirectionB(const std::vector<Pos>& path) {
     return 0;
 }
 
-
 int Ghost::getDirectionPacMan(int** matriz, Nodo* final, Nodo* inicio, int rows, int columns){
     std::unordered_set<std::pair<int, int>, pair_hash> visited;
     int xStart = inicio->getCol();
